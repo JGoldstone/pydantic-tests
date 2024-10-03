@@ -50,6 +50,17 @@ def json_schema() -> dict[str, Any]:
     return Employee.model_json_schema()
 
 
+def it_employee_misspecified() -> None:
+    it_employee = {
+        "name": "Alexis Tau",
+        "email": "ataue@example.com",
+        "birth_date": "2001-04-12",
+        "compensation": 100_000,
+        "department": "IT",
+        "elected_benefits": True,
+    }
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     employee_from_ctor()
@@ -58,7 +69,8 @@ if __name__ == '__main__':
     e_as_dict: dict[str, Any] = dump_employee_as_string(e)
     e_as_json: str = dump_employee_as_json(e)
     schema: dict[str, Any] = json_schema()
-    print(json.dumps(schema))
+    # print(json.dumps(schema))
+    it_employee_misspecified()
 
 foo = Employee(name="foo",
                email='foo@example.com',

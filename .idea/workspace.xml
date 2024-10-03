@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Snapshot before exploring Fields.">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/pydantic tests.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pydantic tests.iml" afterDir="false" />
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="First experiment with field validators">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pydantic_models.py" beforeDir="false" afterPath="$PROJECT_DIR$/pydantic_models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -113,7 +110,7 @@
       <updated>1727958530762</updated>
       <workItem from="1727958539347" duration="5122000" />
       <workItem from="1727975840815" duration="12000" />
-      <workItem from="1727975953189" duration="8652000" />
+      <workItem from="1727975953189" duration="10579000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -131,7 +128,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727974724515</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="First experiment with field validators">
+      <option name="closed" value="true" />
+      <created>1727991279693</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1727991279693</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -141,7 +146,8 @@
     <MESSAGE value="Initial commit." />
     <MESSAGE value="Add dump functions; add Poetry lock and workspace.xml file." />
     <MESSAGE value="Snapshot before exploring Fields." />
-    <option name="LAST_COMMIT_MESSAGE" value="Snapshot before exploring Fields." />
+    <MESSAGE value="First experiment with field validators" />
+    <option name="LAST_COMMIT_MESSAGE" value="First experiment with field validators" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727990741301" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

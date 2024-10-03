@@ -1,7 +1,8 @@
+from typing import Self
 from datetime import date
 from uuid import UUID, uuid4
 from enum import Enum
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
 class Department(Enum):
     HR = "HR"
@@ -27,3 +28,12 @@ class Employee(BaseModel):
         if date_of_birth > eighteen_years_ago:
             raise ValueError("Employees must be at least 18 years old")
         return date_of_birth
+
+    @model_validator(mode="after")
+    def check_it_benefits(self) -> Self:
+        department = self.department
+        elected_benefits = self.elected_benefits
+        if department == Department.IT and elected_benefits:
+            raise ValueError("IT employees are contractors and don't qualify for benefits")
+        return self
+
