@@ -1,23 +1,25 @@
 from typing import Any
-
+from datetime import date, timedelta
 from pydantic_models import Employee
+import json
 
 
 def employee_from_ctor() -> Employee:
     return Employee(name="Chris DeTuma",
                     email="cdetuma@example.com",
-                    date_of_birth="1998-04-02",
-                    salary=123_000.00,
+                    birth_date="1998-04-02",
+                    compensation=123_000.00,
                     department="IT",
                     elected_benefits=True, )
 
 
 def employee_from_dict() -> Employee:
+    youngling_birthday: date = date.today() - timedelta(days=365*17)
     new_employee_dict = {
         "name": "Chris DeTuma",
         "email": "cdetuma@example.com",
-        "date_of_birth": "1998-04-02",
-        "salary": 123_000.00,
+        "birth_date": youngling_birthday,
+        "compensation": 123_000.00,
         "department": "IT",
         "elected_benefits": True}
     return Employee.model_validate(new_employee_dict)
@@ -28,8 +30,8 @@ def employee_from_json() -> Employee:
 {"employee_id":"d2e7b773-926b-49df-939a-5e98cbb9c9eb",
 "name":"Eric Slogrenta",
 "email":"eslogrenta@example.com",
-"date_of_birth":"1990-01-02",
-"salary":125000.0,
+"birth_date":"1990-01-02",
+"compensation":125000.0,
 "department":"HR",
 "elected_benefits":false}
 """
@@ -44,6 +46,10 @@ def dump_employee_as_json(employee: Employee) -> str:
     return employee.model_dump_json()
 
 
+def json_schema() -> dict[str, Any]:
+    return Employee.model_json_schema()
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     employee_from_ctor()
@@ -51,3 +57,12 @@ if __name__ == '__main__':
     e: Employee = employee_from_json()
     e_as_dict: dict[str, Any] = dump_employee_as_string(e)
     e_as_json: str = dump_employee_as_json(e)
+    schema: dict[str, Any] = json_schema()
+    print(json.dumps(schema))
+
+foo = Employee(name="foo",
+               email='foo@example.com',
+               birth_date='1959-11-17',
+               compensation=170_000.00,
+               department='IT',
+               elected_benefits=True)
