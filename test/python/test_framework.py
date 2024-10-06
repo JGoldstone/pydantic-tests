@@ -1,6 +1,6 @@
 import unittest
-from camdkit.framework import (MIN_UINT_32, MIN_INT_32, MAX_UINT_32, MAX_INT_32,
-                               Rational, StrictlyPositiveRational)
+from camdkit.types import (MIN_UINT_32, MIN_INT_32, MAX_UINT_32, MAX_INT_32,
+                           Rational, StrictlyPositiveRational, NonBlankUTF8String)
 from pydantic import ValidationError
 
 class MyTestCase(unittest.TestCase):
@@ -46,6 +46,19 @@ class MyTestCase(unittest.TestCase):
         StrictlyPositiveRational(1, MAX_UINT_32)
         with self.assertRaises(ValidationError):
             StrictlyPositiveRational(1, MAX_UINT_32 +1)
+
+    def test_non_blank_utf8_string(self):
+        with self.assertRaises(ValidationError):
+            NonBlankUTF8String('')
+        with self.assertRaises(ValidationError):
+            NonBlankUTF8String(0)
+        with self.assertRaises(ValidationError):
+            NonBlankUTF8String(complex(1, 1))
+        NonBlankUTF8String('hello world')
+        NonBlankUTF8String('X' * 1023)
+        with self.assertRaises(ValidationError):
+            NonBlankUTF8String('X' * 1024)
+
 
 if __name__ == '__main__':
     unittest.main()

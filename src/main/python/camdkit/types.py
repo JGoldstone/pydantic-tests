@@ -19,3 +19,9 @@ class StrictlyPositiveRational(BaseModel):
     denominator: int = Field(..., gt=0, le=MAX_UINT_32)
     def __init__(self, n: int, d: int, **kwargs) -> None:
         super(StrictlyPositiveRational, self).__init__(numerator=n, denominator=d, **kwargs)
+
+
+class NonBlankUTF8String(BaseModel):
+    value: str = Field(min_length=1, max_length=1023)
+    def __init__(self, v: str, **kwargs) -> None:
+        super(NonBlankUTF8String, self).__init__(value=v, **kwargs)
