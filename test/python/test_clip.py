@@ -1,7 +1,5 @@
 import unittest
 
-from pydantic.v1 import NoneBytes
-
 from camdkit.types import Rational, StrictlyPositiveRational, NonBlankUTF8String
 from camdkit.clip import Clip
 

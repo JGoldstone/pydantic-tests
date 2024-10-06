@@ -1,7 +1,6 @@
 from typing import Any
 from datetime import date, timedelta
 from pydantic_models import Employee
-import json
 
 
 def employee_from_ctor() -> Employee:
@@ -59,6 +58,7 @@ def it_employee_misspecified() -> None:
         "department": "IT",
         "elected_benefits": True,
     }
+    Employee.model_validate(it_employee)
 
 
 # Press the green button in the gutter to run the script.

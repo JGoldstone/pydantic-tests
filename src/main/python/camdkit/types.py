@@ -1,10 +1,12 @@
 from typing import Final
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
 MIN_UINT_32: Final[int] = 0
 MAX_UINT_32: Final[int] = 2**32-1
 MIN_INT_32: Final[int] = -2**31
 MAX_INT_32: Final[int] = 2**31-1
+
+# init method because by default Pydantic BaseModel doesn't let you use positional arguments
 
 
 class Rational(BaseModel):
