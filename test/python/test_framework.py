@@ -3,7 +3,7 @@ from camdkit.types import (MIN_UINT_32, MIN_INT_32, MAX_UINT_32, MAX_INT_32,
                            Rational, StrictlyPositiveRational, NonBlankUTF8String)
 from pydantic import ValidationError
 
-class MyTestCase(unittest.TestCase):
+class FrameworkTestCases(unittest.TestCase):
     def test_rational_ranges(self):
         with self.assertRaises(ValidationError):
             Rational(MIN_INT_32 - 1, 1)

@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Add test of strictly positive rationals">
-      <change afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/framework.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/types.py" afterDir="false" />
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Add non-blank UTF8 strings and tests thereof">
+      <change afterPath="$PROJECT_DIR$/test/python/test_clip.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/python/test_framework.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_framework.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -18,8 +17,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Unit Test" />
         <option value="Python Script" />
+        <option value="Python Unit Test" />
       </list>
     </option>
   </component>
@@ -52,6 +51,8 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python tests.Python tests for test_clip.ClipTestCases.test_basic.executor": "Run",
+    "Python tests.Python tests for test_framework.MyTestCase.test_non_blank_utf8_string.executor": "Run",
     "Python tests.Python tests for test_framework.MyTestCase.test_rational_ranges.executor": "Run",
     "Python tests.Python tests for test_framework.MyTestCase.test_strictly_positive_rational_ranges.executor": "Run",
     "Python tests.Python tests in test_framework.py.executor": "Run",
@@ -78,7 +79,7 @@
       <recent name="$PROJECT_DIR$/src/main/python/camdkit" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test_framework.MyTestCase.test_strictly_positive_rational_ranges">
+  <component name="RunManager" selected="Python tests.Python tests for test_clip.ClipTestCases.test_basic">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -100,6 +101,38 @@
       <option name="MODULE_MODE" value="false" />
       <option name="REDIRECT_INPUT" value="false" />
       <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test_clip.ClipTestCases.test_basic" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="pydantic tests" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/python" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_clip.ClipTestCases.test_basic&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test_framework.MyTestCase.test_non_blank_utf8_string" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="pydantic tests" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/python" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_framework.MyTestCase.test_non_blank_utf8_string&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <configuration name="Python tests for test_framework.MyTestCase.test_rational_ranges" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
@@ -152,6 +185,8 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_basic" />
+        <item itemvalue="Python tests.Python tests for test_framework.MyTestCase.test_non_blank_utf8_string" />
         <item itemvalue="Python tests.Python tests for test_framework.MyTestCase.test_strictly_positive_rational_ranges" />
         <item itemvalue="Python tests.Python tests in test_framework.py" />
         <item itemvalue="Python tests.Python tests for test_framework.MyTestCase.test_rational_ranges" />
@@ -177,7 +212,7 @@
       <workItem from="1727958539347" duration="5122000" />
       <workItem from="1727975840815" duration="12000" />
       <workItem from="1727975953189" duration="11432000" />
-      <workItem from="1728139889575" duration="14523000" />
+      <workItem from="1728139889575" duration="15823000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -227,7 +262,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728255030168</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Add non-blank UTF8 strings and tests thereof">
+      <option name="closed" value="true" />
+      <created>1728255871334</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1728255871334</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -241,10 +284,11 @@
     <MESSAGE value="Experiment with model validators" />
     <MESSAGE value="Start to bring in camdkit types" />
     <MESSAGE value="Add test of strictly positive rationals" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add test of strictly positive rationals" />
+    <MESSAGE value="Add non-blank UTF8 strings and tests thereof" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add non-blank UTF8 strings and tests thereof" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1728255010889" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1728256890483" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
