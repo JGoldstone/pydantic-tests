@@ -5,6 +5,8 @@ from camdkit.clip import Clip
 
 class ClipTestCases(unittest.TestCase):
     def test_basic(self):
+        # TODO figure out how to automatically promote (with checking!) str to NonBlankUTF8String
+        #   both in the Clip ctor call, and in the assertEqual call
         camera_make = NonBlankUTF8String('ARRI')
         entrance_pupil_offset = Rational(80_000, 1)  # microns, so 8cm in front of image plane
         capture_fps = StrictlyPositiveRational(24, 1001)
