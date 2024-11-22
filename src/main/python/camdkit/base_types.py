@@ -1,5 +1,7 @@
-from typing import Final
-from pydantic import BaseModel, Field
+from typing import Optional, Final, Annotated
+from pydantic import BaseModel, Field, ValidationError
+
+__all__ = ['Rational', 'StrictlyPositiveRational', 'NonBlankUTF8String']
 
 MIN_UINT_32: Final[int] = 0
 MAX_UINT_32: Final[int] = 2**32-1
@@ -12,6 +14,7 @@ MAX_INT_32: Final[int] = 2**31-1
 class Rational(BaseModel):
     numerator: int = Field(..., ge=MIN_INT_32, le=MAX_INT_32)
     denominator: int = Field(..., gt=0, le=MAX_UINT_32)
+
     def __init__(self, n: int, d: int, **kwargs) -> None:
         super(Rational, self).__init__(numerator=n, denominator=d, **kwargs)
 
@@ -19,11 +22,17 @@ class Rational(BaseModel):
 class StrictlyPositiveRational(BaseModel):
     numerator: int = Field(..., gt=0, le=MAX_INT_32)
     denominator: int = Field(..., gt=0, le=MAX_UINT_32)
+
     def __init__(self, n: int, d: int, **kwargs) -> None:
         super(StrictlyPositiveRational, self).__init__(numerator=n, denominator=d, **kwargs)
 
 
-class NonBlankUTF8String(BaseModel):
-    value: str = Field(min_length=1, max_length=1023)
-    def __init__(self, v: str, **kwargs) -> None:
-        super(NonBlankUTF8String, self).__init__(value=v, **kwargs)
+# class NonBlankUTF8String(BaseModel):
+#     value: str = Field(min_length=1, max_length=1023)
+#
+#     def __init__(self, v: str, **kwargs) -> None:
+#         super(NonBlankUTF8String, self).__init__(value=v, **kwargs)
+#     # TODO figure out how to JSONify with <field>=<val> instead of <field>={'value': <thing>}
+#     #  and likewise for dict-ificiation
+
+NonBlankUTF8String = Annotated[str, Field(min_length=1, max_length=1023)]

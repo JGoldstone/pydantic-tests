@@ -4,10 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Add non-blank UTF8 strings and tests thereof">
-      <change afterPath="$PROJECT_DIR$/test/python/test_clip.py" afterDir="false" />
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Add TODO re: auto-promotion of str to NonBlankUTF8String (if passes validation)">
+      <change afterPath="$PROJECT_DIR$/src/main/python/camdkit/backwards.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/python/camdkit/base_types.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/python/camdkit/model_types.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/python/test_model_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/python/test_framework.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_framework.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/types.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_clip.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_framework.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_base_types.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,8 +23,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="Python Unit Test" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -31,12 +37,12 @@
     &quot;assignee&quot;: &quot;JGoldstone&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "git@github.com:JGoldstone/pydantic-tests.git",
-    "accountId": "74460914-b6b9-479f-adf7-b93659cc5993"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:JGoldstone/pydantic-tests.git&quot;,
+    &quot;accountId&quot;: &quot;74460914-b6b9-479f-adf7-b93659cc5993&quot;
   }
-}]]></component>
+}</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="ProjectErrors" />
   </component>
@@ -49,37 +55,47 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python tests.Python tests for test_clip.ClipTestCases.test_basic.executor": "Run",
-    "Python tests.Python tests for test_framework.MyTestCase.test_non_blank_utf8_string.executor": "Run",
-    "Python tests.Python tests for test_framework.MyTestCase.test_rational_ranges.executor": "Run",
-    "Python tests.Python tests for test_framework.MyTestCase.test_strictly_positive_rational_ranges.executor": "Run",
-    "Python tests.Python tests in test_framework.py.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/usr/local/repos/git/jgoldstone/pydantic-tests",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.intellij.pycharm.community.ide.impl.configuration.PythonContentEntriesConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python tests.Python tests for test_clip.ClipTestCases.test_basic.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_clip.ClipTestCases.test_frame_rate_validation.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_clip.ClipTestCases.test_sampleID_validation.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_clip.ClipTestCases.test_sampleID_validation_old_style.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_clip.ClipTestCases.test_sample_from_json.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_clip.ClipTestCases.test_sample_id_to_json.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_framework.MyTestCase.test_non_blank_utf8_string.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_framework.MyTestCase.test_rational_ranges.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_framework.MyTestCase.test_strictly_positive_rational_ranges.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_model_types.ModelTestCases.test_to_json.executor&quot;: &quot;Debug&quot;,
+    &quot;Python tests.Python tests in test_clip.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in test_framework.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in test_model_types.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.scratch.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/usr/local/repos/git/jgoldstone/pydantic-tests&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;aDefault&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "Python"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;Python&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/python/camdkit" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test_clip.ClipTestCases.test_basic">
+  <component name="RunManager" selected="Python tests.Python tests for test_model_types.ModelTestCases.test_to_json">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -103,7 +119,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_clip.ClipTestCases.test_basic" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_clip.ClipTestCases.test_frame_rate_validation" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -115,11 +131,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_clip.ClipTestCases.test_basic&quot;" />
+      <option name="_new_target" value="&quot;test_clip.ClipTestCases.test_frame_rate_validation&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_framework.MyTestCase.test_non_blank_utf8_string" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_clip.ClipTestCases.test_sample_from_json" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -131,11 +147,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_framework.MyTestCase.test_non_blank_utf8_string&quot;" />
+      <option name="_new_target" value="&quot;test_clip.ClipTestCases.test_sample_from_json&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_framework.MyTestCase.test_rational_ranges" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_model_types.ModelTestCases.test_to_json" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -147,11 +163,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_framework.MyTestCase.test_rational_ranges&quot;" />
+      <option name="_new_target" value="&quot;test_model_types.ModelTestCases.test_to_json&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_framework.MyTestCase.test_strictly_positive_rational_ranges" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests in test_clip.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -163,11 +179,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_framework.MyTestCase.test_strictly_positive_rational_ranges&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_clip.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests in test_framework.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests in test_model_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -179,25 +195,25 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_framework.py&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_model_types.py&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_basic" />
-        <item itemvalue="Python tests.Python tests for test_framework.MyTestCase.test_non_blank_utf8_string" />
-        <item itemvalue="Python tests.Python tests for test_framework.MyTestCase.test_strictly_positive_rational_ranges" />
-        <item itemvalue="Python tests.Python tests in test_framework.py" />
-        <item itemvalue="Python tests.Python tests for test_framework.MyTestCase.test_rational_ranges" />
+        <item itemvalue="Python tests.Python tests for test_model_types.ModelTestCases.test_to_json" />
+        <item itemvalue="Python tests.Python tests in test_model_types.py" />
+        <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_frame_rate_validation" />
+        <item itemvalue="Python tests.Python tests in test_clip.py" />
+        <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_sample_from_json" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-PY-242.23339.19" />
-        <option value="bundled-python-sdk-0029f7779945-399fe30bd8c1-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.23339.19" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-PY-242.23726.102" />
+        <option value="bundled-python-sdk-5e1850174b45-399fe30bd8c1-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-242.23726.102" />
       </set>
     </attachedChunks>
   </component>
@@ -212,7 +228,17 @@
       <workItem from="1727958539347" duration="5122000" />
       <workItem from="1727975840815" duration="12000" />
       <workItem from="1727975953189" duration="11432000" />
-      <workItem from="1728139889575" duration="15823000" />
+      <workItem from="1728139889575" duration="21284000" />
+      <workItem from="1728766574525" duration="2795000" />
+      <workItem from="1728834686704" duration="2647000" />
+      <workItem from="1728839043680" duration="398000" />
+      <workItem from="1728840937153" duration="24233000" />
+      <workItem from="1729092631954" duration="460000" />
+      <workItem from="1729609805714" duration="190000" />
+      <workItem from="1730133127975" duration="250000" />
+      <workItem from="1731704909713" duration="380000" />
+      <workItem from="1731705678213" duration="1963000" />
+      <workItem from="1732055445104" duration="185000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -270,7 +296,31 @@
       <option name="project" value="LOCAL" />
       <updated>1728255871334</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Very very basic definition of Clip">
+      <option name="closed" value="true" />
+      <created>1728257148733</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1728257148733</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Cleanup to avoid some minor warnings; not quite PEP8 yet but close">
+      <option name="closed" value="true" />
+      <created>1728257522687</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1728257522687</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Add TODO re: auto-promotion of str to NonBlankUTF8String (if passes validation)">
+      <option name="closed" value="true" />
+      <created>1728257841241</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1728257841241</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -285,10 +335,30 @@
     <MESSAGE value="Start to bring in camdkit types" />
     <MESSAGE value="Add test of strictly positive rationals" />
     <MESSAGE value="Add non-blank UTF8 strings and tests thereof" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add non-blank UTF8 strings and tests thereof" />
+    <MESSAGE value="Very very basic definition of Clip" />
+    <MESSAGE value="Cleanup to avoid some minor warnings; not quite PEP8 yet but close" />
+    <MESSAGE value="Add TODO re: auto-promotion of str to NonBlankUTF8String (if passes validation)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add TODO re: auto-promotion of str to NonBlankUTF8String (if passes validation)" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$APPLICATION_CONFIG_DIR$/scratches/scratch.py</url>
+          <line>50</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/python/test_model_types.py</url>
+          <line>29</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1728256890483" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1728870338459" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1728857315751" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
