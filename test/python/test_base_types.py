@@ -61,6 +61,5 @@ class FrameworkTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             NonBlankUTF8String('X' * 1024)
 
-
 if __name__ == '__main__':
     unittest.main()
