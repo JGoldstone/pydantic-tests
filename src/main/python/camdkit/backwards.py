@@ -7,6 +7,8 @@ from pydantic import BaseModel, ValidationError, ConfigDict, json
 # For compatibility with existing code
 class CompatibleBaseModel(BaseModel):
 
+    model_config = {"validate_assignment": True}
+
     @classmethod
     def validate(cls, value) -> bool:
         try:
