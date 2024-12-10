@@ -18,33 +18,37 @@ MAX_INT_32: Final[int] = 2**31-1
 
 # init methods because by default Pydantic BaseModel doesn't let you use positional arguments
 
+type NonNegativeInt = Annotated[int, Field(..., ge=0, le=MAX_UINT_32, strict=True)]
 
-class NonNegativeInt(CompatibleBaseModel):
-    value: int = Field(..., ge=0, le=MAX_UINT_32, strict=True)
+# class NonNegativeInt(CompatibleBaseModel):
+#     value: int = Field(..., ge=0, le=MAX_UINT_32, strict=True)
+#
+#     def __init__(self, v: int) -> None:
+#         super(NonNegativeInt, self).__init__(value=v)
 
-    def __init__(self, v: int) -> None:
-        super(NonNegativeInt, self).__init__(value=v)
+type StrictlyPositiveInt = Annotated[int, Field(..., gt=0, le=MAX_UINT_32, strict=False)]
 
+# class StrictlyPositiveInt(CompatibleBaseModel):
+#     value: int = Field(..., gt=0, le=MAX_UINT_32, strict=False)
+#
+#     def __init__(self, v: int) -> None:
+#         super(StrictlyPositiveInt, self).__init__(value=v)
 
-class StrictlyPositiveInt(CompatibleBaseModel):
-    value: int = Field(..., gt=0, le=MAX_UINT_32, strict=True)
+type NonNegativeFloat = Annotated[float, Field(..., ge=0, le=sys.float_info.max, strict=True)]
 
-    def __init__(self, v: int) -> None:
-        super(StrictlyPositiveInt, self).__init__(value=v)
+# class NonNegativeFloat(CompatibleBaseModel):
+#     value: float = Field(..., ge=0, le=sys.float_info.max, strict=True)
+#
+#     def __init__(self, v: float) -> None:
+#         super(NonNegativeFloat, self).__init__(value=v)
 
+type StrictlyPositiveFloat = Annotated[float, Field(..., gt=0.0, le=sys.float_info.max, strict=True)]
 
-class NonNegativeFloat(CompatibleBaseModel):
-    value: float = Field(..., ge=0, le=sys.float_info.max, strict=True)
-
-    def __init__(self, v: float) -> None:
-        super(NonNegativeFloat, self).__init__(value=v)
-
-
-class StrictlyPositiveFloat(CompatibleBaseModel):
-    value: float = Field(..., gt=0.0, le=sys.float_info.max, strict=True)
-
-    def __init__(self, v: float) -> None:
-        super(StrictlyPositiveFloat, self).__init__(value=v)
+# class StrictlyPositiveFloat(CompatibleBaseModel):
+#     value: float = Field(..., gt=0.0, le=sys.float_info.max, strict=True)
+#
+#     def __init__(self, v: float) -> None:
+#         super(StrictlyPositiveFloat, self).__init__(value=v)
 
 
 class Rational(CompatibleBaseModel):
@@ -62,9 +66,10 @@ class StrictlyPositiveRational(CompatibleBaseModel):
     def __init__(self, n: int, d: int, ) -> None:
         super(StrictlyPositiveRational, self).__init__(numerator=n, denominator=d)
 
+type NonBlankUTF8String = Annotated[str, StringConstraints(min_length=1, max_length=1023)]
 
-class NonBlankUTF8String(CompatibleBaseModel):
-    value: Annotated[str, StringConstraints(min_length=1, max_length=1023)]
-
-    def __init__(self, v: str) -> None:
-        super(NonBlankUTF8String, self).__init__(value=v)
+# class NonBlankUTF8String(CompatibleBaseModel):
+#     value: Annotated[str, StringConstraints(min_length=1, max_length=1023)]
+#
+#     def __init__(self, v: str) -> None:
+#         super(NonBlankUTF8String, self).__init__(value=v)

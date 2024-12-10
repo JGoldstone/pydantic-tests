@@ -8,7 +8,9 @@ from fractions import Fraction
 
 from pydantic import ValidationError
 
-from camdkit.camera_types import (PhysicalDimensions, ShutterAngle, SenselDimensions)
+from camdkit.base_types import StrictlyPositiveRational, NonBlankUTF8String
+from camdkit.camera_types import (PhysicalDimensions, SenselDimensions,
+                                  ShutterAngle, StaticCamera)
 
 ALEXA_265_WIDTH_MM: float = 54.12
 ALEXA_265_HEIGHT_MM = 25.58
@@ -30,7 +32,6 @@ THREE_HUNDRED_SIXTY_DEGREES = 360.0
 
 
 class CameraTestCases(unittest.TestCase):
-
 
     # example of testing a struct:
     #   verify no-arg instantiation fails
@@ -81,9 +82,28 @@ class CameraTestCases(unittest.TestCase):
         # verify correct construction from json
         instance_from_json: PhysicalDimensions = PhysicalDimensions.from_json(json_from_instance)
         self.assertEqual(d, instance_from_json)
-        # verify introspected schema matches expectations
+        expected_schema = {
+            "properties": {
+                "width": {
+                    "exclusiveMinimum": 0.0,
+                    "title": "Width",
+                    "type": "number"
+                },
+                "height": {
+                    "exclusiveMinimum": 0.0,
+                    "title": "Height",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "width",
+                "height"
+            ],
+            "title": "PhysicalDimensions",
+            "type": "object"
+        }
         schema = PhysicalDimensions.make_json_schema()
-        print(json.dumps(schema, indent=2))
+        self.assertDictEqual(expected_schema, schema)
 
     def test_sensel_dimensions(self):
         with self.assertRaises(TypeError):
@@ -111,7 +131,35 @@ class CameraTestCases(unittest.TestCase):
             SenselDimensions(ALEXA_265_WIDTH_MM, 0)  # zero height
         with self.assertRaises(ValidationError):
             SenselDimensions(ALEXA_265_WIDTH_MM, math.inf)  # infinite height
-
+        SenselDimensions.validate(d)
+        expected_json = {'width': RED_V_RAPTOR_XL_8K_VV_WIDTH_PX,
+                         'height': RED_V_RAPTOR_XL_8K_VV_HEIGHT_PX }
+        json_from_instance: dict[str, Any] = SenselDimensions.to_json(d)
+        self.assertDictEqual(expected_json, json_from_instance)
+        instance_from_json: SenselDimensions = SenselDimensions.from_json(json_from_instance)
+        self.assertEqual(d, instance_from_json)
+        expected_schema = {
+            "properties": {
+                "width": {
+                    "exclusiveMinimum": 0,
+                    "title": "Width",
+                    "type": "integer"
+                },
+                "height": {
+                    "exclusiveMinimum": 0.0,
+                    "title": "Height",
+                    "type": "number"
+                }
+            },
+            "required": [
+                "width",
+                "height"
+            ],
+            "title": "SenselDimensions",
+            "type": "object"
+        }
+        schema = SenselDimensions.make_json_schema()
+        self.assertDictEqual(expected_schema, schema)
 
     def test_shutter_angle(self):
         with self.assertRaises(TypeError):
@@ -137,8 +185,87 @@ class CameraTestCases(unittest.TestCase):
                              json_from_instance)
         instance_from_json: ShutterAngle = ShutterAngle.from_json(json_from_instance)
         self.assertEqual(s, instance_from_json)
+        expected_schema = {
+            "exclusiveMinimum": 0.0,
+            "maximum": 360.0,
+            "type": "number"
+        }
         schema = ShutterAngle.make_json_schema()
-        print(json.dumps(schema, indent=2))
+        self.assertDictEqual(expected_schema, schema)
+
+    def test_static_camera(self):
+        sc = StaticCamera()
+
+        self.assertIsNone(sc.capture_frame_rate)
+        with self.assertRaises(ValidationError):
+            sc.capture_frame_rate = 1+2j
+        valid_capture_frame_rate = StrictlyPositiveRational(30, 1)
+        sc.capture_frame_rate = valid_capture_frame_rate
+        self.assertEqual(valid_capture_frame_rate, sc.capture_frame_rate)
+
+        self.assertIsNone(sc.active_sensor_physical_dimensions)
+        with self.assertRaises(ValidationError):
+            sc.active_sensor_physical_dimensions = PhysicalDimensions(-1.0, 1.0)
+        valid_active_sensor_physical_dimensions = PhysicalDimensions(ALEXA_265_WIDTH_MM,
+                                                                     ALEXA_265_HEIGHT_MM)
+        sc.active_sensor_physical_dimensions = valid_active_sensor_physical_dimensions
+        self.assertEqual(valid_active_sensor_physical_dimensions, sc.active_sensor_physical_dimensions)
+
+        self.assertIsNone(sc.active_sensor_resolution)
+        with self.assertRaises(ValidationError):
+            sc.active_sensor_resolution = SenselDimensions(-1, 1)
+        valid_active_sensor_resolution = SenselDimensions(ALEXA_265_WIDTH_PX,
+                                                                     ALEXA_265_HEIGHT_PX)
+        sc.active_sensor_resolution = valid_active_sensor_resolution
+        self.assertEqual(valid_active_sensor_resolution, sc.active_sensor_resolution)
+
+        self.assertIsNone(sc.make)
+        with self.assertRaises(ValidationError):
+            sc.make = 0+0.1j
+        valid_make = "aaton"
+        sc.make = valid_make
+        self.assertEqual(valid_make, sc.make)
+
+        self.assertIsNone(sc.model_name)
+        with self.assertRaises(ValidationError):
+            sc.model_name = 1
+        valid_model = "delta penelope"
+        sc.model_name = valid_model
+        self.assertEqual(valid_model, sc.model_name)
+
+        self.assertIsNone(sc.serial_number)
+        with self.assertRaises(ValidationError):
+            sc.serial_number = 1
+        valid_serial_number = "s/n 1 099 162"
+        sc.serial_number = valid_serial_number
+        self.assertEqual(valid_serial_number, sc.serial_number)
+
+        self.assertIsNone(sc.firmware_version)
+        with self.assertRaises(ValidationError):
+            sc.firmware_version = 1
+        valid_firmware_version = "SUP 3.0"
+        sc.firmware_version = valid_firmware_version
+        self.assertEqual(valid_firmware_version, sc.firmware_version)
+
+        self.assertIsNone(sc.anamorphic_squeeze)
+        with self.assertRaises(ValidationError):
+            sc.anamorphic_squeeze = 1
+        valid_anamorphic_squeeze = StrictlyPositiveRational(4, 3)
+        sc.anamorphic_squeeze = valid_anamorphic_squeeze
+        self.assertEqual(valid_anamorphic_squeeze, sc.anamorphic_squeeze)
+
+        # self.assertIsNone(sc.iso)
+        # with self.assertRaises(ValidationError):
+        #     sc.iso = 800.5
+        # valid_iso = 800
+        # sc.iso = valid_iso
+        # self.assertEqual(valid_iso, sc.iso)
+
+
+        self.assertIsNone(sc.label)
+        self.assertIsNone(sc.fdl_link)
+        self.assertIsNone(sc.shutter_angle)
+        print(json.dumps(sc.make_json_schema(), indent=2))
 
 if __name__ == '__main__':
     unittest.main()

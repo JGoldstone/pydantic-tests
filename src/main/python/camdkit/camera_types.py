@@ -29,8 +29,8 @@ class SenselDimensions(CompatibleBaseModel):
     width: Annotated[int, Field(gt=0)]
     height: Annotated[float, Field(gt=0)]
 
-    def __init__(self, w: int, h: int) -> None:
-        super(SenselDimensions, self).__init__(width=w, height=h)
+    def __init__(self, width: int, height: int) -> None:
+        super(SenselDimensions, self).__init__(width=width, height=height)
 
 
 class ShutterAngle(PODModel):
@@ -49,6 +49,7 @@ class StaticCamera(CompatibleBaseModel):
     firmware_version: Optional[NonBlankUTF8String] = None
     label: Optional[NonBlankUTF8String] = None
     anamorphic_squeeze: Optional[StrictlyPositiveRational] = None
-    isoSpeed: Optional[StrictlyPositiveInt] = None
+    # TODO complain that "iso" is not a great name
+    iso: Optional[StrictlyPositiveInt] = None
     fdl_link: Optional[UUIDURN] = None
     shutter_angle: Optional[ShutterAngle] = None
