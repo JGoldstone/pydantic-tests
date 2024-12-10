@@ -1,30 +1,59 @@
-from typing import List, Optional
+from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import Field
 
-from camdkit.base_types import Rational, StrictlyPositiveRational, NonBlankUTF8String
-from camdkit.model_types import SampleId, Synchronization, PhysicalDimensions, SenselDimensions
+from camdkit.backwards import CompatibleBaseModel
+from camdkit.base_types import NonNegativeInt, StrictlyPositiveRational
+from camdkit.lens_types import StaticLens, Lens
+from camdkit.camera_types import StaticCamera
+from camdkit.model_types import UUIDURN
+from camdkit.tracker_types import StaticTracker, Tracker
+from camdkit.timing_types import Timing
+from camdkit.transform_types import Transforms
 
 
-class Clip(BaseModel):
-    # per clip
-    active_sensor_physical_dimensions: Optional[PhysicalDimensions] = None
-    active_sensor_resolution: Optional[SenselDimensions] = None
-    anamorphic_squeeze: Optional[StrictlyPositiveRational] = None
-    camera_make: Optional[NonBlankUTF8String] = None
-    camera_model: Optional[NonBlankUTF8String] = None
-    camera_firmware: Optional[NonBlankUTF8String] = None
-    camera_serial_number: Optional[NonBlankUTF8String] = None
-    camera_label: Optional[NonBlankUTF8String] = None
-    capture_frame_rate: Optional[StrictlyPositiveRational] = None
-    tracker_make: Optional[NonBlankUTF8String] = None
-    tracker_model: Optional[NonBlankUTF8String] = None
-    tracker_firmware: Optional[NonBlankUTF8String] = None
-    tracker_serial_number: Optional[NonBlankUTF8String] = None
-    entrance_pupil_offset: Optional[Rational] = None
-    capture_fps: Optional[StrictlyPositiveRational] = None
-    timing_frame_rate: Optional[StrictlyPositiveRational] = None
-    related_sample_ids: Optional[List[SampleId]] = None
-    timing_synchronization: Optional[Synchronization] = None
-    # per-sample
-    sample_id: Optional[SampleId] = None
+class GlobalPosition(CompatibleBaseModel):
+    """Global ENU and geodetic coördinates
+    Reference:. https://en.wikipedia.org/wiki/Local_tangent_plane_coordinates
+    """
+    E: float  # East (meters)
+    N: float  # North (meters)
+    U: float  # Up (meters)
+    lat0: float = Field(..., ge=-90, le=90)  # latitude (degrees)
+    long0: float = Field(..., ge=-180, le=180)  # longitude (degrees)
+    h0: float  # height (meters)
+
+    def __init__(self, e: float, n: float, u: float, lat0: float, long0: float, h0: float):
+        super(GlobalPosition, self).__init__(E=e, N=n, U=u, lat0=lat0, long0=long0, h0=h0)
+
+
+class Static(CompatibleBaseModel):
+    duration: Optional[StrictlyPositiveRational] = None
+    static_camera: Optional[StaticCamera] = None
+    static_lens: Optional[StaticLens] = None
+    static_tracker: Optional[StaticTracker] = None
+
+
+class Clip(CompatibleBaseModel):
+    static: Optional[Static] = None
+    sample_id: Optional[tuple[UUIDURN]] = None
+    source_id: Optional[tuple[UUIDURN]] = None
+    source_number: Optional[tuple[NonNegativeInt]] = None
+    related_sample_ids: Optional[tuple[tuple[UUIDURN]]] = None
+    global_stage: Optional[tuple[GlobalPosition]] = None
+    tracker: Optional[Tracker] = None
+    timing: Optional[Timing] = None
+    transforms: Optional[tuple[Transforms]] = None
+    lens: Optional[Lens] = None
+
+    # read and write access to static data is provided via properties
+
+    @property
+    def duration(self) -> StrictlyPositiveRational:
+        return self.static.duration
+
+    @duration.setter
+    def duration(self, value) -> None:
+        self.static.duration = value
+
+

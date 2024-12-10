@@ -32,8 +32,8 @@ class CompatibleBaseModel(BaseModel):
         return cls.model_json_schema()
 
 def scrub_title(json_data: json) -> json:
-    if 'title' in json_data:
-        del json_data['title']
+    if "title" in json_data:
+        del json_data["title"]
     return json_data
 
 def hoist_pod_and_scrub_title(json) -> None:

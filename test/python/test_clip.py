@@ -1,12 +1,11 @@
-from typing import Optional
 import unittest
-import json
 
-from pydantic import TypeAdapter, BaseModel, ValidationError
-from camdkit.base_types import Rational, StrictlyPositiveRational, NonBlankUTF8String
-from camdkit.model_types import (SampleId, FrameRate,
+from pydantic import ValidationError
+from camdkit.base_types import Rational, StrictlyPositiveRational
+from camdkit.tracker_types import NonBlankUTF8String
+from camdkit.model_types import (FrameRate,
                                  SynchronizationSource, SynchronizationOffsets,
-                                 SynchronizationPTP, Synchronization, PhysicalDimensions)
+                                 SynchronizationPTP, Synchronization)
 from camdkit.clip import Clip
 
 VALID_SAMPLE_ID = 'urn:uuid:abcdefab-abcd-abcd-abcd-abcdefabcdef'  # 8-4-4-4-12

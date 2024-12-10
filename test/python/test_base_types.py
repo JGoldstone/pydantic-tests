@@ -1,10 +1,63 @@
+import sys
 import unittest
-from camdkit.base_types import (MIN_UINT_32, MIN_INT_32, MAX_UINT_32, MAX_INT_32,
-                                Rational, StrictlyPositiveRational, NonBlankUTF8String)
+
 from pydantic import ValidationError
+
+from camdkit.base_types import (MIN_UINT_32, MIN_INT_32, MAX_UINT_32, MAX_INT_32,
+                                NonNegativeInt, StrictlyPositiveInt,
+                                NonNegativeFloat, StrictlyPositiveFloat,
+                                Rational, StrictlyPositiveRational,
+                                NonBlankUTF8String)
 
 
 class FrameworkTestCases(unittest.TestCase):
+
+    def test_non_negative_int(self):
+        with self.assertRaises(ValidationError):
+            NonNegativeInt('foo')
+        with self.assertRaises(ValidationError):
+            NonNegativeInt(1.0)
+        with self.assertRaises(ValidationError):
+            NonNegativeInt(-1)
+        NonNegativeInt(0)
+        NonNegativeInt(1)
+        NonNegativeInt(MAX_UINT_32)
+        with self.assertRaises(ValidationError):
+            NonNegativeInt(MAX_UINT_32 + 1)
+        # TODO test validate(), to_json(), from_json() and make_json_schema()
+
+    def test_strictly_positive_int(self):
+        with self.assertRaises(ValidationError):
+            StrictlyPositiveInt('bar')
+        with self.assertRaises(ValidationError):
+            StrictlyPositiveInt(1.0)
+        with self.assertRaises(ValidationError):
+            StrictlyPositiveInt(-1)
+        with self.assertRaises(ValidationError):
+            StrictlyPositiveInt(0)
+        StrictlyPositiveInt(1)
+        StrictlyPositiveInt(MAX_UINT_32)
+        with self.assertRaises(ValidationError):
+            StrictlyPositiveInt(MAX_UINT_32 + 1)
+
+    def test_non_negative_float(self):
+        with self.assertRaises(ValidationError):
+            NonNegativeFloat(0+1j)
+        with self.assertRaises(ValidationError):
+            NonNegativeFloat(-0.1)
+        NonNegativeFloat(0.0)
+        NonNegativeFloat(0.1)
+        NonNegativeFloat(sys.float_info.max)
+
+    def test_strictly_positive_float(self):
+        with self.assertRaises(ValidationError):
+            StrictlyPositiveFloat(1+1j)
+        with self.assertRaises(ValidationError):
+            StrictlyPositiveFloat(-0.1)
+        with self.assertRaises(ValidationError):
+            StrictlyPositiveFloat(0.0)
+        StrictlyPositiveFloat(0.1)
+        StrictlyPositiveFloat(sys.float_info.max)
 
     def test_rational_ranges(self):
         with self.assertRaises(ValidationError):
