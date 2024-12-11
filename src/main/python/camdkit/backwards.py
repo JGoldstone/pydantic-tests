@@ -1,13 +1,27 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright Contributors to the SMTPE RIS OSVP Metadata Project
+
+"""Provisions for compatibility with OpenTrackIO 0.9 release"""
 
 from typing import Any
 from copy import deepcopy
 
 from pydantic import BaseModel, ValidationError, ConfigDict, json
 
+
+def title_stripper(schema: dict[str, Any]) -> None:
+    for prop in schema.get('properties', {}).values():
+        prop.pop('title', None)
+    schema.pop('title', None)
+
 # For compatibility with existing code
 class CompatibleBaseModel(BaseModel):
 
-    model_config = {"validate_assignment": True}
+    model_config = ConfigDict(validate_assignment=True,
+                              json_schema_extra=title_stripper)
 
     @classmethod
     def validate(cls, value) -> bool:

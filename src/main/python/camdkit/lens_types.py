@@ -1,14 +1,24 @@
-from typing import Optional
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright Contributors to the SMTPE RIS OSVP Metadata Project
+
+"""Types for lens modeling"""
+
+from typing import Optional, Annotated, Self
+
+from pydantic import Field, model_validator
 
 from camdkit.backwards import CompatibleBaseModel
-from camdkit.base_types import (NonBlankUTF8String,
-                                NonNegativeFloat, StrictlyPositiveFloat,
-                                NonNegativeInt)
+from camdkit.numeric_types import (NonBlankUTF8String,
+                                   NonNegativeFloat, StrictlyPositiveFloat,
+                                   NonNegativeInt)
 
 
 class StaticLens(CompatibleBaseModel):
-    distortion_overscan_max: Optional[float] = None
-    undistortion_overscan_max: Optional[float] = None
+    distortion_overscan_max: Optional[StrictlyPositiveFloat] = None
+    undistortion_overscan_max: Optional[StrictlyPositiveFloat] = None
     make: Optional[NonBlankUTF8String] = None
     model_name: Optional[NonBlankUTF8String] = None
     serial_number: Optional[NonBlankUTF8String] = None
@@ -17,19 +27,30 @@ class StaticLens(CompatibleBaseModel):
 
 
 class Distortion(CompatibleBaseModel):
-    radial: tuple[float, ...]
-    tangential: Optional[tuple[float, ...]] = None
-    model: Optional[str] = None
+    radial: tuple[Annotated[float, Field(strict=True)], ...]
+    tangential: Optional[tuple[Annotated[float, Field(strict=True)], ...]] = None
+    model: Optional[NonBlankUTF8String] = None
 
-    def __init__(self, r: tuple[float, ...],
-                 t: Optional[tuple[float, ...]] = None,
-                 m: Optional[str] = None):
-        super(Distortion, self).__init__(radial=r, tangential=t, model=m)
+    @model_validator(mode="after")
+    def check_tuples_not_empty(self) -> Self:
+        if self.radial is not None and len(self.radial) == 0:
+            raise ValueError("radial distortion coefficient sequence must not be empty")
+        if self.tangential is not None and len(self.tangential) == 0:
+            raise ValueError("tangential distortion coefficient sequence, if provided, must not be empty")
+        return self
+
+    def __init__(self, radial: tuple[float, ...],  # positional __init__() for compatibility
+                 tangential: Optional[tuple[float, ...]] = None,
+                 model: Optional[str] = None):
+        super(Distortion, self).__init__(radial=radial, tangential=tangential, model=model)
 
 
 class PlanarOffset(CompatibleBaseModel):
     x: float
     y: float
+
+    def __init__(self, x: float, y: float):
+        super(PlanarOffset, self).__init__(x=x, y=y)
 
 
 class FizEncoder[T](CompatibleBaseModel):

@@ -1,10 +1,18 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright Contributors to the SMTPE RIS OSVP Metadata Project
+
+"""Types for modeling of time-related metadata"""
+
 from enum import Enum
 from typing import Optional
 
 from pydantic import Field
 
 from camdkit.backwards import CompatibleBaseModel
-from camdkit.base_types import StrictlyPositiveRational, NonNegativeInt
+from camdkit.numeric_types import StrictlyPositiveRational, NonNegativeInt
 from camdkit.model_types import Synchronization
 
 

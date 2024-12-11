@@ -1,7 +1,15 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright Contributors to the SMTPE RIS OSVP Metadata Project
+
+"""Tests for clips"""
+
 import unittest
 
 from pydantic import ValidationError
-from camdkit.base_types import Rational, StrictlyPositiveRational
+from camdkit.numeric_types import Rational, StrictlyPositiveRational
 from camdkit.tracker_types import NonBlankUTF8String
 from camdkit.model_types import (FrameRate,
                                  SynchronizationSource, SynchronizationOffsets,

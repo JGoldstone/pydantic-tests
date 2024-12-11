@@ -1,9 +1,17 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright Contributors to the SMTPE RIS OSVP Metadata Project
+
+"""Types for modeling clips"""
+
 from typing import Optional
 
 from pydantic import Field
 
 from camdkit.backwards import CompatibleBaseModel
-from camdkit.base_types import NonNegativeInt, StrictlyPositiveRational
+from camdkit.numeric_types import NonNegativeInt, StrictlyPositiveRational
 from camdkit.lens_types import StaticLens, Lens
 from camdkit.camera_types import StaticCamera
 from camdkit.model_types import UUIDURN
@@ -55,5 +63,3 @@ class Clip(CompatibleBaseModel):
     @duration.setter
     def duration(self, value) -> None:
         self.static.duration = value
-
-

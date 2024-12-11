@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright Contributors to the SMTPE RIS OSVP Metadata Project
+
+"""Types for camera modeling"""
+
 import math
 
 from typing import Annotated, Optional
@@ -5,9 +13,9 @@ from typing import Annotated, Optional
 from pydantic import Field
 
 from camdkit.backwards import CompatibleBaseModel, PODModel
-from camdkit.base_types import (NonBlankUTF8String,
-                                StrictlyPositiveInt,
-                                StrictlyPositiveRational)
+from camdkit.numeric_types import (NonBlankUTF8String,
+                                   StrictlyPositiveInt,
+                                   StrictlyPositiveRational)
 from camdkit.model_types import UUIDURN
 
 
@@ -33,11 +41,13 @@ class SenselDimensions(CompatibleBaseModel):
         super(SenselDimensions, self).__init__(width=width, height=height)
 
 
-class ShutterAngle(PODModel):
-    angle: Annotated[float, Field(gt=0.0, le=360.0)]
+type ShutterAngle = Annotated[float, Field(ge=0.0, le=360.0, strict=True)]
 
-    def __init__(self, angle: float) -> None:
-        super(ShutterAngle, self).__init__(angle=angle)
+# class ShutterAngle(PODModel):
+#     angle: Annotated[float, Field(gt=0.0, le=360.0)]
+#
+#     def __init__(self, angle: float) -> None:
+#         super(ShutterAngle, self).__init__(angle=angle)
 
 class StaticCamera(CompatibleBaseModel):
     capture_frame_rate: Optional[StrictlyPositiveRational] = None

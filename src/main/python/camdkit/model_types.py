@@ -1,10 +1,18 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright Contributors to the SMTPE RIS OSVP Metadata Project
+
+"""Types for general modeling"""
+
 from typing import Optional, Annotated
 from enum import Enum, StrEnum, verify, UNIQUE
 import math
 
 from pydantic import Field, BaseModel
 
-from camdkit.base_types import StrictlyPositiveRational
+from camdkit.numeric_types import StrictlyPositiveRational
 from camdkit.backwards import CompatibleBaseModel, PODModel
 
 
@@ -15,22 +23,24 @@ class Sampling(Enum):
 UUID_URN_PATTERN = r'^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
 
 
-class UUIDURN(PODModel):
-    """Unique ID for this sample
-    If no argument given when an object of this class is instantiated, a
-    default value will be provided.
-    If None is the sole argument, then a default value will be provided.
-    If an argument is given it must be
-    a valid URN of the form <insert description here>
+# class UUIDURN(PODModel):
+#     """Unique ID for this sample
+#     If no argument given when an object of this class is instantiated, a
+#     default value will be provided.
+#     If None is the sole argument, then a default value will be provided.
+#     If an argument is given it must be
+#     a valid URN of the form <insert description here>
+#
+#     """
+#     # id: Annotated[str, Field(serialization_alias='sampleId',
+#     #                             pattern=UUID_URN_PATTERN,
+#     #                             default_factory=lambda: uuid4().urn)]
+#     value: Annotated[str, Field(pattern=UUID_URN_PATTERN)]
+#
+#     def __init__(self, value: str) -> None:
+#         super(UUIDURN, self).__init__(value=value)
 
-    """
-    # id: Annotated[str, Field(serialization_alias='sampleId',
-    #                             pattern=UUID_URN_PATTERN,
-    #                             default_factory=lambda: uuid4().urn)]
-    value: Annotated[str, Field(pattern=UUID_URN_PATTERN)]
-
-    def __init__(self, value: str) -> None:
-        super(UUIDURN, self).__init__(value=value)
+type UUIDURN = Annotated[str, Field(pattern=UUID_URN_PATTERN)]
 
 
 class FrameRate(StrictlyPositiveRational):

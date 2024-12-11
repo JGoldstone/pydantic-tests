@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# SPDX-License-Identifier: BSD-3-Clause
+# Copyright Contributors to the SMTPE RIS OSVP Metadata Project
+
+"""Tests for camera types"""
+
 import sys
 import math
 import unittest
@@ -8,7 +16,8 @@ from fractions import Fraction
 
 from pydantic import ValidationError
 
-from camdkit.base_types import StrictlyPositiveRational, NonBlankUTF8String
+from camdkit.numeric_types import StrictlyPositiveRational
+from camdkit.model_types import UUIDURN
 from camdkit.camera_types import (PhysicalDimensions, SenselDimensions,
                                   ShutterAngle, StaticCamera)
 
@@ -26,20 +35,14 @@ RED_V_RAPTOR_XL_8K_VV_HEIGHT_MM = 21.60
 RED_V_RAPTOR_XL_8K_VV_WIDTH_PX = 8192
 RED_V_RAPTOR_XL_8K_VV_HEIGHT_PX = 4320
 
+ZERO_DEGREES = 0.0
 THIRTY_DEGREES = 30.0
 SIXTY_DEGREES = 60.0
+ONE_HUNDRED_EIGHTY_DEGREES = 180.0
 THREE_HUNDRED_SIXTY_DEGREES = 360.0
 
 
-class CameraTestCases(unittest.TestCase):
-
-    # example of testing a struct:
-    #   verify no-arg instantiation fails
-    #   verify trying to instantiate with arguments of invalid type raises a validation error
-    #   verify correct instantiation returns an object the attributes of which meet expectations
-    #   verify one can set the object's attributes to new values
-    #   when applicable, verify that trying to instantiate with arguments of the correct type
-    #     but out-of-range or otherwise invalid values fail
+class CameraTypesTestCases(unittest.TestCase):
 
     def test_physical_dimensions(self):
         with self.assertRaises(TypeError):
@@ -86,12 +89,10 @@ class CameraTestCases(unittest.TestCase):
             "properties": {
                 "width": {
                     "exclusiveMinimum": 0.0,
-                    "title": "Width",
                     "type": "number"
                 },
                 "height": {
                     "exclusiveMinimum": 0.0,
-                    "title": "Height",
                     "type": "number"
                 }
             },
@@ -99,7 +100,6 @@ class CameraTestCases(unittest.TestCase):
                 "width",
                 "height"
             ],
-            "title": "PhysicalDimensions",
             "type": "object"
         }
         schema = PhysicalDimensions.make_json_schema()
@@ -142,12 +142,10 @@ class CameraTestCases(unittest.TestCase):
             "properties": {
                 "width": {
                     "exclusiveMinimum": 0,
-                    "title": "Width",
                     "type": "integer"
                 },
                 "height": {
                     "exclusiveMinimum": 0.0,
-                    "title": "Height",
                     "type": "number"
                 }
             },
@@ -155,42 +153,9 @@ class CameraTestCases(unittest.TestCase):
                 "width",
                 "height"
             ],
-            "title": "SenselDimensions",
             "type": "object"
         }
         schema = SenselDimensions.make_json_schema()
-        self.assertDictEqual(expected_schema, schema)
-
-    def test_shutter_angle(self):
-        with self.assertRaises(TypeError):
-            ShutterAngle()
-        s = ShutterAngle(THIRTY_DEGREES)
-        self.assertEqual(THIRTY_DEGREES, s.angle)
-        s.angle = SIXTY_DEGREES
-        self.assertEqual(SIXTY_DEGREES, s.angle)
-        with self.assertRaises(ValidationError):
-            ShutterAngle(0.0 + 0.0j)
-        with self.assertRaises(ValidationError):
-            ShutterAngle(-sys.float_info.min)
-        with self.assertRaises(ValidationError):
-            ShutterAngle(0.0)
-        s.angle = THREE_HUNDRED_SIXTY_DEGREES
-        with self.assertRaises(ValidationError):
-            ShutterAngle(THREE_HUNDRED_SIXTY_DEGREES + 1)
-            # What Pierre warned us about: this passes validation
-            # ShutterAngle(THREE_HUNDRED_SIXTY_DEGREES + sys.float_info.min)
-        ShutterAngle.validate(ShutterAngle(THIRTY_DEGREES))
-        json_from_instance: dict[str, Any] = ShutterAngle.to_json(s)
-        self.assertDictEqual({'angle': THREE_HUNDRED_SIXTY_DEGREES},
-                             json_from_instance)
-        instance_from_json: ShutterAngle = ShutterAngle.from_json(json_from_instance)
-        self.assertEqual(s, instance_from_json)
-        expected_schema = {
-            "exclusiveMinimum": 0.0,
-            "maximum": 360.0,
-            "type": "number"
-        }
-        schema = ShutterAngle.make_json_schema()
         self.assertDictEqual(expected_schema, schema)
 
     def test_static_camera(self):
@@ -247,6 +212,13 @@ class CameraTestCases(unittest.TestCase):
         sc.firmware_version = valid_firmware_version
         self.assertEqual(valid_firmware_version, sc.firmware_version)
 
+        self.assertIsNone(sc.label)
+        with self.assertRaises(ValidationError):
+            sc.label = 1
+        valid_label = "B camera"
+        sc.label = valid_label
+        self.assertEqual(valid_label, sc.label)
+
         self.assertIsNone(sc.anamorphic_squeeze)
         with self.assertRaises(ValidationError):
             sc.anamorphic_squeeze = 1
@@ -254,18 +226,45 @@ class CameraTestCases(unittest.TestCase):
         sc.anamorphic_squeeze = valid_anamorphic_squeeze
         self.assertEqual(valid_anamorphic_squeeze, sc.anamorphic_squeeze)
 
-        # self.assertIsNone(sc.iso)
-        # with self.assertRaises(ValidationError):
-        #     sc.iso = 800.5
-        # valid_iso = 800
-        # sc.iso = valid_iso
-        # self.assertEqual(valid_iso, sc.iso)
+        self.assertIsNone(sc.iso)
+        with self.assertRaises(ValidationError):
+            sc.iso = 800.5
+        valid_iso = 800
+        sc.iso = valid_iso
+        self.assertEqual(valid_iso, sc.iso)
 
-
-        self.assertIsNone(sc.label)
         self.assertIsNone(sc.fdl_link)
+        with self.assertRaises(ValidationError):
+            sc.fdl_link = 1
+        invalid_fdl_link = "urn:XX:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"
+        valid_fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"
+        with self.assertRaises(ValidationError):
+            sc.fdl_link = invalid_fdl_link
+        sc.fdl_link = valid_fdl_link
+        self.assertEqual(valid_fdl_link, sc.fdl_link)
+
         self.assertIsNone(sc.shutter_angle)
-        print(json.dumps(sc.make_json_schema(), indent=2))
+        with self.assertRaises(ValidationError):
+            sc.shutter_angle = ONE_HUNDRED_EIGHTY_DEGREES + 0+1j
+        with self.assertRaises(ValidationError):
+            sc.shutter_angle = ZERO_DEGREES - sys.float_info.epsilon
+        sc.shutter_angle = ZERO_DEGREES
+        self.assertEqual(ZERO_DEGREES, sc.shutter_angle)
+        sc.shutter_angle = ONE_HUNDRED_EIGHTY_DEGREES
+        self.assertEqual(ONE_HUNDRED_EIGHTY_DEGREES, sc.shutter_angle)
+        sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES
+        self.assertEqual(THREE_HUNDRED_SIXTY_DEGREES, sc.shutter_angle)
+        sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES
+        with self.assertRaises(ValidationError):
+            # What Pierre warned us about: this fails validation, as it should:
+            sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES + 129 * sys.float_info.epsilon
+            # but this should fail, and does not:
+            # sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES + 128 * sys.float_info.epsilon
+            # and this, the extreme case, should likewise fail, but likewise does not:
+            # sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES + sys.float_info.epsilon
+
+        # print(json.dumps(sc.make_json_schema(), indent=2))
+
 
 if __name__ == '__main__':
     unittest.main()
