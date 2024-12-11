@@ -6,7 +6,9 @@
 
 """Types for modeling of tracker-related metadata"""
 
-from typing import Optional
+from typing import Annotated, Optional
+
+from pydantic import Field
 
 from camdkit.numeric_types import NonBlankUTF8String
 from camdkit.backwards import CompatibleBaseModel
@@ -20,7 +22,7 @@ class StaticTracker(CompatibleBaseModel):
 
 
 class Tracker(CompatibleBaseModel):
-    notes: Optional[tuple[NonBlankUTF8String]] = None
-    recording: Optional[tuple[bool]] = None
-    slate: Optional[tuple[NonBlankUTF8String]] = None
-    status: Optional[tuple[NonBlankUTF8String]] = None
+    notes: Optional[tuple[NonBlankUTF8String, ...]] = None
+    recording: Optional[tuple[Annotated[bool, Field(strict=True)], ...]] = None
+    slate: Optional[tuple[NonBlankUTF8String, ...]] = None
+    status: Optional[tuple[NonBlankUTF8String, ...]] = None
