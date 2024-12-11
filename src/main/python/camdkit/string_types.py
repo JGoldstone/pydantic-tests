@@ -8,8 +8,12 @@
 
 from typing import Annotated
 
-from pydantic import StringConstraints
+from pydantic import Field, StringConstraints
 
-__all__ = ['NonBlankUTF8String']
+__all__ = ['NonBlankUTF8String', 'UUIDURN']
 
 type NonBlankUTF8String = Annotated[str, StringConstraints(min_length=1, max_length=1023)]
+
+UUID_URN_PATTERN = r'^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+
+type UUIDURN = Annotated[str, Field(pattern=UUID_URN_PATTERN)]

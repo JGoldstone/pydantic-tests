@@ -14,7 +14,7 @@ from camdkit.backwards import CompatibleBaseModel
 from camdkit.numeric_types import NonNegativeInt, StrictlyPositiveRational
 from camdkit.lens_types import StaticLens, Lens
 from camdkit.camera_types import StaticCamera
-from camdkit.model_types import UUIDURN
+from camdkit.string_types import UUIDURN
 from camdkit.tracker_types import StaticTracker, Tracker
 from camdkit.timing_types import Timing
 from camdkit.transform_types import Transforms

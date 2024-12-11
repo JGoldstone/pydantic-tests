@@ -17,9 +17,8 @@ from fractions import Fraction
 from pydantic import ValidationError
 
 from camdkit.numeric_types import StrictlyPositiveRational
-from camdkit.model_types import UUIDURN
 from camdkit.camera_types import (PhysicalDimensions, SenselDimensions,
-                                  ShutterAngle, StaticCamera)
+                                  StaticCamera)
 
 ALEXA_265_WIDTH_MM: float = 54.12
 ALEXA_265_HEIGHT_MM = 25.58

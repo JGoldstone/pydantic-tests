@@ -2,7 +2,7 @@ import unittest
 
 from pydantic import ValidationError
 
-from camdkit.numeric_types import NonBlankUTF8String
+from camdkit.string_types import NonBlankUTF8String
 
 from camdkit.tracker_types import StaticTracker, Tracker
 

@@ -4,16 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Add TODO re: auto-promotion of str to NonBlankUTF8String (if passes validation)">
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Move NonBlankUTF8String into string_types.py and put tests into test_string_types.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/backwards.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/backwards.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/base_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/base_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/camera_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/camera_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/model_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/model_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/python/test_base_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_base_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/string_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/string_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/tracker_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/tracker_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/transform_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/transform_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_camera_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_camera_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/python/test_clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_clip.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/python/test_model_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_model_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_numeric_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_numeric_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_string_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_string_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_tracker_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_tracker_types.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +28,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Jupyter Notebook" />
         <option value="Python Unit Test" />
         <option value="Python Script" />
       </list>
@@ -45,6 +51,7 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/lib/python3.13/site-packages/pydantic/main.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/lib/python3.13/site-packages/pydantic/types.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -62,10 +69,19 @@
   "keyToString": {
     "Python tests.Python tests for test_base_types.FrameworkTestCases.test_foo.executor": "Run",
     "Python tests.Python tests for test_base_types.FrameworkTestCases.test_non_blank_utf8_string.executor": "Run",
+    "Python tests.Python tests for test_base_types.FrameworkTestCases.test_non_negative_float.executor": "Run",
+    "Python tests.Python tests for test_base_types.FrameworkTestCases.test_non_negative_int.executor": "Run",
     "Python tests.Python tests for test_base_types.FrameworkTestCases.test_rational_ranges.executor": "Run",
+    "Python tests.Python tests for test_base_types.FrameworkTestCases.test_strictly_positive_float.executor": "Run",
+    "Python tests.Python tests for test_base_types.FrameworkTestCases.test_strictly_positive_int.executor": "Run",
     "Python tests.Python tests for test_base_types.FrameworkTestCases.test_strictly_positive_rational_ranges.executor": "Run",
+    "Python tests.Python tests for test_camera_types.CameraTestCases.test_physical_dimensions.executor": "Run",
+    "Python tests.Python tests for test_camera_types.CameraTestCases.test_sensel_dimensions.executor": "Run",
+    "Python tests.Python tests for test_camera_types.CameraTestCases.test_shutter_angle.executor": "Run",
+    "Python tests.Python tests for test_camera_types.CameraTestCases.test_static_camera.executor": "Run",
+    "Python tests.Python tests for test_camera_types.CameraTypesTestCases.test_shutter_angle.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_active_sensor_physical_dimensions.executor": "Debug",
-    "Python tests.Python tests for test_clip.ClipTestCases.test_basic.executor": "Run",
+    "Python tests.Python tests for test_clip.ClipTestCases.test_basic.executor": "Debug",
     "Python tests.Python tests for test_clip.ClipTestCases.test_frame_rate_validation.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_old_style.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_sampleID_validation.executor": "Run",
@@ -75,6 +91,7 @@
     "Python tests.Python tests for test_framework.MyTestCase.test_non_blank_utf8_string.executor": "Run",
     "Python tests.Python tests for test_framework.MyTestCase.test_rational_ranges.executor": "Run",
     "Python tests.Python tests for test_framework.MyTestCase.test_strictly_positive_rational_ranges.executor": "Run",
+    "Python tests.Python tests for test_lens_types.LensTypesTestCases.test_distortion.executor": "Run",
     "Python tests.Python tests for test_model_types.ModelTestCases.test_Standalone_sample_id_no_args.executor": "Run",
     "Python tests.Python tests for test_model_types.ModelTestCases.test_ctor.executor": "Run",
     "Python tests.Python tests for test_model_types.ModelTestCases.test_open_coded_sample_id.executor": "Run",
@@ -96,10 +113,22 @@
     "Python tests.Python tests for test_model_types.ModelTestCases.test_synchronization_offsets_validation.executor": "Run",
     "Python tests.Python tests for test_model_types.ModelTestCases.test_synchronization_source_validation.executor": "Run",
     "Python tests.Python tests for test_model_types.ModelTestCases.test_to_json.executor": "Debug",
+    "Python tests.Python tests for test_model_types.ModelTestCases.test_uuid_urn.executor": "Run",
+    "Python tests.Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string.executor": "Run",
+    "Python tests.Python tests for test_tracker_types.TrackerTestCases.test_tracker_make.executor": "Run",
+    "Python tests.Python tests for test_tracker_types.TrackerTestCases.test_tracker_model_name.executor": "Run",
+    "Python tests.Python tests for test_tracker_types.TrackerTestCases.test_tracker_notes.executor": "Run",
+    "Python tests.Python tests for test_tracker_types.TrackerTestCases.test_tracker_recording.executor": "Run",
     "Python tests.Python tests in test_base_types.py.executor": "Run",
+    "Python tests.Python tests in test_camera_types.py.executor": "Run",
     "Python tests.Python tests in test_clip.py.executor": "Run",
     "Python tests.Python tests in test_framework.py.executor": "Run",
+    "Python tests.Python tests in test_lens_types.py.executor": "Run",
     "Python tests.Python tests in test_model_types.py.executor": "Run",
+    "Python tests.Python tests in test_numeric_types.py.executor": "Run",
+    "Python tests.Python tests in test_string_types.py.executor": "Run",
+    "Python tests.Python tests in test_tracker_types.py.executor": "Run",
+    "Python tests.Unittests in python.executor": "Run",
     "Python.main.executor": "Run",
     "Python.scratch.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -112,7 +141,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "run.code.analysis.last.selected.profile": "aDefault",
-    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.General",
+    "settings.editor.selected.configurable": "preferences.keymap",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -126,7 +155,7 @@
       <recent name="$PROJECT_DIR$/src/main/python/camdkit" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test_model_types.ModelTestCases.test_sample_id">
+  <component name="RunManager" selected="Python tests.Unittests in python">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -150,7 +179,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_model_types.ModelTestCases.test_sample_id" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -162,11 +191,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_model_types.ModelTestCases.test_sample_id&quot;" />
+      <option name="_new_target" value="&quot;test_string_types.StringsTestCases.test_non_blank_utf8_string&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_model_types.ModelTestCases.test_shutter_angle" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_tracker_types.TrackerTestCases.test_tracker_notes" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -178,11 +207,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_model_types.ModelTestCases.test_shutter_angle&quot;" />
+      <option name="_new_target" value="&quot;test_tracker_types.TrackerTestCases.test_tracker_notes&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_model_types.ModelTestCases.test_synchronization_offsets_validation" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_tracker_types.TrackerTestCases.test_tracker_recording" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -194,11 +223,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_model_types.ModelTestCases.test_synchronization_offsets_validation&quot;" />
+      <option name="_new_target" value="&quot;test_tracker_types.TrackerTestCases.test_tracker_recording&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests in test_base_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests in test_string_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -210,11 +239,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_base_types.py&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_string_types.py&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests in test_model_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests in test_tracker_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -226,17 +255,44 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_model_types.py&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_tracker_types.py&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="Unittests in python" type="tests" factoryName="Unittests" nameIsGenerated="true">
+      <module name="pydantic tests" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/bin/python" />
+      <option name="SDK_NAME" value="Poetry (pydantic-tests)" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_pattern" value="&quot;test_*.py&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python tests.Unittests in python" />
+      <item itemvalue="Python tests.Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string" />
+      <item itemvalue="Python tests.Python tests for test_tracker_types.TrackerTestCases.test_tracker_notes" />
+      <item itemvalue="Python tests.Python tests for test_tracker_types.TrackerTestCases.test_tracker_recording" />
+      <item itemvalue="Python tests.Python tests in test_string_types.py" />
+      <item itemvalue="Python tests.Python tests in test_tracker_types.py" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Python tests for test_model_types.ModelTestCases.test_sample_id" />
-        <item itemvalue="Python tests.Python tests for test_model_types.ModelTestCases.test_shutter_angle" />
-        <item itemvalue="Python tests.Python tests for test_model_types.ModelTestCases.test_synchronization_offsets_validation" />
-        <item itemvalue="Python tests.Python tests in test_model_types.py" />
-        <item itemvalue="Python tests.Python tests in test_base_types.py" />
+        <item itemvalue="Python tests.Python tests in test_string_types.py" />
+        <item itemvalue="Python tests.Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string" />
+        <item itemvalue="Python tests.Python tests in test_tracker_types.py" />
+        <item itemvalue="Python tests.Python tests for test_tracker_types.TrackerTestCases.test_tracker_recording" />
+        <item itemvalue="Python tests.Python tests for test_tracker_types.TrackerTestCases.test_tracker_notes" />
       </list>
     </recent_temporary>
   </component>
@@ -272,7 +328,7 @@
       <workItem from="1732055445104" duration="185000" />
       <workItem from="1732919525370" duration="1329000" />
       <workItem from="1733010179570" duration="1538000" />
-      <workItem from="1733259270686" duration="85091000" />
+      <workItem from="1733259270686" duration="176621000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -354,7 +410,87 @@
       <option name="project" value="LOCAL" />
       <updated>1728257841241</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Upgrade various components; changes in IDEA substrate files.">
+      <option name="closed" value="true" />
+      <created>1733616330878</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1733616330878</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Total overhaul of Pydantic use affecting (almost?) every file">
+      <option name="closed" value="true" />
+      <created>1733616386775</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1733616386775</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Split model classes and associated tests into multiple files; add tests.">
+      <option name="closed" value="true" />
+      <created>1733857228284</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1733857228284</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Remove unused files from early pydantic experiments.">
+      <option name="closed" value="true" />
+      <created>1733857280053</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1733857280053</updated>
+    </task>
+    <task id="LOCAL-00015" summary="turn on assignment validation in CompatibleBaseModel.">
+      <option name="closed" value="true" />
+      <created>1733860560749</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1733860560749</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Define fields with strict=True so that, e.g., one can't initialize a NonNegativeInt with 1.0 instead of 1.">
+      <option name="closed" value="true" />
+      <created>1733861166960</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1733861166960</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Use type aliases instead of CompatibleBaseModel instances for POD parameters">
+      <option name="closed" value="true" />
+      <created>1733873879651</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1733873879651</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Continued creation of test cases; shabang, emacs-style coding lines and BSD-3-clause licenses at the top of every Python file.">
+      <option name="closed" value="true" />
+      <created>1733944643921</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1733944643921</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Fully flesh out and test tracker types.">
+      <option name="closed" value="true" />
+      <created>1733948423748</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1733948423748</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Move NonBlankUTF8String into string_types.py and put tests into test_string_types.py">
+      <option name="closed" value="true" />
+      <created>1733949870807</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1733949870807</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -372,7 +508,17 @@
     <MESSAGE value="Very very basic definition of Clip" />
     <MESSAGE value="Cleanup to avoid some minor warnings; not quite PEP8 yet but close" />
     <MESSAGE value="Add TODO re: auto-promotion of str to NonBlankUTF8String (if passes validation)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add TODO re: auto-promotion of str to NonBlankUTF8String (if passes validation)" />
+    <MESSAGE value="Upgrade various components; changes in IDEA substrate files." />
+    <MESSAGE value="Total overhaul of Pydantic use affecting (almost?) every file" />
+    <MESSAGE value="Split model classes and associated tests into multiple files; add tests." />
+    <MESSAGE value="Remove unused files from early pydantic experiments." />
+    <MESSAGE value="turn on assignment validation in CompatibleBaseModel." />
+    <MESSAGE value="Define fields with strict=True so that, e.g., one can't initialize a NonNegativeInt with 1.0 instead of 1." />
+    <MESSAGE value="Use type aliases instead of CompatibleBaseModel instances for POD parameters" />
+    <MESSAGE value="Continued creation of test cases; shabang, emacs-style coding lines and BSD-3-clause licenses at the top of every Python file." />
+    <MESSAGE value="Fully flesh out and test tracker types." />
+    <MESSAGE value="Move NonBlankUTF8String into string_types.py and put tests into test_string_types.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Move NonBlankUTF8String into string_types.py and put tests into test_string_types.py" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -383,16 +529,17 @@
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/test/python/test_model_types.py</url>
-          <line>130</line>
-          <option name="timeStamp" value="25" />
+          <url>file://$PROJECT_DIR$/test/python/test_clip.py</url>
+          <line>35</line>
+          <option name="timeStamp" value="26" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1733952951783" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/pydantic_tests$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1728857315751" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1733614766602" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1733949716752" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
   </component>
 </project>

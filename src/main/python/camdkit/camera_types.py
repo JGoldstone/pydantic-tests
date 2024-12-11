@@ -12,11 +12,9 @@ from typing import Annotated, Optional
 
 from pydantic import Field
 
-from camdkit.backwards import CompatibleBaseModel, PODModel
-from camdkit.numeric_types import (NonBlankUTF8String,
-                                   StrictlyPositiveInt,
-                                   StrictlyPositiveRational)
-from camdkit.model_types import UUIDURN
+from camdkit.backwards import CompatibleBaseModel
+from camdkit.numeric_types import StrictlyPositiveInt, StrictlyPositiveRational
+from camdkit.string_types import NonBlankUTF8String, UUIDURN
 
 
 # Tempting as it might seem to make PhysicalDimensions and SenselDimensions subclasses

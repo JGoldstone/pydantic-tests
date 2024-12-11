@@ -11,9 +11,9 @@ from typing import Optional, Annotated, Self
 from pydantic import Field, model_validator
 
 from camdkit.backwards import CompatibleBaseModel
-from camdkit.numeric_types import (NonBlankUTF8String,
-                                   NonNegativeFloat, StrictlyPositiveFloat,
+from camdkit.numeric_types import (NonNegativeFloat, StrictlyPositiveFloat,
                                    NonNegativeInt)
+from camdkit.string_types import NonBlankUTF8String
 
 
 class StaticLens(CompatibleBaseModel):

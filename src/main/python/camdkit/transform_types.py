@@ -11,7 +11,7 @@ from typing import Optional
 from pydantic import Field
 
 from camdkit.backwards import CompatibleBaseModel
-from camdkit.model_types import UUIDURN
+from camdkit.string_types import UUIDURN
 
 
 class Vector3(CompatibleBaseModel):

@@ -10,7 +10,7 @@ from typing import Annotated, Optional
 
 from pydantic import Field
 
-from camdkit.numeric_types import NonBlankUTF8String
+from camdkit.string_types import NonBlankUTF8String
 from camdkit.backwards import CompatibleBaseModel
 
 

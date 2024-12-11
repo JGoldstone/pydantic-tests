@@ -16,8 +16,7 @@ from camdkit.backwards import CompatibleBaseModel
 from camdkit.numeric_types import (MIN_INT_32, MAX_UINT_32, MAX_INT_32,
                                    NonNegativeInt, StrictlyPositiveInt,
                                    NonNegativeFloat, StrictlyPositiveFloat,
-                                   Rational, StrictlyPositiveRational,
-                                   NonBlankUTF8String)
+                                   Rational, StrictlyPositiveRational)
 
 
 class NumericsTestCases(unittest.TestCase):
