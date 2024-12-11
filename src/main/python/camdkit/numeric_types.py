@@ -16,8 +16,7 @@ __all__ = ['MIN_UINT_32', 'MAX_UINT_32',
            'MIN_INT_32', 'MAX_INT_32',
            'NonNegativeInt', 'StrictlyPositiveInt',
            'NonNegativeFloat', 'StrictlyPositiveFloat',
-           'Rational', 'StrictlyPositiveRational',
-           'NonBlankUTF8String']
+           'Rational', 'StrictlyPositiveRational']
 
 MIN_UINT_32: Final[int] = 0
 MAX_UINT_32: Final[int] = 2**32-1
@@ -50,5 +49,3 @@ class StrictlyPositiveRational(CompatibleBaseModel):
 
     def __init__(self, n: int, d: int, ) -> None:
         super(StrictlyPositiveRational, self).__init__(numerator=n, denominator=d)
-
-type NonBlankUTF8String = Annotated[str, StringConstraints(min_length=1, max_length=1023)]

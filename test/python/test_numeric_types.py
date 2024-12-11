@@ -20,7 +20,7 @@ from camdkit.numeric_types import (MIN_INT_32, MAX_UINT_32, MAX_INT_32,
                                    NonBlankUTF8String)
 
 
-class FrameworkTestCases(unittest.TestCase):
+class NumericsTestCases(unittest.TestCase):
 
     def test_non_negative_int(self):
         class NonNegativeIntTestbed(CompatibleBaseModel):
@@ -128,18 +128,6 @@ class FrameworkTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             StrictlyPositiveRational(1, MAX_UINT_32 +1)
 
-    # TODO: write tests cases for NonBlankUTF8String
-    # def test_non_blank_utf8_string(self):
-    #     # with self.assertRaises(ValidationError):
-    #     #     a: NonBlankUTF8String = ''
-    #     with self.assertRaises(ValidationError):
-    #         b: NonBlankUTF8String = 0
-    #     with self.assertRaises(ValidationError):
-    #         c: NonBlankUTF8String = complex(1, 1)
-    #     d: NonBlankUTF8String = 'hello world'
-    #     e: NonBlankUTF8String = 'X' * 1023
-    #     with self.assertRaises(ValidationError):
-    #         f: NonBlankUTF8String = 'X' * 1024
 
 if __name__ == '__main__':
     unittest.main()
