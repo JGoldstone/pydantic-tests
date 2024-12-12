@@ -24,9 +24,9 @@ class Vector3(CompatibleBaseModel):
 
 
 class Rotator3(CompatibleBaseModel):
-    x: float = Field(..., ge=0.0, le=360.0)  # pan
-    y: float = Field(..., ge=-90.0, le=90.0)  # tilt
-    z: float = Field(..., ge=0.0, le=360.0)
+    x: float  # pan
+    y: float  # tilt
+    z: float  # roll
 
     def __init__(self, x: float, y: float, z: float):
         super(Rotator3, self).__init__(x=x, y=y, z=z)

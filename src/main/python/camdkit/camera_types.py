@@ -41,14 +41,9 @@ class SenselDimensions(CompatibleBaseModel):
 
 type ShutterAngle = Annotated[float, Field(ge=0.0, le=360.0, strict=True)]
 
-# class ShutterAngle(PODModel):
-#     angle: Annotated[float, Field(gt=0.0, le=360.0)]
-#
-#     def __init__(self, angle: float) -> None:
-#         super(ShutterAngle, self).__init__(angle=angle)
 
 class StaticCamera(CompatibleBaseModel):
-    capture_frame_rate: Optional[StrictlyPositiveRational] = None
+    capture_frame_rate: Optional[Annotated[StrictlyPositiveRational, Field(serialization_alias="captureFrameRate")]] = None
     active_sensor_physical_dimensions: Optional[PhysicalDimensions] = None
     active_sensor_resolution: Optional[SenselDimensions] = None
     make: Optional[NonBlankUTF8String] = None

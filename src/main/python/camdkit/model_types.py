@@ -13,7 +13,6 @@ import math
 from pydantic import Field, BaseModel
 
 from camdkit.numeric_types import StrictlyPositiveRational
-from camdkit.backwards import CompatibleBaseModel, PODModel
 
 
 class Sampling(Enum):

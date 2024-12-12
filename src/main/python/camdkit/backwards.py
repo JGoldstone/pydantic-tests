@@ -31,13 +31,12 @@ class CompatibleBaseModel(BaseModel):
         except ValidationError:
             return False
 
-    @staticmethod
-    def to_json(value: Any) -> json:
-        return value.model_dump(by_alias=True,
-                                exclude={"canonical_name",
-                                         "sampling",
-                                         "units",
-                                         "section"})
+    def to_json(self, *_) -> json:
+        return self.model_dump(by_alias=True,
+                               exclude={"canonical_name",
+                                        "sampling",
+                                        "units",
+                                        "section"})
 
     @classmethod
     def from_json(cls, json_data: json) -> Any:
@@ -59,8 +58,3 @@ def hoist_pod_and_scrub_title(json) -> None:
     json.clear()
     for k, v in scrub_title(pod_json).items():
         json[k] = v
-
-
-class PODModel(CompatibleBaseModel):
-    model_config = ConfigDict(json_schema_extra=hoist_pod_and_scrub_title)
-
