@@ -29,9 +29,9 @@ class StaticLens(CompatibleBaseModel):
 
 
 class Distortion(CompatibleBaseModel):
-    radial: tuple[Annotated[float, Field(strict=True)], ...]
-    tangential: Optional[tuple[Annotated[float, Field(strict=True)], ...]] = None
-    model: Optional[NonBlankUTF8String] = None
+    radial: Annotated[tuple[float, ...], Field(strict=True)]
+    tangential: Annotated[tuple[float, ...], Field(strict=True)]
+    model: NonBlankUTF8String = None
 
     @model_validator(mode="after")
     def check_tuples_not_empty(self) -> Self:
@@ -68,9 +68,9 @@ class ExposureFalloff(CompatibleBaseModel):
 
 
 class Lens(CompatibleBaseModel):
-    custom: Optional[tuple[tuple]] = None  # WTF?
-    distortion: Optional[tuple[Distortion]] = None
-    distortion_overscan: Optional[tuple[tuple[float]]] = None  # How many, exactly?
+    custom: Optional[tuple[tuple, ...]] = None  # WTF?
+    distortion: Optional[tuple[Distortion, ...]] = None
+    distortion_overscan: Annotated[tuple[float, ...] | None, Field(alias="distortionOverscan")] = None
     undistortion_overscan: Optional[tuple[tuple[float]]] = None  # Again, how many?
     distortion_offset: Optional[tuple[tuple[PlanarOffset]]] = None
     encoders: Optional[tuple[tuple[FizEncoder[NonNegativeFloat]]]] = None

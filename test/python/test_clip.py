@@ -32,6 +32,7 @@ class ClipTestCases(unittest.TestCase):
     #         FrameRate(-24000, 1001)
 
     def test_statics(self):
+        # reference static camera values
         capture_frame_rate = Fraction(24000, 1001)
         canonical_capture_frame_rate = StrictlyPositiveRational(24000, 1001)
         active_sensor_physical_dimensions = PhysicalDimensions(width=36.0, height=24.0)
@@ -46,6 +47,8 @@ class ClipTestCases(unittest.TestCase):
         iso = 13
         fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
         shutter_angle = 180
+
+        # reference static lens values
         lens_distortion_overscan_max = 1.2
         lens_undistortion_overscan_max = 1.2
         lens_make = "ABC"
@@ -53,9 +56,9 @@ class ClipTestCases(unittest.TestCase):
         lens_firmware = "1-dev.1"
         lens_serial_number = "123456789"
         lens_nominal_focal_length = 24
+        lens_distortion_overscan = (1.0, 1.0)
 
         clip = Clip()
-        # camera static stuff first
         self.assertIsNone(clip.active_sensor_physical_dimensions)
         clip.active_sensor_physical_dimensions = active_sensor_physical_dimensions
         self.assertEqual(active_sensor_physical_dimensions, clip.active_sensor_physical_dimensions)
@@ -92,6 +95,7 @@ class ClipTestCases(unittest.TestCase):
         self.assertIsNone(clip.shutter_angle)
         clip.shutter_angle = shutter_angle
         self.assertEqual(shutter_angle, clip.shutter_angle)
+
         # lens static stuff next
         self.assertIsNone(clip.lens_distortion_overscan_max)
         clip.lens_distortion_overscan_max = lens_distortion_overscan_max
@@ -114,6 +118,11 @@ class ClipTestCases(unittest.TestCase):
         self.assertIsNone(clip.lens_nominal_focal_length)
         clip.lens_nominal_focal_length = lens_nominal_focal_length
 
+        # lens dynamic stuff
+        self.assertIsNone(clip.lens_distortion_overscan)
+        clip.lens_distortion_overscan = lens_distortion_overscan
+        self.assertEqual(lens_distortion_overscan, clip.lens_distortion_overscan)
+
 
 
         d = clip.to_json()
@@ -134,8 +143,27 @@ class ClipTestCases(unittest.TestCase):
         self.assertEqual(d["static"]["lens"]["firmwareVersion"], "1-dev.1")
         self.assertEqual(d["static"]["lens"]["nominalFocalLength"], 24)
 
+        self.assertTupleEqual(d["lens"]["distortionOverscan"], (1.0, 1.0))
+
         rt: Clip = Clip.from_json(d)
         self.assertEqual(clip, rt)
+
+    def test_lens_regular_parameters(self):
+        # reference values
+        lens_distortion_overscan = (1.0, 1.0)
+
+        clip = Clip()
+        self.assertIsNone(clip.lens_distortion_overscan)
+        clip.lens_distortion_overscan = lens_distortion_overscan
+        self.assertEqual(lens_distortion_overscan, clip.lens_distortion_overscan)
+
+        clip_as_json = clip.to_json()
+        self.assertTupleEqual(clip_as_json["lens"]["distortionOverscan"], (1.0, 1.0))
+
+        clip_from_json: Clip = Clip.from_json(clip_as_json)
+        self.assertEqual(clip, clip_from_json)
+
+
 
     #     self.assertEqual(camera_make, clip.camera_make)  # add assertion here
     #     print(clip.model_dump_json(indent=2))

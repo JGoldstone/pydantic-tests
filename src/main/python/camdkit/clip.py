@@ -290,3 +290,13 @@ class Clip(CompatibleBaseModel):
                                     ('lens', StaticLens)),
                                    'nominal_focal_length',
                                    value)
+
+    @property
+    def lens_distortion_overscan(self) -> tuple[float, ...]:
+        return self.value_from_hierarchy(('lens', 'distortion_overscan'))
+
+    @lens_distortion_overscan.setter
+    def lens_distortion_overscan(self, value: tuple[float, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'distortion_overscan',
+                                   value)
