@@ -11,8 +11,12 @@ from typing import Optional, Any
 from pydantic import Field
 
 from camdkit.backwards import CompatibleBaseModel
-from camdkit.numeric_types import NonNegativeInt, UnityOrGreaterFloat, StrictlyPositiveRational
-from camdkit.lens_types import StaticLens, Lens
+from camdkit.numeric_types import (NonNegativeInt,
+                                   NonNegativeFloat, UnityOrGreaterFloat,
+                                   StrictlyPositiveRational)
+from camdkit.lens_types import (StaticLens, Lens,
+                                Distortion, DistortionOffset, ProjectionOffset,
+                                FizEncoders, RawFizEncoders)
 from camdkit.camera_types import StaticCamera, PhysicalDimensions, SenselDimensions
 from camdkit.string_types import NonBlankUTF8String, UUIDURN
 from camdkit.tracker_types import StaticTracker, Tracker
@@ -292,6 +296,26 @@ class Clip(CompatibleBaseModel):
                                    value)
 
     @property
+    def lens_custom(self) -> tuple[tuple[Any, ...], ...] | None:
+        return self.value_from_hierarchy(('lens', 'custom'))
+
+    @lens_custom.setter
+    def lens_custom(self, value: tuple[tuple[Any, ...], ...] | None) -> None:
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'custom',
+                                   value)
+
+    @property
+    def lens_distortion(self) -> tuple[Distortion, ...] | None:
+        return self.value_from_hierarchy(('lens', 'distortion'))
+
+    @lens_distortion.setter
+    def lens_distortion(self, value: tuple[Distortion, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'distortion',
+                                   value)
+
+    @property
     def lens_distortion_overscan(self) -> tuple[float, ...]:
         return self.value_from_hierarchy(('lens', 'distortion_overscan'))
 
@@ -300,3 +324,124 @@ class Clip(CompatibleBaseModel):
         self.set_through_hierarchy((('lens', Lens),),
                                    'distortion_overscan',
                                    value)
+
+    @property
+    def lens_undistortion_overscan(self) -> tuple[float, ...]:
+        return self.value_from_hierarchy(('lens', 'undistortion_overscan'))
+
+    @lens_undistortion_overscan.setter
+    def lens_undistortion_overscan(self, value: tuple[float, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'undistortion_overscan',
+                                   value)
+
+    @property
+    def lens_distortion_offset(self) -> tuple[DistortionOffset, ...] | None:
+        return self.value_from_hierarchy(('lens', 'distortion_offset'))
+
+    @lens_distortion_offset.setter
+    def lens_distortion_offset(self, value: tuple[DistortionOffset, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'distortion_offset',
+                                   value)
+
+    @property
+    def lens_encoders(self) -> tuple[FizEncoders, ...] | None:
+        return self.value_from_hierarchy(('lens', 'encoders'))
+
+    @lens_encoders.setter
+    def lens_encoders(self, value: tuple[FizEncoders, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'encoders',
+                                   value)
+
+    @property
+    def lens_entrance_pupil_offset(self) -> tuple[float, ...] | None:
+        return self.value_from_hierarchy(('lens', 'entrance_pupil_offset'))
+
+    @lens_entrance_pupil_offset.setter
+    def lens_entrance_pupil_offset(self, value: tuple[float, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'entrance_pupil_offset',
+                                   value)
+
+    @property
+    def lens_exposure_falloff(self) -> tuple[float, ...] | None:
+        return self.value_from_hierarchy(('lens', 'exposure_falloff'))
+
+    @lens_exposure_falloff.setter
+    def lens_exposure_falloff(self, value: tuple[float, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'exposure_falloff',
+                                   value)
+
+    @property
+    def lens_f_number(self) -> tuple[float, ...] | None:
+        return self.value_from_hierarchy(('lens', 'f_number'))
+
+    @lens_f_number.setter
+    def lens_f_number(self, value: tuple[float, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'f_number',
+                                   value)
+
+    @property
+    def lens_focal_length(self) -> tuple[float, ...] | None:
+        return self.value_from_hierarchy(('lens', 'focal_length'))
+
+    @lens_focal_length.setter
+    def lens_focal_length(self, value: tuple[float, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'focal_length',
+                                   value)
+
+    @property
+    def lens_focus_distance(self) -> tuple[float, ...] | None:
+        return self.value_from_hierarchy(('lens', 'focus_distance'))
+
+    @lens_focus_distance.setter
+    def lens_focus_distance(self, value: tuple[float, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'focus_distance',
+                                   value)
+
+    @property
+    def lens_projection_offset(self) -> tuple[ProjectionOffset, ...] | None:
+        return self.value_from_hierarchy(('lens', 'projection_offset'))
+
+    @lens_projection_offset.setter
+    def lens_projection_offset(self, value: tuple[ProjectionOffset, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'projection_offset',
+                                   value)
+
+    @property
+    def lens_raw_encoders(self) -> tuple[RawFizEncoders, ...] | None:
+        return self.value_from_hierarchy(('lens', 'raw_encoders'))
+
+    @lens_raw_encoders.setter
+    def lens_raw_encoders(self, value: tuple[RawFizEncoders, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'raw_encoders',
+                                   value)
+
+    @property
+    def lens_t_number(self) -> tuple[float, ...] | None:
+        return self.value_from_hierarchy(('lens', 't_number'))
+
+    @lens_t_number.setter
+    def lens_t_number(self, value: tuple[float, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   't_number',
+                                   value)
+
+    @property
+    def lens_undistortion(self) -> tuple[Distortion, ...] | None:
+        return self.value_from_hierarchy(('lens', 'undistortion'))
+
+    @lens_undistortion.setter
+    def lens_undistortion(self, value: tuple[Distortion, ...]):
+        self.set_through_hierarchy((('lens', Lens),),
+                                   'undistortion',
+                                   value)
+

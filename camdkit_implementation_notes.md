@@ -87,3 +87,7 @@ Go over all the attributes of the original clip
       note in the original clip that the parameter descriptor was changed to be static
     else
       set the new clip's descriptor for that attribute to be descriptor
+
+### Suppressed warnings
+# See this for a discussion of why #noexception PyNestedDecorators is used above field decorators
+https://youtrack.jetbrains.com/issue/PY-34368/False-warning-This-decorator-will-not-receive-a-callable-it-may-expect-when-classmethod-is-not-the-last-applied

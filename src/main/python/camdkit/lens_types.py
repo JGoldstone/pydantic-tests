@@ -6,7 +6,7 @@
 
 """Types for lens modeling"""
 
-from typing import Optional, Annotated, Self
+from typing import Any, Annotated, Self
 
 from pydantic import Field, model_validator
 
@@ -30,8 +30,8 @@ class StaticLens(CompatibleBaseModel):
 
 class Distortion(CompatibleBaseModel):
     radial: Annotated[tuple[float, ...], Field(strict=True)]
-    tangential: Annotated[tuple[float, ...], Field(strict=True)]
-    model: NonBlankUTF8String = None
+    tangential: Annotated[tuple[float, ...] | None, Field(strict=True)] = None
+    model: NonBlankUTF8String | None = None
 
     @model_validator(mode="after")
     def check_tuples_not_empty(self) -> Self:
@@ -42,8 +42,8 @@ class Distortion(CompatibleBaseModel):
         return self
 
     def __init__(self, radial: tuple[float, ...],  # positional __init__() for compatibility
-                 tangential: Optional[tuple[float, ...]] = None,
-                 model: Optional[str] = None):
+                 tangential: tuple[float, ...] | None = None,
+                 model: str | None = None):
         super(Distortion, self).__init__(radial=radial, tangential=tangential, model=model)
 
 
@@ -54,32 +54,59 @@ class PlanarOffset(CompatibleBaseModel):
     def __init__(self, x: float, y: float):
         super(PlanarOffset, self).__init__(x=x, y=y)
 
+class DistortionOffset(PlanarOffset):
 
-class FizEncoder[T](CompatibleBaseModel):
-    focus: T
-    iris: T
-    zoom: T
+    def __init__(self, x: float, y: float):
+        super(DistortionOffset, self).__init__(x=x, y=y)
+
+class ProjectionOffset(PlanarOffset):
+
+    def __init__(self, x: float, y: float):
+        super(ProjectionOffset, self).__init__(x=x, y=y)
+
+
+class FizEncoders(CompatibleBaseModel):
+    focus: NonNegativeFloat | None = None
+    iris: NonNegativeFloat | None = None
+    zoom: NonNegativeFloat | None = None
+
+    def __init__(self, focus: float, iris: float, zoom: float):
+        super(FizEncoders, self).__init__(focus=focus, iris=iris, zoom=zoom)
+
+
+class RawFizEncoders(CompatibleBaseModel):
+    focus: NonNegativeInt | None = None
+    iris: NonNegativeInt | None = None
+    zoom: NonNegativeInt | None = None
+
+    def __init__(self, focus: int, iris: int, zoom: int):
+        super(RawFizEncoders, self).__init__(focus=focus, iris=iris, zoom=zoom)
 
 
 class ExposureFalloff(CompatibleBaseModel):
     a1: float
-    a2: Optional[float] = None
-    a3: Optional[float] = None
+    a2: float | None = None
+    a3: float | None = None
+
+    def __init__(self, a1: float, a2: float | None = None, a3: float | None = None):
+        super(ExposureFalloff, self).__init__(a1=a1, a2=a2, a3=a3)
 
 
 class Lens(CompatibleBaseModel):
-    custom: Optional[tuple[tuple, ...]] = None  # WTF?
-    distortion: Optional[tuple[Distortion, ...]] = None
-    distortion_overscan: Annotated[tuple[float, ...] | None, Field(alias="distortionOverscan")] = None
-    undistortion_overscan: Optional[tuple[tuple[float]]] = None  # Again, how many?
-    distortion_offset: Optional[tuple[tuple[PlanarOffset]]] = None
-    encoders: Optional[tuple[tuple[FizEncoder[NonNegativeFloat]]]] = None
-    entrance_pupil_offset: Optional[tuple[float]] = None
-    exposure_falloff: Optional[tuple[ExposureFalloff]] = None
-    f_number: Optional[tuple[StrictlyPositiveFloat]] = None
-    focal_length: Optional[tuple[StrictlyPositiveFloat]] = None
-    focus_distance: Optional[tuple[StrictlyPositiveFloat]] = None
-    projection_offset: Optional[tuple[PlanarOffset]] = None
-    raw_encoders: Optional[tuple[FizEncoder[NonNegativeInt]]] = None
-    t_number: Optional[tuple[StrictlyPositiveFloat]] = None
-    undistortion: Optional[tuple[Distortion]] = None
+    # TODO: watch GitHub issue #127 to see if we can get rid of the 'custom' field
+    custom: tuple[tuple[Any, ...], ...] | None = None  # WTF?
+    distortion: tuple[Distortion, ...] | None = None
+    distortion_overscan: Annotated[tuple[UnityOrGreaterFloat, ...] | None, Field(alias="distortionOverscan")] = None
+    undistortion_overscan: Annotated[tuple[UnityOrGreaterFloat, ...] | None, Field(alias="undistortionOverscan")] = None
+    distortion_offset: Annotated[tuple[DistortionOffset, ...] | None, Field(alias="distortionOffset")] = None
+    encoders: tuple[FizEncoders, ...] | None = None
+    entrance_pupil_offset: Annotated[tuple[float, ...] | None, Field(alias="entrancePupilOffset")] = None
+    exposure_falloff: Annotated[tuple[ExposureFalloff, ...] | None, Field(alias="exposureFalloff")] = None
+    f_number: Annotated[tuple[StrictlyPositiveFloat, ...] | None, Field(alias="fStop")] = None
+    # TODO: file issue to get this renamed to lens_pinhole_focal_length in the clip and pinholeFocalLength in the JSON
+    focal_length: Annotated[tuple[StrictlyPositiveFloat, ...] | None, Field(alias="focalLength")] = None
+    focus_distance: Annotated[tuple[StrictlyPositiveFloat, ...] | None, Field(alias="focusDistance")] = None
+    projection_offset: Annotated[tuple[ProjectionOffset, ...], Field(alias="projectionOffset")] = None
+    raw_encoders: Annotated[tuple[RawFizEncoders, ...] | None, Field(alias="rawEncoders")] = None
+    t_number: Annotated[tuple[StrictlyPositiveFloat, ...] | None, Field(alias="tStop")] = None
+    undistortion: tuple[Distortion, ...] | None = None

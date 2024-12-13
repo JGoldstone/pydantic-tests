@@ -11,7 +11,12 @@ import unittest
 from fractions import Fraction
 
 from pydantic import ValidationError
-from camdkit.numeric_types import Rational, StrictlyPositiveRational
+from pydantic.v1 import NonNegativeFloat
+
+from camdkit.lens_types import (ExposureFalloff,
+                                Distortion, DistortionOffset, ProjectionOffset,
+                                FizEncoders, RawFizEncoders)
+from camdkit.numeric_types import Rational, StrictlyPositiveRational, NonNegativeFloat, NonNegativeInt
 from camdkit.string_types import NonBlankUTF8String
 from camdkit.model_types import (FrameRate,
                                  SynchronizationSource, SynchronizationOffsets,
@@ -148,17 +153,101 @@ class ClipTestCases(unittest.TestCase):
         rt: Clip = Clip.from_json(d)
         self.assertEqual(clip, rt)
 
+
     def test_lens_regular_parameters(self):
         # reference values
+        lens_t_number = (2000, 4000)
+        lens_f_number = (1200, 2800)
+        lens_focal_length = (2.0, 4.0)
+        lens_focus_distance = (2, 4)
+        lens_entrance_pupil_offset = (1.23, 2.34)
+        lens_encoders = (FizEncoders(focus=0.1, iris=0.2, zoom=0.3),
+                         FizEncoders(focus=0.1, iris=0.2, zoom=0.3))
+        lens_raw_encoders = (RawFizEncoders(focus=1, iris=2, zoom=3),
+                             RawFizEncoders(focus=1, iris=2, zoom=3))
         lens_distortion_overscan = (1.0, 1.0)
+        lens_undistortion_overscan = (1.0, 1.0)
+        lens_exposure_falloff = (ExposureFalloff(1.0, 2.0, 3.0),
+                                 ExposureFalloff(1.0, 2.0, 3.0))
+        # These (copied from the current main camdkit) fail validation because the typing is for tuples, not lists
+        # lens_distortion = (Distortion([1.0, 2.0, 3.0], [1.0, 2.0], "Brown-Conrady D-U"),
+        #                    Distortion([1.0, 2.0, 3.0], [1.0, 2.0], "Brown-Conrady D-U"))
+        # lens_undistortion = (Distortion([1.0, 2.0, 3.0], [1.0, 2.0], "Brown-Conrady U-D"),
+        #                      Distortion([1.0, 2.0, 3.0], [1.0, 2.0], "Brown-Conrady U-D"))
+        lens_distortion = (Distortion((1.0, 2.0, 3.0), (1.0, 2.0), "Brown-Conrady D-U"),
+                           Distortion((1.0, 2.0, 3.0), (1.0, 2.0), "Brown-Conrady D-U"))
+        lens_undistortion = (Distortion((1.0, 2.0, 3.0), (1.0, 2.0), "Brown-Conrady U-D"),
+                             Distortion((1.0, 2.0, 3.0), (1.0, 2.0), "Brown-Conrady U-D"))
+        lens_distortion_offset = (DistortionOffset(1.0, 2.0), DistortionOffset(1.0, 2.0))
+        lens_projection_offset = (ProjectionOffset(0.1, 0.2), ProjectionOffset(0.1, 0.2))
 
         clip = Clip()
+        self.assertIsNone(clip.lens_t_number)
+        clip.lens_t_number = lens_t_number
+        self.assertEqual(lens_t_number, clip.lens_t_number)
+        self.assertIsNone(clip.lens_f_number)
+        clip.lens_f_number = lens_f_number
+        self.assertEqual(lens_f_number, clip.lens_f_number)
+        self.assertIsNone(clip.lens_focal_length)
+        clip.lens_focal_length = lens_focal_length
+        self.assertEqual(lens_focal_length, clip.lens_focal_length)
+        self.assertIsNone(clip.lens_focus_distance)
+        clip.lens_focus_distance = lens_focus_distance
+        self.assertEqual(lens_focus_distance, clip.lens_focus_distance)
+        self.assertIsNone(clip.lens_entrance_pupil_offset)
+        clip.lens_entrance_pupil_offset = lens_entrance_pupil_offset
+        self.assertEqual(lens_entrance_pupil_offset, clip.lens_entrance_pupil_offset)
+        self.assertIsNone(clip.lens_encoders)
+        clip.lens_encoders = lens_encoders
+        self.assertEqual(lens_encoders, clip.lens_encoders)
+        self.assertIsNone(clip.lens_raw_encoders)
+        clip.lens_raw_encoders = lens_raw_encoders
+        self.assertEqual(lens_raw_encoders, clip.lens_raw_encoders)
         self.assertIsNone(clip.lens_distortion_overscan)
         clip.lens_distortion_overscan = lens_distortion_overscan
         self.assertEqual(lens_distortion_overscan, clip.lens_distortion_overscan)
-
+        self.assertIsNone(clip.lens_undistortion_overscan)
+        clip.lens_undistortion_overscan = lens_undistortion_overscan
+        self.assertEqual(lens_undistortion_overscan, clip.lens_undistortion_overscan)
+        self.assertIsNone(clip.lens_exposure_falloff)
+        clip.lens_exposure_falloff = lens_exposure_falloff
+        self.assertEqual(lens_exposure_falloff, clip.lens_exposure_falloff)
+        self.assertIsNone(clip.lens_distortion)
+        clip.lens_distortion = lens_distortion
+        self.assertEqual(lens_distortion, clip.lens_distortion)
+        self.assertIsNone(clip.lens_undistortion)
+        clip.lens_undistortion = lens_undistortion
+        self.assertEqual(lens_undistortion, clip.lens_undistortion)
+        self.assertIsNone(clip.lens_distortion_offset)
+        clip.lens_distortion_offset = lens_distortion_offset
+        self.assertEqual(lens_distortion_offset, clip.lens_distortion_offset)
+        self.assertIsNone(clip.lens_projection_offset)
+        clip.lens_projection_offset = lens_projection_offset
+        self.assertEqual(lens_projection_offset, clip.lens_projection_offset)
+        
         clip_as_json = clip.to_json()
-        self.assertTupleEqual(clip_as_json["lens"]["distortionOverscan"], (1.0, 1.0))
+        # self.assertTupleEqual(clip_as_json["lens"]["custom"], lens_custom)
+        self.assertTupleEqual(clip_as_json["lens"]["tStop"], lens_t_number)
+        self.assertTupleEqual(clip_as_json["lens"]["fStop"], lens_f_number)
+        self.assertTupleEqual(clip_as_json["lens"]["focalLength"], lens_focal_length)
+        self.assertTupleEqual(clip_as_json["lens"]["focusDistance"], lens_focus_distance)
+        self.assertTupleEqual(clip_as_json["lens"]["entrancePupilOffset"], lens_entrance_pupil_offset)
+        self.assertTupleEqual(clip_as_json["lens"]["encoders"], ({ "focus":0.1, "iris":0.2, "zoom":0.3 },
+                                                                 { "focus":0.1, "iris":0.2, "zoom":0.3 }))
+        self.assertTupleEqual(clip_as_json["lens"]["rawEncoders"], ({ "focus":1, "iris":2, "zoom":3 },
+                                                                    { "focus":1, "iris":2, "zoom":3 }))
+        self.assertTupleEqual(clip_as_json["lens"]["distortionOverscan"], lens_distortion_overscan)
+        self.assertTupleEqual(clip_as_json["lens"]["undistortionOverscan"], lens_undistortion_overscan)
+        self.assertTupleEqual(clip_as_json["lens"]["exposureFalloff"], ({"a1": 1.0, "a2": 2.0, "a3": 3.0},
+                                                             {"a1": 1.0, "a2": 2.0, "a3": 3.0}))
+        self.assertTupleEqual(clip_as_json["lens"]["distortion"],
+                              ({"radial": (1.0, 2.0, 3.0), "tangential": (1.0, 2.0), "model": "Brown-Conrady D-U"},
+                               {"radial": (1.0, 2.0, 3.0), "tangential": (1.0, 2.0), "model": "Brown-Conrady D-U"}))
+        self.assertTupleEqual(clip_as_json["lens"]["undistortion"],
+                              ({"radial": (1.0, 2.0, 3.0), "tangential": (1.0, 2.0), "model": "Brown-Conrady U-D"},
+                               {"radial": (1.0, 2.0, 3.0), "tangential": (1.0, 2.0), "model": "Brown-Conrady U-D"}))
+        self.assertTupleEqual(clip_as_json["lens"]["distortionOffset"], ({"x": 1.0, "y": 2.0}, {"x": 1.0, "y": 2.0}))
+        self.assertTupleEqual(clip_as_json["lens"]["projectionOffset"], ({"x": 0.1, "y": 0.2}, {"x": 0.1, "y": 0.2}))
 
         clip_from_json: Clip = Clip.from_json(clip_as_json)
         self.assertEqual(clip, clip_from_json)
