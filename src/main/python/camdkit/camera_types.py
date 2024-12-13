@@ -7,14 +7,17 @@
 """Types for camera modeling"""
 
 import math
+import numbers
+from fractions import Fraction
 
 from typing import Annotated, Optional
 
-from pydantic import Field
+from pydantic import Field, field_validator, StringConstraints
 
 from camdkit.backwards import CompatibleBaseModel
-from camdkit.numeric_types import StrictlyPositiveInt, StrictlyPositiveRational
-from camdkit.string_types import NonBlankUTF8String, UUIDURN
+from camdkit.numeric_types import (StrictlyPositiveInt,
+                                   StrictlyPositiveRational, rationalize_strictly_and_positively)
+from camdkit.string_types import NonBlankUTF8String, UUIDURN, UUID_URN_PATTERN
 
 
 # Tempting as it might seem to make PhysicalDimensions and SenselDimensions subclasses
@@ -43,16 +46,30 @@ type ShutterAngle = Annotated[float, Field(ge=0.0, le=360.0, strict=True)]
 
 
 class StaticCamera(CompatibleBaseModel):
-    capture_frame_rate: Optional[Annotated[StrictlyPositiveRational, Field(serialization_alias="captureFrameRate")]] = None
-    active_sensor_physical_dimensions: Optional[PhysicalDimensions] = None
-    active_sensor_resolution: Optional[SenselDimensions] = None
-    make: Optional[NonBlankUTF8String] = None
-    model_name: Optional[NonBlankUTF8String] = None
-    serial_number: Optional[NonBlankUTF8String] = None
-    firmware_version: Optional[NonBlankUTF8String] = None
-    label: Optional[NonBlankUTF8String] = None
-    anamorphic_squeeze: Optional[StrictlyPositiveRational] = None
-    # TODO complain that "iso" is not a great name
-    iso: Optional[StrictlyPositiveInt] = None
-    fdl_link: Optional[UUIDURN] = None
-    shutter_angle: Optional[ShutterAngle] = None
+    capture_frame_rate: Annotated[StrictlyPositiveRational | None, Field(alias="captureFrameRate")] = None
+    active_sensor_physical_dimensions: Annotated[PhysicalDimensions | None, Field(alias="activeSensorPhysicalDimensions")] = None
+    active_sensor_resolution: Annotated[SenselDimensions | None, Field(alias="activeSensorResolution")] = None
+    make: NonBlankUTF8String | None = None
+    model: NonBlankUTF8String | None = None
+    serial_number: Annotated[NonBlankUTF8String | None, Field(alias="serialNumber")] = None
+    firmware_version: Annotated[NonBlankUTF8String | None, Field(alias="firmwareVersion")] = None
+    label: NonBlankUTF8String | None = None
+    anamorphic_squeeze: Annotated[StrictlyPositiveRational | None, Field(alias="anamorphicSqueeze")] = None
+    iso: Annotated[int | None, Field(gt=0, strict=True, alias="isoSpeed")] = None
+    fdl_link: Annotated[str | None, Field(pattern=UUID_URN_PATTERN, alias="fdlLink")] = None
+    shutter_angle: Annotated[float | None, Field(ge=0.0, le=360.0, alias="shutterAngle")] = None
+
+    # noinspection PyNestedDecorators
+    @field_validator('capture_frame_rate', 'anamorphic_squeeze', mode='before')
+    @classmethod
+    def coerce_to_strictly_positive_rational(cls, v):
+        return rationalize_strictly_and_positively(v)
+
+
+if __name__ == '__main__':
+    sc = StaticCamera()
+    sc.capture_frame_rate = StrictlyPositiveRational(24000, 1001)
+    print('StrictlyPositiveRational accepted')
+    sc.capture_frame_rate = Fraction(24000, 1001)
+    sc.anamorphic_squeeze = Fraction(4, 3)
+    print('Fraction accepted')

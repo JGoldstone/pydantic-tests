@@ -11,7 +11,7 @@ from typing import Optional, Any
 from pydantic import Field
 
 from camdkit.backwards import CompatibleBaseModel
-from camdkit.numeric_types import NonNegativeInt, StrictlyPositiveRational
+from camdkit.numeric_types import NonNegativeInt, UnityOrGreaterFloat, StrictlyPositiveRational
 from camdkit.lens_types import StaticLens, Lens
 from camdkit.camera_types import StaticCamera, PhysicalDimensions, SenselDimensions
 from camdkit.string_types import NonBlankUTF8String, UUIDURN
@@ -131,13 +131,13 @@ class Clip(CompatibleBaseModel):
 
     @property
     def camera_model(self) -> NonBlankUTF8String | None:
-        return self.value_from_hierarchy(('static', 'camera', 'model_name'))
+        return self.value_from_hierarchy(('static', 'camera', 'model'))
 
     @camera_model.setter
     def camera_model(self, value: NonBlankUTF8String) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('camera', StaticCamera)),
-                                   'model_name',
+                                   'model',
                                    value)
 
     @property
@@ -206,7 +206,6 @@ class Clip(CompatibleBaseModel):
                                    'shutter_angle',
                                    value)
 
-
     @property
     def duration(self) -> StrictlyPositiveRational:
         return self.static.duration
@@ -214,3 +213,80 @@ class Clip(CompatibleBaseModel):
     @duration.setter
     def duration(self, value) -> None:
         self.static.duration = value
+    
+    @property
+    def lens_distortion_overscan_max(self) -> UnityOrGreaterFloat:
+        return self.value_from_hierarchy(('static', 'lens', 'distortion_overscan_max'))
+    
+    @lens_distortion_overscan_max.setter
+    def lens_distortion_overscan_max(self, value: UnityOrGreaterFloat) -> None:
+        self.set_through_hierarchy((('static', Static),
+                                    ('lens', StaticLens)),
+                                   'distortion_overscan_max',
+                                   value)
+    
+    @property
+    def lens_undistortion_overscan_max(self) -> UnityOrGreaterFloat:
+        return self.value_from_hierarchy(('static', 'lens', 'undistortion_overscan_max'))
+    
+    @lens_undistortion_overscan_max.setter
+    def lens_undistortion_overscan_max(self, value: UnityOrGreaterFloat) -> None:
+        self.set_through_hierarchy((('static', Static),
+                                    ('lens', StaticLens)),
+                                   'undistortion_overscan_max',
+                                   value)
+
+    @property
+    def lens_make(self) -> NonBlankUTF8String | None:
+        return self.value_from_hierarchy(('static', 'lens', 'make'))
+
+    @lens_make.setter
+    def lens_make(self, value: NonBlankUTF8String) -> None:
+        self.set_through_hierarchy((('static', Static),
+                                    ('lens', StaticLens)),
+                                   'make',
+                                   value)
+
+    @property
+    def lens_model(self) -> NonBlankUTF8String | None:
+        return self.value_from_hierarchy(('static', 'lens', 'model'))
+
+    @lens_model.setter
+    def lens_model(self, value: NonBlankUTF8String) -> None:
+        self.set_through_hierarchy((('static', Static),
+                                    ('lens', StaticLens)),
+                                   'model',
+                                   value)
+
+    @property
+    def lens_serial_number(self) -> NonBlankUTF8String | None:
+        return self.value_from_hierarchy(('static', 'lens', 'serial_number'))
+
+    @lens_serial_number.setter
+    def lens_serial_number(self, value: NonBlankUTF8String) -> None:
+        self.set_through_hierarchy((('static', Static),
+                                    ('lens', StaticLens)),
+                                   'serial_number',
+                                   value)
+
+    @property
+    def lens_firmware(self) -> NonBlankUTF8String | None:
+        return self.value_from_hierarchy(('static', 'lens', 'firmware_version'))
+
+    @lens_firmware.setter
+    def lens_firmware(self, value: NonBlankUTF8String) -> None:
+        self.set_through_hierarchy((('static', Static),
+                                    ('lens', StaticLens)),
+                                   'firmware_version',
+                                   value)
+
+    @property
+    def lens_nominal_focal_length(self) -> NonBlankUTF8String | None:
+        return self.value_from_hierarchy(('static', 'lens', 'nominal_focal_length'))
+
+    @lens_nominal_focal_length.setter
+    def lens_nominal_focal_length(self, value: NonBlankUTF8String) -> None:
+        self.set_through_hierarchy((('static', Static),
+                                    ('lens', StaticLens)),
+                                   'nominal_focal_length',
+                                   value)

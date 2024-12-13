@@ -12,18 +12,20 @@ from pydantic import Field, model_validator
 
 from camdkit.backwards import CompatibleBaseModel
 from camdkit.numeric_types import (NonNegativeFloat, StrictlyPositiveFloat,
-                                   NonNegativeInt)
+                                   NonNegativeInt, UnityOrGreaterFloat)
 from camdkit.string_types import NonBlankUTF8String
 
 
 class StaticLens(CompatibleBaseModel):
-    distortion_overscan_max: Optional[StrictlyPositiveFloat] = None
-    undistortion_overscan_max: Optional[StrictlyPositiveFloat] = None
-    make: Optional[NonBlankUTF8String] = None
-    model_name: Optional[NonBlankUTF8String] = None
-    serial_number: Optional[NonBlankUTF8String] = None
-    firmware_version: Optional[NonBlankUTF8String] = None
-    nominal_focal_length: Optional[StrictlyPositiveFloat] = None
+    distortion_overscan_max: Annotated[UnityOrGreaterFloat | None,
+      Field(alias="distortionOverscanMax")] = None
+    undistortion_overscan_max: Annotated[UnityOrGreaterFloat | None,
+      Field(alias="undistortionOverscanMax")] = None
+    make: NonBlankUTF8String | None = None
+    model: NonBlankUTF8String | None = None
+    serial_number: Annotated[NonBlankUTF8String | None, Field(alias="serialNumber")] = None
+    firmware_version: Annotated[NonBlankUTF8String | None, Field(alias="firmwareVersion")] = None
+    nominal_focal_length: Annotated[NonNegativeFloat, None, Field(alias="nominalFocalLength")] = None
 
 
 class Distortion(CompatibleBaseModel):

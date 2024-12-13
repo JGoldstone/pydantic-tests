@@ -32,10 +32,12 @@ class ClipTestCases(unittest.TestCase):
     #         FrameRate(-24000, 1001)
 
     def test_statics(self):
+        capture_frame_rate = Fraction(24000, 1001)
+        canonical_capture_frame_rate = StrictlyPositiveRational(24000, 1001)
         active_sensor_physical_dimensions = PhysicalDimensions(width=36.0, height=24.0)
         active_sensor_resolution = SenselDimensions(width=3840, height=2160)
-        anamorphic_squeeze = StrictlyPositiveRational(2, 1)  # needs to allow Fraction
-        capture_frame_rate = StrictlyPositiveRational(24000, 1001)  # needs to allow Fraction
+        anamorphic_squeeze = Fraction(2, 1)
+        canonical_anamorphic_squeeze = StrictlyPositiveRational(2, 1)
         camera_make = "Bob"
         camera_model = "Hello"
         camera_serial_number = "123456"
@@ -44,6 +46,13 @@ class ClipTestCases(unittest.TestCase):
         iso = 13
         fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
         shutter_angle = 180
+        lens_distortion_overscan_max = 1.2
+        lens_undistortion_overscan_max = 1.2
+        lens_make = "ABC"
+        lens_model = "FGH"
+        lens_firmware = "1-dev.1"
+        lens_serial_number = "123456789"
+        lens_nominal_focal_length = 24
 
         clip = Clip()
         # camera static stuff first
@@ -55,10 +64,10 @@ class ClipTestCases(unittest.TestCase):
         self.assertEqual(active_sensor_resolution, clip.active_sensor_resolution)
         self.assertIsNone(clip.anamorphic_squeeze)
         clip.anamorphic_squeeze = anamorphic_squeeze
-        self.assertEqual(anamorphic_squeeze, clip.anamorphic_squeeze)
+        self.assertEqual(canonical_anamorphic_squeeze, clip.anamorphic_squeeze)
         self.assertIsNone(clip.capture_frame_rate)
         clip.capture_frame_rate = capture_frame_rate
-        self.assertEqual(capture_frame_rate, clip.capture_frame_rate)
+        self.assertEqual(canonical_capture_frame_rate, clip.capture_frame_rate)
         self.assertIsNone(clip.camera_make)
         clip.camera_make = camera_make
         self.assertEqual(camera_make, clip.camera_make)
@@ -83,9 +92,50 @@ class ClipTestCases(unittest.TestCase):
         self.assertIsNone(clip.shutter_angle)
         clip.shutter_angle = shutter_angle
         self.assertEqual(shutter_angle, clip.shutter_angle)
+        # lens static stuff next
+        self.assertIsNone(clip.lens_distortion_overscan_max)
+        clip.lens_distortion_overscan_max = lens_distortion_overscan_max
+        self.assertEqual(lens_distortion_overscan_max, clip.lens_distortion_overscan_max)
+        self.assertIsNone(clip.lens_undistortion_overscan_max)
+        clip.lens_undistortion_overscan_max = lens_undistortion_overscan_max
+        self.assertEqual(lens_undistortion_overscan_max, clip.lens_undistortion_overscan_max)
+        self.assertIsNone(clip.lens_make)
+        clip.lens_make = lens_make
+        self.assertEqual(lens_make, clip.lens_make)
+        self.assertIsNone(clip.lens_model)
+        clip.lens_model = lens_model
+        self.assertEqual(lens_model, clip.lens_model)
+        self.assertIsNone(clip.lens_firmware)
+        clip.lens_firmware = lens_firmware
+        self.assertEqual(lens_firmware, clip.lens_firmware)
+        self.assertIsNone(clip.lens_serial_number)
+        clip.lens_serial_number = lens_serial_number
+        self.assertEqual(lens_serial_number, clip.lens_serial_number)
+        self.assertIsNone(clip.lens_nominal_focal_length)
+        clip.lens_nominal_focal_length = lens_nominal_focal_length
+
+
 
         d = clip.to_json()
-        print("now look at clip.to_json()")
+        self.assertEqual(d["static"]["camera"]["captureFrameRate"], {"num": 24000, "denom": 1001})
+        self.assertDictEqual(d["static"]["camera"]["activeSensorPhysicalDimensions"], {"height": 24.0, "width": 36.0})
+        self.assertDictEqual(d["static"]["camera"]["activeSensorResolution"], {"height": 2160, "width": 3840})
+        self.assertEqual(d["static"]["camera"]["make"], camera_make)
+        self.assertEqual(d["static"]["camera"]["model"], camera_model)
+        self.assertEqual(d["static"]["camera"]["serialNumber"], camera_serial_number)
+        self.assertEqual(d["static"]["camera"]["firmwareVersion"], "7.1")
+        self.assertEqual(d["static"]["camera"]["label"], "A")
+
+        self.assertEqual(d["static"]["lens"]["distortionOverscanMax"], 1.2)
+        self.assertEqual(d["static"]["lens"]["undistortionOverscanMax"], 1.2)
+        self.assertEqual(d["static"]["lens"]["make"], "ABC")
+        self.assertEqual(d["static"]["lens"]["model"], "FGH")
+        self.assertEqual(d["static"]["lens"]["serialNumber"], "123456789")
+        self.assertEqual(d["static"]["lens"]["firmwareVersion"], "1-dev.1")
+        self.assertEqual(d["static"]["lens"]["nominalFocalLength"], 24)
+
+        rt: Clip = Clip.from_json(d)
+        self.assertEqual(clip, rt)
 
     #     self.assertEqual(camera_make, clip.camera_make)  # add assertion here
     #     print(clip.model_dump_json(indent=2))
