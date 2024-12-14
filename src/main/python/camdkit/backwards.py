@@ -6,6 +6,8 @@
 
 """Provisions for compatibility with OpenTrackIO 0.9 release"""
 
+import jsonref
+
 from typing import Any
 from copy import deepcopy
 
@@ -53,7 +55,9 @@ class CompatibleBaseModel(BaseModel):
 
     @classmethod
     def make_json_schema(cls) -> json:
-        return cls.model_json_schema(schema_generator=SortlessSchemaGenerator)
+        with_refs = cls.model_json_schema(schema_generator=SortlessSchemaGenerator)
+        without_refs = jsonref.replace_refs(with_refs)
+        return without_refs
 
 def scrub_title(json_data: json) -> json:
     if "title" in json_data:

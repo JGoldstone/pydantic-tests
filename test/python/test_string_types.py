@@ -6,8 +6,8 @@
 
 """Tests for string types"""
 
+import json
 import unittest
-import uuid
 
 from typing import Optional
 
@@ -41,6 +41,18 @@ class StringsTestCases(unittest.TestCase):
         smallest_too_long_non_blank_utf8_string: NonBlankUTF8String = "x" * 1024
         with self.assertRaises(ValidationError):
             x.value = smallest_too_long_non_blank_utf8_string
+
+    def test_non_blank_utf8_string_schema_matches(self):
+        expected_schema = {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1023
+        }
+        class NonBlankUTF8StringTestbed(CompatibleBaseModel):
+            value: NonBlankUTF8String = None
+        entire_schema = NonBlankUTF8StringTestbed.make_json_schema()
+        string_schema = entire_schema["properties"]["value"]
+        self.assertDictEqual(expected_schema, string_schema)
 
     def test_uuid_urn(self):
         class UUIDTestbed(CompatibleBaseModel):
