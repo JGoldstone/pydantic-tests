@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Restore test that infinite pixel dimensions fail for both width and height.">
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="UUID URN schema matches">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/backwards.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/backwards.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/python/test_string_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_string_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/numeric_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/numeric_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_numeric_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_numeric_types.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,8 +114,12 @@
     "Python tests.Python tests for test_model_types.ModelTestCases.test_synchronization_source_validation.executor": "Run",
     "Python tests.Python tests for test_model_types.ModelTestCases.test_to_json.executor": "Debug",
     "Python tests.Python tests for test_model_types.ModelTestCases.test_uuid_urn.executor": "Run",
+    "Python tests.Python tests for test_numeric_types.NumericsTestCases.test_non_negative_int.executor": "Run",
+    "Python tests.Python tests for test_numeric_types.NumericsTestCases.test_rational.executor": "Run",
+    "Python tests.Python tests for test_numeric_types.NumericsTestCases.test_strictly_positive_rational.executor": "Run",
     "Python tests.Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string.executor": "Run",
     "Python tests.Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string_schema_matches.executor": "Run",
+    "Python tests.Python tests for test_string_types.StringsTestCases.test_uuid_urn.executor": "Run",
     "Python tests.Python tests for test_tracker_types.TrackerTestCases.test_tracker_make.executor": "Run",
     "Python tests.Python tests for test_tracker_types.TrackerTestCases.test_tracker_model_name.executor": "Run",
     "Python tests.Python tests for test_tracker_types.TrackerTestCases.test_tracker_notes.executor": "Run",
@@ -160,7 +162,7 @@
       <recent name="$PROJECT_DIR$/src/main/python/camdkit" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string_schema_matches">
+  <component name="RunManager" selected="Python tests.Python tests for test_numeric_types.NumericsTestCases.test_non_negative_int">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -184,7 +186,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_camera_types.CameraTypesTestCases.test_physical_dimensions" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_numeric_types.NumericsTestCases.test_non_negative_int" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -196,11 +198,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_camera_types.CameraTypesTestCases.test_physical_dimensions&quot;" />
+      <option name="_new_target" value="&quot;test_numeric_types.NumericsTestCases.test_non_negative_int&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_camera_types.CameraTypesTestCases.test_sensel_dimensions" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_numeric_types.NumericsTestCases.test_rational" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -212,7 +214,23 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_camera_types.CameraTypesTestCases.test_sensel_dimensions&quot;" />
+      <option name="_new_target" value="&quot;test_numeric_types.NumericsTestCases.test_rational&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for test_numeric_types.NumericsTestCases.test_strictly_positive_rational" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="pydantic tests" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/python" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_numeric_types.NumericsTestCases.test_strictly_positive_rational&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
@@ -232,7 +250,7 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests in test_camera_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_string_types.StringsTestCases.test_uuid_urn" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -244,24 +262,8 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_camera_types.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests in test_clip.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="pydantic tests" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/python" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_clip.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <option name="_new_target" value="&quot;test_string_types.StringsTestCases.test_uuid_urn&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <configuration name="Unittests in python" type="tests" factoryName="Unittests" nameIsGenerated="true">
@@ -285,19 +287,19 @@
     <list>
       <item itemvalue="Python.main" />
       <item itemvalue="Python tests.Unittests in python" />
-      <item itemvalue="Python tests.Python tests for test_camera_types.CameraTypesTestCases.test_physical_dimensions" />
-      <item itemvalue="Python tests.Python tests for test_camera_types.CameraTypesTestCases.test_sensel_dimensions" />
+      <item itemvalue="Python tests.Python tests for test_numeric_types.NumericsTestCases.test_non_negative_int" />
+      <item itemvalue="Python tests.Python tests for test_numeric_types.NumericsTestCases.test_rational" />
+      <item itemvalue="Python tests.Python tests for test_numeric_types.NumericsTestCases.test_strictly_positive_rational" />
       <item itemvalue="Python tests.Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string_schema_matches" />
-      <item itemvalue="Python tests.Python tests in test_camera_types.py" />
-      <item itemvalue="Python tests.Python tests in test_clip.py" />
+      <item itemvalue="Python tests.Python tests for test_string_types.StringsTestCases.test_uuid_urn" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for test_numeric_types.NumericsTestCases.test_non_negative_int" />
+        <item itemvalue="Python tests.Python tests for test_numeric_types.NumericsTestCases.test_rational" />
+        <item itemvalue="Python tests.Python tests for test_numeric_types.NumericsTestCases.test_strictly_positive_rational" />
+        <item itemvalue="Python tests.Python tests for test_string_types.StringsTestCases.test_uuid_urn" />
         <item itemvalue="Python tests.Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string_schema_matches" />
-        <item itemvalue="Python tests.Python tests for test_camera_types.CameraTypesTestCases.test_sensel_dimensions" />
-        <item itemvalue="Python tests.Python tests for test_camera_types.CameraTypesTestCases.test_physical_dimensions" />
-        <item itemvalue="Python tests.Python tests in test_camera_types.py" />
-        <item itemvalue="Python tests.Python tests in test_clip.py" />
       </list>
     </recent_temporary>
   </component>
@@ -336,7 +338,7 @@
       <workItem from="1733259270686" duration="185065000" />
       <workItem from="1734018398844" duration="5656000" />
       <workItem from="1734029473500" duration="51831000" />
-      <workItem from="1734133161202" duration="36045000" />
+      <workItem from="1734133161202" duration="40192000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -634,15 +636,29 @@
       <option name="project" value="LOCAL" />
       <updated>1734211228408</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="Constrained-length strings match.">
+      <option name="closed" value="true" />
+      <created>1734212667947</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1734212667947</updated>
+    </task>
+    <task id="LOCAL-00039" summary="UUID URN schema matches">
+      <option name="closed" value="true" />
+      <created>1734213411490</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1734213411490</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Split model classes and associated tests into multiple files; add tests." />
-    <MESSAGE value="Remove unused files from early pydantic experiments." />
     <MESSAGE value="turn on assignment validation in CompatibleBaseModel." />
     <MESSAGE value="Define fields with strict=True so that, e.g., one can't initialize a NonNegativeInt with 1.0 instead of 1." />
     <MESSAGE value="Use type aliases instead of CompatibleBaseModel instances for POD parameters" />
@@ -666,7 +682,9 @@
     <MESSAGE value="Fix up camera types test" />
     <MESSAGE value="Match original implementation schema for physical and sensel dimensions" />
     <MESSAGE value="Restore test that infinite pixel dimensions fail for both width and height." />
-    <option name="LAST_COMMIT_MESSAGE" value="Restore test that infinite pixel dimensions fail for both width and height." />
+    <MESSAGE value="Constrained-length strings match." />
+    <MESSAGE value="UUID URN schema matches" />
+    <option name="LAST_COMMIT_MESSAGE" value="UUID URN schema matches" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -675,6 +693,11 @@
           <url>file://$APPLICATION_CONFIG_DIR$/scratches/scratch.py</url>
           <line>50</line>
           <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/python/test_numeric_types.py</url>
+          <line>48</line>
+          <option name="timeStamp" value="38" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -691,6 +714,6 @@
     <SUITE FILE_PATH="coverage/pydantic_tests$camera_types.coverage" NAME="camera_types Coverage Results" MODIFIED="1734106899074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
     <SUITE FILE_PATH="coverage/pydantic_tests$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1728857315751" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1734212454291" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1734217588757" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
   </component>
 </project>

@@ -23,30 +23,30 @@ class NumericsTestCases(unittest.TestCase):
 
     def test_non_negative_int(self):
         class NonNegativeIntTestbed(CompatibleBaseModel):
-            x: Optional[NonNegativeInt] = None
-
-
+            value: NonNegativeInt
+        x = NonNegativeIntTestbed(value=0)
         with self.assertRaises(ValidationError):
-            class WrongType(CompatibleBaseModel):
-                value: NonNegativeInt
-
-            x = NonNegativeIntTestbed()
-            with self.assertRaises(ValidationError):
-                x.value = 'foo'
-            with self.assertRaises(ValidationError):
-                x.value = -1
-            with self.assertRaises(ValidationError):
-                x.value = 0 - sys.float_info.epsilon
-            with self.assertRaises(ValidationError):
-                x.value = 0.0
-            x.value = 0
-            self.assertEqual(0, x.value)
-            x.value = 1
-            self.assertEqual(1, x.value)
-            x.value = MAX_UINT_32
-            self.assertEqual(MAX_UINT_32, x.value)
-            with self.assertRaises(ValidationError):
-                x = MAX_UINT_32 + 1
+            x.value = 'foo'
+        with self.assertRaises(ValidationError):
+            x.value = -1
+        with self.assertRaises(ValidationError):
+            x.value = 0.0
+        x.value = 0
+        self.assertEqual(0, x.value)
+        x.value = 1
+        self.assertEqual(1, x.value)
+        x.value = MAX_UINT_32
+        self.assertEqual(MAX_UINT_32, x.value)
+        with self.assertRaises(ValidationError):
+            x.value = MAX_UINT_32 + 1
+        expected_schema = {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": MAX_UINT_32,
+        }
+        entire_schema = NonNegativeIntTestbed.make_json_schema()
+        non_negative_int_schema = entire_schema["properties"]["value"]
+        self.assertDictEqual(expected_schema, non_negative_int_schema)
 
     # TODO: write test cases for StrictlyPositiveInt
     # def test_strictly_positive_int(self):
@@ -102,6 +102,25 @@ class NumericsTestCases(unittest.TestCase):
         Rational(0, MAX_UINT_32)
         with self.assertRaises(ValidationError):
             Rational(0, MAX_UINT_32 +1)
+        expected_schema = {
+            "type": "object",
+            "properties": {
+                "num" : {
+                    "type": "integer",
+                    "minimum": MIN_INT_32,
+                    "maximum": MAX_INT_32
+                },
+                "denom" : {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": MAX_UINT_32
+                }
+            },
+            "required": ["num", "denom" ],
+            "additionalProperties": False
+        }
+        schema = Rational.make_json_schema()
+        self.assertDictEqual(expected_schema, schema)
 
     def test_strictly_positive_rational(self):
         with self.assertRaises(ValidationError):
@@ -126,6 +145,26 @@ class NumericsTestCases(unittest.TestCase):
         StrictlyPositiveRational(1, MAX_UINT_32)
         with self.assertRaises(ValidationError):
             StrictlyPositiveRational(1, MAX_UINT_32 +1)
+        # TODO file Issue: existing implementation has StrictlyPositiveRational that allows 0/N
+        expected_schema = {
+            "type": "object",
+            "properties": {
+                "num" : {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": MAX_INT_32
+                },
+                "denom" : {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": MAX_UINT_32
+                }
+            },
+            "required": ["num", "denom" ],
+            "additionalProperties": False
+        }
+        schema = StrictlyPositiveRational.make_json_schema()
+        self.assertDictEqual(expected_schema, schema)
 
 
 if __name__ == '__main__':

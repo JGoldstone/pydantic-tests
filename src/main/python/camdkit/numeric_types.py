@@ -41,15 +41,15 @@ type UnityOrGreaterFloat = Annotated[float, Field(..., ge=1, le=sys.float_info.m
 
 class Rational(CompatibleBaseModel):
     num: int = Field(ge=MIN_INT_32, le=MAX_INT_32, strict=True)
-    denom: int = Field(gt=0, le=MAX_UINT_32, strict=True)
+    denom: int = Field(ge=1, le=MAX_UINT_32, strict=True)
 
     def __init__(self, num: int, denom: int) -> None:
         super(Rational, self).__init__(num=num, denom=denom)
 
 
 class StrictlyPositiveRational(CompatibleBaseModel):
-    num: int = Field(gt=0, le=MAX_INT_32, strict=True)
-    denom: int = Field(gt=0, le=MAX_UINT_32, strict=True)
+    num: int = Field(ge=1, le=MAX_INT_32, strict=True)
+    denom: int = Field(ge=1, le=MAX_UINT_32, strict=True)
 
     def __init__(self, num: int, denom: int, ) -> None:
         super(StrictlyPositiveRational, self).__init__(num=num, denom=denom)
