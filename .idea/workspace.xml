@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Static regular parameters pass.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/transform_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/transform_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/python/test_clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_clip.py" afterDir="false" />
-    </list>
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Global parameters pass." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -332,7 +327,7 @@
       <workItem from="1733259270686" duration="185065000" />
       <workItem from="1734018398844" duration="5656000" />
       <workItem from="1734029473500" duration="51831000" />
-      <workItem from="1734133161202" duration="29332000" />
+      <workItem from="1734133161202" duration="29965000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -590,14 +585,21 @@
       <option name="project" value="LOCAL" />
       <updated>1734197976647</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Global parameters pass.">
+      <option name="closed" value="true" />
+      <created>1734206378898</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1734206378898</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Very very basic definition of Clip" />
     <MESSAGE value="Cleanup to avoid some minor warnings; not quite PEP8 yet but close" />
     <MESSAGE value="Add TODO re: auto-promotion of str to NonBlankUTF8String (if passes validation)" />
     <MESSAGE value="Upgrade various components; changes in IDEA substrate files." />
@@ -622,7 +624,8 @@
     <MESSAGE value="Timing parameters fully pass." />
     <MESSAGE value="Static tracking parameters pass." />
     <MESSAGE value="Static regular parameters pass." />
-    <option name="LAST_COMMIT_MESSAGE" value="Static regular parameters pass." />
+    <MESSAGE value="Global parameters pass." />
+    <option name="LAST_COMMIT_MESSAGE" value="Global parameters pass." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

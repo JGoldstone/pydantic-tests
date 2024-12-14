@@ -24,12 +24,12 @@ class Vector3(CompatibleBaseModel):
 
 
 class Rotator3(CompatibleBaseModel):
-    x: float  # pan
-    y: float  # tilt
-    z: float  # roll
+    pan: float
+    tilt: float
+    roll: float
 
-    def __init__(self, x: float, y: float, z: float):
-        super(Rotator3, self).__init__(x=x, y=y, z=z)
+    def __init__(self, pan: float, tilt: float, roll: float):
+        super(Rotator3, self).__init__(pan=pan, tilt=tilt, roll=roll)
 
 
 class Transform(CompatibleBaseModel):

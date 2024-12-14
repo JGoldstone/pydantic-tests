@@ -10,18 +10,14 @@ import unittest
 
 from fractions import Fraction
 
-from pydantic import ValidationError
-from pydantic.v1 import NonNegativeFloat
-
 from camdkit.lens_types import (ExposureFalloff,
                                 Distortion, DistortionOffset, ProjectionOffset,
                                 FizEncoders, RawFizEncoders)
-from camdkit.numeric_types import Rational, StrictlyPositiveRational, NonNegativeFloat, NonNegativeInt
-from camdkit.string_types import NonBlankUTF8String
+from camdkit.numeric_types import StrictlyPositiveRational
 from camdkit.camera_types import PhysicalDimensions, SenselDimensions
-from camdkit.timing_types import Timestamp, Timecode, TimecodeFormat, FrameRate, SynchronizationSource, \
+from camdkit.timing_types import Timestamp, Timecode, TimecodeFormat, SynchronizationSource, \
     SynchronizationOffsets, SynchronizationPTP, Synchronization
-from camdkit.transform_types import Vector3,
+from camdkit.transform_types import Vector3, Rotator3, Transform
 from camdkit.clip import GlobalPosition, Clip
 
 VALID_SAMPLE_ID = "urn:uuid:abcdefab-abcd-abcd-abcd-abcdefabcdef"  # 8-4-4-4-12
@@ -68,6 +64,7 @@ class ClipTestCases(unittest.TestCase):
         fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
         shutter_angle = 180
 
+        # noinspection DuplicatedCode
         clip = Clip()
         self.assertIsNone(clip.active_sensor_physical_dimensions)
         clip.active_sensor_physical_dimensions = active_sensor_physical_dimensions
@@ -128,8 +125,8 @@ class ClipTestCases(unittest.TestCase):
         lens_firmware = "1-dev.1"
         lens_serial_number = "123456789"
         lens_nominal_focal_length = 24
-        lens_distortion_overscan = (1.0, 1.0)
 
+        # noinspection DuplicatedCode
         clip = Clip()
         self.assertIsNone(clip.lens_distortion_overscan_max)
         clip.lens_distortion_overscan_max = lens_distortion_overscan_max
@@ -171,6 +168,7 @@ class ClipTestCases(unittest.TestCase):
         tracker_serial_number = "1234567890A"
         tracker_firmware = "1.0.1a"
 
+        # noinspection DuplicatedCode
         clip = Clip()
         self.assertIsNone(clip.tracker_make)
         clip.tracker_make = tracker_make
@@ -221,6 +219,7 @@ class ClipTestCases(unittest.TestCase):
         lens_distortion_offset = (DistortionOffset(1.0, 2.0), DistortionOffset(1.0, 2.0))
         lens_projection_offset = (ProjectionOffset(0.1, 0.2), ProjectionOffset(0.1, 0.2))
 
+        # noinspection DuplicatedCode
         clip = Clip()
         self.assertIsNone(clip.lens_t_number)
         clip.lens_t_number = lens_t_number
@@ -319,6 +318,7 @@ class ClipTestCases(unittest.TestCase):
                                           offsets=sync_offsets)
         timing_synchronization = (synchronization, synchronization)
 
+        # noinspection DuplicatedCode
         clip = Clip()
         self.assertIsNone(clip.timing_mode)
         clip.timing_mode = timing_mode
@@ -380,6 +380,7 @@ class ClipTestCases(unittest.TestCase):
         tracker_slate = ("A101_A_4", "A101_A_5")
         tracker_notes = ("Test serialize.", "Test serialize.")
 
+        # noinspection DuplicatedCode
         clip = Clip()
         self.assertIsNone(clip.tracker_status)
         clip.tracker_status = tracker_status
@@ -422,6 +423,7 @@ class ClipTestCases(unittest.TestCase):
                            (Transform(translation=translation, rotation=rotation),
                             Transform(translation=translation, rotation=rotation)))
 
+        # noinspection DuplicatedCode
         clip = Clip()
         self.assertIsNone(clip.sample_id)
         clip.sample_id = sample_id
