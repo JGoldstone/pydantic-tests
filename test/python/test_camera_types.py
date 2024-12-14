@@ -124,15 +124,14 @@ class CameraTypesTestCases(unittest.TestCase):
             SenselDimensions(-1, ALEXA_265_HEIGHT_PX)  # negative width
         # with self.assertRaises(ValidationError):
         #     SenselDimensions(0, ALEXA_265_HEIGHT_PX)  # zero width
-        # TODO look into why this math.inf for width raises, but the one for height does not
         with self.assertRaises(ValidationError):
             SenselDimensions(math.inf, ALEXA_265_HEIGHT_PX)  # infinite width
         with self.assertRaises(ValidationError):
             SenselDimensions(ALEXA_265_WIDTH_PX, -1)  # negative height
         # with self.assertRaises(ValidationError):
         #     SenselDimensions(ALEXA_265_WIDTH_PX, 0)  # zero height
-        # with self.assertRaises(ValidationError):
-        #     SenselDimensions(ALEXA_265_WIDTH_PX, math.inf)  # infinite height
+        with self.assertRaises(ValidationError):
+            SenselDimensions(ALEXA_265_WIDTH_PX, math.inf)  # infinite height
         SenselDimensions.validate(d)
         expected_json = {'width': RED_V_RAPTOR_XL_8K_VV_WIDTH_PX,
                          'height': RED_V_RAPTOR_XL_8K_VV_HEIGHT_PX }
