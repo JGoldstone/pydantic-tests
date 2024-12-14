@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Bump version of pydantic-settings.">
-      <change afterPath="$PROJECT_DIR$/test/python/test_timing_types.py" afterDir="false" />
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Start of unit tests for timing parameters">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/backwards.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/backwards.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/camera_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/camera_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/model_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/model_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/camdkit_implementation_notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/camdkit_implementation_notes.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/numeric_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/numeric_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/python/test_clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_clip.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/python/test_model_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_model_types.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,6 +123,7 @@
     "Python tests.Python tests in test_model_types.py.executor": "Run",
     "Python tests.Python tests in test_numeric_types.py.executor": "Run",
     "Python tests.Python tests in test_string_types.py.executor": "Run",
+    "Python tests.Python tests in test_timing_types.py.executor": "Run",
     "Python tests.Python tests in test_tracker_types.py.executor": "Run",
     "Python tests.Unittests in python.executor": "Run",
     "Python.camera_types.executor": "Run",
@@ -156,7 +153,7 @@
       <recent name="$PROJECT_DIR$/src/main/python/camdkit" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests in test_timing_types.py">
+  <component name="RunManager" selected="Python tests.Python tests for test_clip.ClipTestCases.test_timing_regular_parameters">
     <configuration name="camera_types" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -296,8 +293,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Python tests in test_timing_types.py" />
         <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_timing_regular_parameters" />
+        <item itemvalue="Python tests.Python tests in test_timing_types.py" />
         <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_lens_regular_parameters" />
         <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_statics" />
         <item itemvalue="Python.camera_types" />
@@ -339,7 +336,7 @@
       <workItem from="1733259270686" duration="185065000" />
       <workItem from="1734018398844" duration="5656000" />
       <workItem from="1734029473500" duration="51831000" />
-      <workItem from="1734133161202" duration="6484000" />
+      <workItem from="1734133161202" duration="13776000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -565,14 +562,21 @@
       <option name="project" value="LOCAL" />
       <updated>1734142436421</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="Start of unit tests for timing parameters">
+      <option name="closed" value="true" />
+      <created>1734143003405</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1734143003405</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Experiment with model validators" />
     <MESSAGE value="Start to bring in camdkit types" />
     <MESSAGE value="Add test of strictly positive rationals" />
     <MESSAGE value="Add non-blank UTF8 strings and tests thereof" />
@@ -597,7 +601,8 @@
     <MESSAGE value="Prototypical first &quot;regular&quot; (i.e. periodic) lens metadata." />
     <MESSAGE value="Lens 'regular' parameters pass unit tests" />
     <MESSAGE value="Bump version of pydantic-settings." />
-    <option name="LAST_COMMIT_MESSAGE" value="Bump version of pydantic-settings." />
+    <MESSAGE value="Start of unit tests for timing parameters" />
+    <option name="LAST_COMMIT_MESSAGE" value="Start of unit tests for timing parameters" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -614,13 +619,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test/python/test_clip.py</url>
-          <line>198</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/test/python/test_clip.py</url>
-          <line>280</line>
-          <option name="timeStamp" value="18" />
+          <line>328</line>
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -637,6 +637,6 @@
     <SUITE FILE_PATH="coverage/pydantic_tests$camera_types.coverage" NAME="camera_types Coverage Results" MODIFIED="1734106899074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
     <SUITE FILE_PATH="coverage/pydantic_tests$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1728857315751" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1734142389005" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1734184288538" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
   </component>
 </project>

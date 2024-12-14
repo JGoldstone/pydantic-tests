@@ -261,10 +261,13 @@ class ClipTestCases(unittest.TestCase):
         timing_sequence_number = (0, 1)
         sample_rate = StrictlyPositiveRational(24000, 1001)
         timing_sample_rate = (sample_rate, sample_rate)
-        timecode = Timecode(1, 2, 3, 4,
-                            TimecodeFormat(StrictlyPositiveRational(24000, 1001),
+        timecode0 = Timecode(1, 2, 3, 4,
+                            TimecodeFormat(StrictlyPositiveRational(24, 1),
                                            0))
-        timing_timecode = (timecode, timecode)
+        timecode1= Timecode(1, 2, 3, 5,
+                            TimecodeFormat(StrictlyPositiveRational(24, 1),
+                                           0))
+        timing_timecode = (timecode0, timecode1)
         ptp = SynchronizationPTP(1, "00:11:22:33:44:55", 0.0)
         sync_offsets = SynchronizationOffsets(1.0, 2.0, 3.0)
         synchronization = Synchronization(present=True,
@@ -298,6 +301,36 @@ class ClipTestCases(unittest.TestCase):
         clip.timing_synchronization = timing_synchronization
         self.assertEqual(timing_synchronization, clip.timing_synchronization)
 
+        clip_as_json = clip.to_json()
+        self.assertTupleEqual(clip_as_json["timing"]["mode"], timing_mode)
+        self.assertTupleEqual(clip_as_json["timing"]["sampleTimestamp"], (
+            {"seconds": 1718806554, "nanoseconds": 0},
+            {"seconds": 1718806555, "nanoseconds": 0}))
+        self.assertTupleEqual(clip_as_json["timing"]["recordedTimestamp"], (
+            { "seconds": 1718806000, "nanoseconds": 0 },
+            { "seconds": 1718806001, "nanoseconds": 0 }))
+        self.assertTupleEqual(clip_as_json["timing"]["sequenceNumber"], timing_sequence_number)
+        self.assertTupleEqual(clip_as_json["timing"]["sampleRate"], (
+            { "num": 24000, "denom": 1001 },
+            { "num": 24000, "denom": 1001 }))
+        self.assertTupleEqual(clip_as_json["timing"]["timecode"], (
+            { "hours":1, "minutes":2, "seconds":3, "frames":4,
+              "format": { "frameRate": { "num": 24, "denom": 1 },
+                          "subFrame": 0 } },
+            { "hours": 1,"minutes": 2,"seconds": 3,"frames": 5,
+              "format": { "frameRate": { "num": 24, "denom": 1 },
+                          "subFrame": 0 } }))
+        expected_synchronization_dict = {
+            "present": True, "locked": True,
+            "frequency": {"num": 24000, "denom": 1001},
+            "source": "ptp",
+            "ptp": {"offset": 0.0, "domain": 1, "master": "00:11:22:33:44:55"},
+            "offsets": {"translation": 1.0, "rotation": 2.0, "lensEncoders": 3.0}}
+        self.assertTupleEqual(clip_as_json["timing"]["synchronization"],
+                              (expected_synchronization_dict,
+                               expected_synchronization_dict))
+        clip_from_json: Clip = Clip.from_json(clip_as_json)
+        self.assertEqual(clip, clip_from_json)
 
 if __name__ == '__main__':
     unittest.main()

@@ -7,7 +7,7 @@
 """Types for modeling of time-related metadata"""
 
 from enum import Enum, verify, UNIQUE, StrEnum
-from typing import Annotated, Optional
+from typing import Annotated
 
 from pydantic import Field, BaseModel, field_validator
 
@@ -21,11 +21,11 @@ class TimingMode(StrEnum):
 
 
 class TimecodeFormat(CompatibleBaseModel):
-    frame_rate: StrictlyPositiveRational
-    sub_frame: int = 0
+    frame_rate: Annotated[StrictlyPositiveRational, Field(alias="frameRate")]
+    sub_frame: Annotated[int, Field(alias="subFrame")] = 0
 
-    def __init__(self, f_r: StrictlyPositiveRational, s_f: int):
-        super(TimecodeFormat, self).__init__(frame_rate=f_r, sub_frame=s_f)
+    def __init__(self, frameRate: StrictlyPositiveRational, subFrame: int):
+        super(TimecodeFormat, self).__init__(frameRate=frameRate, subFrame=subFrame)
 
 
 class Timecode(CompatibleBaseModel):
@@ -35,17 +35,17 @@ class Timecode(CompatibleBaseModel):
     frames: int = Field(..., ge=0, le=29)
     format: TimecodeFormat
 
-    def __init__(self, h: int, m: int, s: int, fr: int, fo: TimecodeFormat):
-        super(Timecode, self).__init__(hours=h, minutes=m, seconds=s, frames=fr,
-                                       format=fo)
+    def __init__(self, hours: int, minutes: int, seconds: int, frames: int, format: TimecodeFormat):
+        super(Timecode, self).__init__(hours=hours, minutes=minutes, seconds=seconds, frames=frames,
+                                       format=format)
 
 
 class Timestamp(CompatibleBaseModel):
     seconds: NonNegativeInt
     nanoseconds: NonNegativeInt
 
-    def __init__(self, s: NonNegativeInt, n: NonNegativeInt):
-        super(Timestamp, self).__init__(seconds=s, nanoseconds=n)
+    def __init__(self, seconds: NonNegativeInt, nanoseconds: NonNegativeInt):
+        super(Timestamp, self).__init__(seconds=seconds, nanoseconds=nanoseconds)
 
 
 @verify(UNIQUE)
@@ -61,36 +61,47 @@ class SynchronizationSource(StrEnum):
 class SynchronizationOffsets(BaseModel):
     """Synchronization offsets"""
 
-    translation: Optional[float] = None
-    rotation: Optional[float] = None
-    lens_encoders: Optional[float] = None
+    translation: float | None = None
+    rotation: float | None = None
+    lens_encoders: Annotated[float | None, Field(alias="lensEncoders")] = None
 
-    def __init__(self, translation: float, rotation: float, lens_encoders: float) -> None:
+    def __init__(self, translation: float, rotation: float, lensEncoders: float) -> None:
         super(SynchronizationOffsets, self).__init__(translation=translation,
                                                      rotation=rotation,
-                                                     lens_encoders=lens_encoders)
+                                                     lensEncoders=lensEncoders)
 
 
 class SynchronizationPTP(BaseModel):
     """needs better explanation"""
 
-    domain: Optional[int] = None  # ???
-    master: Optional[str] = None  # a hostname? an IPv4 address? what?
-    offset: Optional[float]  # offset in what sense? and what units?
+    domain: int | None = None  # ???
+    master: str | None = None  # a hostname? an IPv4 address? what?
+    offset: float | None  # offset in what sense? and what units?
 
-    def __init__(self, d: int, m: str, o: float) -> None:
-        super(SynchronizationPTP, self).__init__(domain=d, master=m, offset=o)
+    def __init__(self, domain: int, master: str, offset: float) -> None:
+        super(SynchronizationPTP, self).__init__(domain=domain, master=master, offset=offset)
 
 
 class Synchronization(BaseModel):
     locked: bool
     source: SynchronizationSource
-    frequency: Optional[StrictlyPositiveRational] = None
-    offsets: Optional[SynchronizationOffsets] = None
-    present: Optional[bool] = None
+    frequency: StrictlyPositiveRational | None = None
+    offsets: SynchronizationOffsets | None = None
+    present: bool | None = None
     ptp: SynchronizationPTP
 
-
+    def __init__(self, locked: bool,
+                 source: SynchronizationSource,
+                 frequency: StrictlyPositiveRational | None,
+                 offsets: SynchronizationOffsets | None,
+                 present: bool | None,
+                 ptp: SynchronizationPTP) -> None:
+        super(Synchronization, self).__init__(locked=locked,
+                                              source=source,
+                                              frequency=frequency,
+                                              offsets=offsets,
+                                              present=present,
+                                              ptp=ptp)
 
 class Timing(CompatibleBaseModel):
     mode: tuple[TimingMode, ...] | None = None
