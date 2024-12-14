@@ -567,8 +567,7 @@ class Clip(CompatibleBaseModel):
     @tracker_status.setter
     def tracker_status(self, value: tuple[NonBlankUTF8String, ...] | None) -> None:
         self.set_through_hierarchy((
-            ('static', Static),
-            ('tracker', StaticTracker)),
+            ('tracker', Tracker),),
             'status', value)
 
     @property
@@ -578,28 +577,27 @@ class Clip(CompatibleBaseModel):
     @tracker_recording.setter
     def tracker_recording(self, value: tuple[bool, ...] | None) -> None:
         self.set_through_hierarchy((
-            ('static', Static),
-            ('tracker', StaticTracker)),
+            ('tracker', Tracker),),
             'recording', value)
 
     @property
     def tracker_slate(self) -> tuple[NonBlankUTF8String, ...] | None:
         return self.value_from_hierarchy(('tracker', 'slate'))
-    
+
     @tracker_slate.setter
     def tracker_slate(self, value: tuple[NonBlankUTF8String, ...] | None) -> None:
-        self.set_through_hierarchy((('tracker', Tracker),),
-                                   'slate',
-                                   value)
+        self.set_through_hierarchy((
+            ('tracker', Tracker),),
+            'slate', value)
 
     @property
     def tracker_notes(self) -> tuple[NonBlankUTF8String, ...] | None:
         return self.value_from_hierarchy(('tracker', 'notes'))
-    
+
     @tracker_notes.setter
     def tracker_notes(self, value: tuple[NonBlankUTF8String, ...] | None) -> None:
-        self.set_through_hierarchy((('tracker', Tracker),),
-                                   'notes',
-                                   value)
+        self.set_through_hierarchy((
+            ('tracker', Tracker),),
+            'notes', value)
     
     

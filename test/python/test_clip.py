@@ -274,7 +274,7 @@ class ClipTestCases(unittest.TestCase):
         self.assertTupleEqual(clip_as_json["lens"]["projectionOffset"], ({"x": 0.1, "y": 0.2}, {"x": 0.1, "y": 0.2}))
 
         clip_from_json: Clip = Clip.from_json(clip_as_json)
-        self.assertDictEqual(clip, clip_from_json)
+        self.assertEqual(clip, clip_from_json)
 
     def test_timing_regular_parameters(self):
         # reference values
@@ -355,10 +355,37 @@ class ClipTestCases(unittest.TestCase):
                               (expected_synchronization_dict,
                                expected_synchronization_dict))
         clip_from_json: Clip = Clip.from_json(clip_as_json)
-        self.assertDictEqual(clip, clip_from_json)
+        self.assertEqual(clip, clip_from_json)
 
     def test_tracker_regular_parameters(self):
-        pass
+        # reference values
+        tracker_status = ("Optical Good", "Optical Good")
+        tracker_recording = (False, True)
+        tracker_slate = ("A101_A_4", "A101_A_5")
+        tracker_notes = ("Test serialize.", "Test serialize.")
+
+        clip = Clip()
+        self.assertIsNone(clip.tracker_status)
+        clip.tracker_status = tracker_status
+        self.assertEqual(tracker_status, clip.tracker_status)
+        self.assertIsNone(clip.tracker_recording)
+        clip.tracker_recording = tracker_recording
+        self.assertEqual(tracker_recording, clip.tracker_recording)
+        self.assertIsNone(clip.tracker_slate)
+        clip.tracker_slate = tracker_slate
+        self.assertEqual(tracker_slate, clip.tracker_slate)
+        self.assertIsNone(clip.tracker_notes)
+        clip.tracker_notes = tracker_notes
+        self.assertEqual(tracker_notes, clip.tracker_notes)
+
+        clip_as_json = clip.to_json()
+        self.assertTupleEqual(clip_as_json["tracker"]["status"], tracker_status)
+        self.assertTupleEqual(clip_as_json["tracker"]["recording"], tracker_recording)
+        self.assertTupleEqual(clip_as_json["tracker"]["slate"], tracker_slate)
+        self.assertTupleEqual(clip_as_json["tracker"]["notes"], tracker_notes)
+
+        clip_from_json = clip.from_json(clip_as_json)
+        self.assertEqual(clip, clip_from_json)
 
 if __name__ == '__main__':
     unittest.main()
