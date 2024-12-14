@@ -15,7 +15,8 @@ from typing import Annotated, Optional
 from pydantic import Field, field_validator, StringConstraints
 
 from camdkit.backwards import CompatibleBaseModel
-from camdkit.numeric_types import (StrictlyPositiveInt,
+from camdkit.numeric_types import (MAX_INT_32,
+                                   StrictlyPositiveInt,
                                    StrictlyPositiveRational, rationalize_strictly_and_positively)
 from camdkit.string_types import NonBlankUTF8String, UUIDURN, UUID_URN_PATTERN
 
@@ -27,16 +28,16 @@ from camdkit.string_types import NonBlankUTF8String, UUIDURN, UUID_URN_PATTERN
 
 
 class PhysicalDimensions(CompatibleBaseModel):
-    width: Annotated[float, Field(gt=0.0, lt=math.inf)]
-    height: Annotated[float, Field(gt=0.0, lt=math.inf)]
+    height: Annotated[float, Field(ge=0.0, lt=math.inf)]
+    width: Annotated[float, Field(ge=0.0, lt=math.inf)]
 
     def __init__(self, width: float, height: float) -> None:
         super(PhysicalDimensions, self).__init__(width=width, height=height)
 
 
 class SenselDimensions(CompatibleBaseModel):
-    width: Annotated[int, Field(gt=0)]
-    height: Annotated[float, Field(gt=0)]
+    height: Annotated[int, Field(ge=0, le=MAX_INT_32)]
+    width: Annotated[int, Field(ge=0, le=MAX_INT_32)]
 
     def __init__(self, width: int, height: int) -> None:
         super(SenselDimensions, self).__init__(width=width, height=height)

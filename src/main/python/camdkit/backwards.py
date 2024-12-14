@@ -10,7 +10,14 @@ from typing import Any
 from copy import deepcopy
 
 from pydantic import BaseModel, ValidationError, ConfigDict, json
+from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue
 
+class SortlessSchemaGenerator(GenerateJsonSchema):
+    def sort(
+        self, value: JsonSchemaValue, parent_key: str | None = None
+    ) -> JsonSchemaValue:
+        """No-op, we don't want to sort schema values at all."""
+        return value
 
 def title_stripper(schema: dict[str, Any]) -> None:
     for prop in schema.get('properties', {}).values():
@@ -22,7 +29,8 @@ class CompatibleBaseModel(BaseModel):
 
     model_config = ConfigDict(validate_assignment=True,
                               use_enum_values=True,
-                              json_schema_extra=title_stripper)
+                              json_schema_extra=title_stripper,
+                              extra="forbid")
 
     @classmethod
     def validate(cls, value) -> bool:
@@ -45,7 +53,7 @@ class CompatibleBaseModel(BaseModel):
 
     @classmethod
     def make_json_schema(cls) -> json:
-        return cls.model_json_schema()
+        return cls.model_json_schema(schema_generator=SortlessSchemaGenerator)
 
 def scrub_title(json_data: json) -> json:
     if "title" in json_data:

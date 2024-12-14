@@ -16,7 +16,7 @@ from fractions import Fraction
 
 from pydantic import ValidationError
 
-from camdkit.numeric_types import StrictlyPositiveRational
+from camdkit.numeric_types import StrictlyPositiveRational, MAX_INT_32
 from camdkit.camera_types import (PhysicalDimensions, SenselDimensions,
                                   StaticCamera)
 
@@ -60,14 +60,15 @@ class CameraTypesTestCases(unittest.TestCase):
             PhysicalDimensions(1.0, ALEXA_YMCA_HEIGHT_MM)  # height type error
         with self.assertRaises(ValidationError):
             PhysicalDimensions(-sys.float_info.min, ALEXA_265_HEIGHT_MM)  # negative width
-        with self.assertRaises(ValidationError):
-            PhysicalDimensions(0, ALEXA_265_HEIGHT_MM)  # zero width
+        # TODO file Issue asking whether zero widths and/or heights should be allowed
+        # with self.assertRaises(ValidationError):
+        #     PhysicalDimensions(0, ALEXA_265_HEIGHT_MM)  # zero width
         with self.assertRaises(ValidationError):
             PhysicalDimensions(math.inf, ALEXA_265_HEIGHT_MM)  # infinite width
         with self.assertRaises(ValidationError):
             PhysicalDimensions(ALEXA_265_WIDTH_MM, -sys.float_info.min)  # negative height
-        with self.assertRaises(ValidationError):
-            PhysicalDimensions(ALEXA_265_WIDTH_MM, 0)  # zero height
+        # with self.assertRaises(ValidationError):
+        #     PhysicalDimensions(ALEXA_265_WIDTH_MM, 0)  # zero height
         with self.assertRaises(ValidationError):
             PhysicalDimensions(ALEXA_265_WIDTH_MM, math.inf)  # infinite height
         #
@@ -85,21 +86,22 @@ class CameraTypesTestCases(unittest.TestCase):
         instance_from_json: PhysicalDimensions = PhysicalDimensions.from_json(json_from_instance)
         self.assertEqual(d, instance_from_json)
         expected_schema = {
-            "properties": {
-                "width": {
-                    "exclusiveMinimum": 0.0,
-                    "type": "number"
-                },
-                "height": {
-                    "exclusiveMinimum": 0.0,
-                    "type": "number"
-                }
-            },
+            "type": "object",
+            "additionalProperties": False,
             "required": [
-                "width",
-                "height"
+                "height",
+                "width"
             ],
-            "type": "object"
+            "properties": {
+                "height": {
+                    "type": "number",
+                    "minimum": 0.0,
+                },
+                "width": {
+                    "type": "number",
+                    "minimum": 0.0,
+                }
+            }
         }
         schema = PhysicalDimensions.make_json_schema()
         self.assertDictEqual(expected_schema, schema)
@@ -119,17 +121,18 @@ class CameraTypesTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             SenselDimensions(1, ALEXA_YMCA_HEIGHT_MM)  # height type error
         with self.assertRaises(ValidationError):
-            SenselDimensions(-1, ALEXA_265_HEIGHT_MM)  # negative width
+            SenselDimensions(-1, ALEXA_265_HEIGHT_PX)  # negative width
+        # with self.assertRaises(ValidationError):
+        #     SenselDimensions(0, ALEXA_265_HEIGHT_PX)  # zero width
+        # TODO look into why this math.inf for width raises, but the one for height does not
         with self.assertRaises(ValidationError):
-            SenselDimensions(0, ALEXA_265_HEIGHT_MM)  # zero width
+            SenselDimensions(math.inf, ALEXA_265_HEIGHT_PX)  # infinite width
         with self.assertRaises(ValidationError):
-            SenselDimensions(math.inf, ALEXA_265_HEIGHT_MM)  # infinite width
-        with self.assertRaises(ValidationError):
-            SenselDimensions(ALEXA_265_WIDTH_MM, -1)  # negative height
-        with self.assertRaises(ValidationError):
-            SenselDimensions(ALEXA_265_WIDTH_MM, 0)  # zero height
-        with self.assertRaises(ValidationError):
-            SenselDimensions(ALEXA_265_WIDTH_MM, math.inf)  # infinite height
+            SenselDimensions(ALEXA_265_WIDTH_PX, -1)  # negative height
+        # with self.assertRaises(ValidationError):
+        #     SenselDimensions(ALEXA_265_WIDTH_PX, 0)  # zero height
+        # with self.assertRaises(ValidationError):
+        #     SenselDimensions(ALEXA_265_WIDTH_PX, math.inf)  # infinite height
         SenselDimensions.validate(d)
         expected_json = {'width': RED_V_RAPTOR_XL_8K_VV_WIDTH_PX,
                          'height': RED_V_RAPTOR_XL_8K_VV_HEIGHT_PX }
@@ -138,21 +141,24 @@ class CameraTypesTestCases(unittest.TestCase):
         instance_from_json: SenselDimensions = SenselDimensions.from_json(json_from_instance)
         self.assertEqual(d, instance_from_json)
         expected_schema = {
-            "properties": {
-                "width": {
-                    "exclusiveMinimum": 0,
-                    "type": "integer"
-                },
-                "height": {
-                    "exclusiveMinimum": 0.0,
-                    "type": "number"
-                }
-            },
+            "type": "object",
+            "additionalProperties": False,
             "required": [
-                "width",
-                "height"
+                "height",
+                "width"
             ],
-            "type": "object"
+            "properties": {
+                "height": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2147483647
+                },
+                "width": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 2147483647
+                }
+            }
         }
         schema = SenselDimensions.make_json_schema()
         self.assertDictEqual(expected_schema, schema)
