@@ -20,7 +20,7 @@ from camdkit.lens_types import (StaticLens, Lens,
 from camdkit.camera_types import StaticCamera, PhysicalDimensions, SenselDimensions
 from camdkit.string_types import NonBlankUTF8String, UUIDURN
 from camdkit.tracker_types import StaticTracker, Tracker
-from camdkit.timing_types import Timing
+from camdkit.timing_types import Timing, TimingMode, Timestamp, Synchronization, Timecode
 from camdkit.transform_types import Transforms
 
 
@@ -83,7 +83,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'camera', 'capture_frame_rate'))
 
     @capture_frame_rate.setter
-    def capture_frame_rate(self, value: StrictlyPositiveRational) -> None:
+    def capture_frame_rate(self, value: StrictlyPositiveRational | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('camera', StaticCamera)),
                                    'capture_frame_rate',
@@ -94,7 +94,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'camera', 'active_sensor_physical_dimensions'))
 
     @active_sensor_physical_dimensions.setter
-    def active_sensor_physical_dimensions(self, value: PhysicalDimensions) -> None:
+    def active_sensor_physical_dimensions(self, value: PhysicalDimensions | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('camera', StaticCamera)),
                                    'active_sensor_physical_dimensions',
@@ -105,7 +105,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'camera', 'active_sensor_resolution'))
 
     @active_sensor_resolution.setter
-    def active_sensor_resolution(self, value: SenselDimensions) -> None:
+    def active_sensor_resolution(self, value: SenselDimensions  | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('camera', StaticCamera)),
                                    'active_sensor_resolution',
@@ -116,7 +116,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'camera', 'anamorphic_squeeze'))
 
     @anamorphic_squeeze.setter
-    def anamorphic_squeeze(self, value: StrictlyPositiveRational) -> None:
+    def anamorphic_squeeze(self, value: StrictlyPositiveRational | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('camera', StaticCamera)),
                                    'anamorphic_squeeze',
@@ -127,7 +127,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'camera', 'make'))
 
     @camera_make.setter
-    def camera_make(self, value: NonBlankUTF8String) -> None:
+    def camera_make(self, value: NonBlankUTF8String | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('camera', StaticCamera)),
                                    'make',
@@ -138,7 +138,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'camera', 'model'))
 
     @camera_model.setter
-    def camera_model(self, value: NonBlankUTF8String) -> None:
+    def camera_model(self, value: NonBlankUTF8String | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('camera', StaticCamera)),
                                    'model',
@@ -149,7 +149,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'camera', 'serial_number'))
 
     @camera_serial_number.setter
-    def camera_serial_number(self, value: NonBlankUTF8String) -> None:
+    def camera_serial_number(self, value: NonBlankUTF8String | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('camera', StaticCamera)),
                                    'serial_number',
@@ -160,7 +160,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'camera', 'firmware_version'))
 
     @camera_firmware.setter
-    def camera_firmware(self, value: NonBlankUTF8String) -> None:
+    def camera_firmware(self, value: NonBlankUTF8String | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('camera', StaticCamera)),
                                    'firmware_version',
@@ -171,7 +171,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'camera', 'label'))
 
     @camera_label.setter
-    def camera_label(self, value: NonBlankUTF8String) -> None:
+    def camera_label(self, value: NonBlankUTF8String | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('camera', StaticCamera)),
                                    'label',
@@ -182,7 +182,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'camera', 'iso'))
 
     @iso.setter
-    def iso(self, value: NonBlankUTF8String) -> None:
+    def iso(self, value: NonBlankUTF8String | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('camera', StaticCamera)),
                                    'iso',
@@ -193,7 +193,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'camera', 'fdl_link'))
 
     @fdl_link.setter
-    def fdl_link(self, value: NonBlankUTF8String) -> None:
+    def fdl_link(self, value: NonBlankUTF8String | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('camera', StaticCamera)),
                                    'fdl_link',
@@ -204,7 +204,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'camera', 'shutter_angle'))
 
     @shutter_angle.setter
-    def shutter_angle(self, value: NonBlankUTF8String) -> None:
+    def shutter_angle(self, value: NonBlankUTF8String | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('camera', StaticCamera)),
                                    'shutter_angle',
@@ -215,7 +215,7 @@ class Clip(CompatibleBaseModel):
         return self.static.duration
 
     @duration.setter
-    def duration(self, value) -> None:
+    def duration(self, value: StrictlyPositiveRational | None) -> None:
         self.static.duration = value
     
     @property
@@ -223,7 +223,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'lens', 'distortion_overscan_max'))
     
     @lens_distortion_overscan_max.setter
-    def lens_distortion_overscan_max(self, value: UnityOrGreaterFloat) -> None:
+    def lens_distortion_overscan_max(self, value: UnityOrGreaterFloat | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('lens', StaticLens)),
                                    'distortion_overscan_max',
@@ -234,7 +234,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'lens', 'undistortion_overscan_max'))
     
     @lens_undistortion_overscan_max.setter
-    def lens_undistortion_overscan_max(self, value: UnityOrGreaterFloat) -> None:
+    def lens_undistortion_overscan_max(self, value: UnityOrGreaterFloat | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('lens', StaticLens)),
                                    'undistortion_overscan_max',
@@ -245,7 +245,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'lens', 'make'))
 
     @lens_make.setter
-    def lens_make(self, value: NonBlankUTF8String) -> None:
+    def lens_make(self, value: NonBlankUTF8String | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('lens', StaticLens)),
                                    'make',
@@ -256,7 +256,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'lens', 'model'))
 
     @lens_model.setter
-    def lens_model(self, value: NonBlankUTF8String) -> None:
+    def lens_model(self, value: NonBlankUTF8String | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('lens', StaticLens)),
                                    'model',
@@ -267,7 +267,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'lens', 'serial_number'))
 
     @lens_serial_number.setter
-    def lens_serial_number(self, value: NonBlankUTF8String) -> None:
+    def lens_serial_number(self, value: NonBlankUTF8String | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('lens', StaticLens)),
                                    'serial_number',
@@ -278,7 +278,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'lens', 'firmware_version'))
 
     @lens_firmware.setter
-    def lens_firmware(self, value: NonBlankUTF8String) -> None:
+    def lens_firmware(self, value: NonBlankUTF8String | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('lens', StaticLens)),
                                    'firmware_version',
@@ -289,7 +289,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('static', 'lens', 'nominal_focal_length'))
 
     @lens_nominal_focal_length.setter
-    def lens_nominal_focal_length(self, value: NonBlankUTF8String) -> None:
+    def lens_nominal_focal_length(self, value: NonBlankUTF8String | None) -> None:
         self.set_through_hierarchy((('static', Static),
                                     ('lens', StaticLens)),
                                    'nominal_focal_length',
@@ -310,27 +310,27 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('lens', 'distortion'))
 
     @lens_distortion.setter
-    def lens_distortion(self, value: tuple[Distortion, ...]):
+    def lens_distortion(self, value: tuple[Distortion, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'distortion',
                                    value)
 
     @property
-    def lens_distortion_overscan(self) -> tuple[float, ...]:
+    def lens_distortion_overscan(self) -> tuple[float, ...] | None:
         return self.value_from_hierarchy(('lens', 'distortion_overscan'))
 
     @lens_distortion_overscan.setter
-    def lens_distortion_overscan(self, value: tuple[float, ...]):
+    def lens_distortion_overscan(self, value: tuple[float, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'distortion_overscan',
                                    value)
 
     @property
-    def lens_undistortion_overscan(self) -> tuple[float, ...]:
+    def lens_undistortion_overscan(self) -> tuple[float, ...] | None:
         return self.value_from_hierarchy(('lens', 'undistortion_overscan'))
 
     @lens_undistortion_overscan.setter
-    def lens_undistortion_overscan(self, value: tuple[float, ...]):
+    def lens_undistortion_overscan(self, value: tuple[float, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'undistortion_overscan',
                                    value)
@@ -340,7 +340,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('lens', 'distortion_offset'))
 
     @lens_distortion_offset.setter
-    def lens_distortion_offset(self, value: tuple[DistortionOffset, ...]):
+    def lens_distortion_offset(self, value: tuple[DistortionOffset, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'distortion_offset',
                                    value)
@@ -350,7 +350,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('lens', 'encoders'))
 
     @lens_encoders.setter
-    def lens_encoders(self, value: tuple[FizEncoders, ...]):
+    def lens_encoders(self, value: tuple[FizEncoders, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'encoders',
                                    value)
@@ -360,7 +360,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('lens', 'entrance_pupil_offset'))
 
     @lens_entrance_pupil_offset.setter
-    def lens_entrance_pupil_offset(self, value: tuple[float, ...]):
+    def lens_entrance_pupil_offset(self, value: tuple[float, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'entrance_pupil_offset',
                                    value)
@@ -370,7 +370,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('lens', 'exposure_falloff'))
 
     @lens_exposure_falloff.setter
-    def lens_exposure_falloff(self, value: tuple[float, ...]):
+    def lens_exposure_falloff(self, value: tuple[float, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'exposure_falloff',
                                    value)
@@ -380,7 +380,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('lens', 'f_number'))
 
     @lens_f_number.setter
-    def lens_f_number(self, value: tuple[float, ...]):
+    def lens_f_number(self, value: tuple[float, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'f_number',
                                    value)
@@ -390,7 +390,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('lens', 'focal_length'))
 
     @lens_focal_length.setter
-    def lens_focal_length(self, value: tuple[float, ...]):
+    def lens_focal_length(self, value: tuple[float, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'focal_length',
                                    value)
@@ -400,7 +400,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('lens', 'focus_distance'))
 
     @lens_focus_distance.setter
-    def lens_focus_distance(self, value: tuple[float, ...]):
+    def lens_focus_distance(self, value: tuple[float, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'focus_distance',
                                    value)
@@ -410,7 +410,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('lens', 'projection_offset'))
 
     @lens_projection_offset.setter
-    def lens_projection_offset(self, value: tuple[ProjectionOffset, ...]):
+    def lens_projection_offset(self, value: tuple[ProjectionOffset, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'projection_offset',
                                    value)
@@ -420,7 +420,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('lens', 'raw_encoders'))
 
     @lens_raw_encoders.setter
-    def lens_raw_encoders(self, value: tuple[RawFizEncoders, ...]):
+    def lens_raw_encoders(self, value: tuple[RawFizEncoders, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'raw_encoders',
                                    value)
@@ -430,7 +430,7 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('lens', 't_number'))
 
     @lens_t_number.setter
-    def lens_t_number(self, value: tuple[float, ...]):
+    def lens_t_number(self, value: tuple[float, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    't_number',
                                    value)
@@ -440,8 +440,77 @@ class Clip(CompatibleBaseModel):
         return self.value_from_hierarchy(('lens', 'undistortion'))
 
     @lens_undistortion.setter
-    def lens_undistortion(self, value: tuple[Distortion, ...]):
+    def lens_undistortion(self, value: tuple[Distortion, ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'undistortion',
                                    value)
 
+    @property
+    def timing_mode(self) -> tuple[TimingMode, ...] | None:
+        return self.value_from_hierarchy(('timing', 'mode'))
+    
+    @timing_mode.setter
+    def timing_mode(self, value: tuple[TimingMode, ...] | None) -> None:
+        self.set_through_hierarchy((('timing', Timing),),
+                                   'mode',
+                                   value)
+
+    @property
+    def timing_recorded_timestamp(self) -> tuple[Timestamp, ...] | None:
+        return self.value_from_hierarchy(('timing', 'recorded_timestamp'))
+    
+    @timing_recorded_timestamp.setter
+    def timing_recorded_timestamp(self, value: tuple[Timestamp, ...] | None) -> None:
+        self.set_through_hierarchy((('timing', Timing),),
+                                   'recorded_timestamp',
+                                   value)
+
+    @property
+    def timing_sample_rate(self) -> tuple[StrictlyPositiveRational, ...] | None:
+        return self.value_from_hierarchy(('timing', 'sample_rate'))
+    
+    @timing_sample_rate.setter
+    def timing_sample_rate(self, value: tuple[StrictlyPositiveRational, ...] | None) -> None:
+        self.set_through_hierarchy((('timing', Timing),),
+                                   'sample_rate',
+                                   value)
+
+    @property
+    def timing_sample_timestamp(self) -> tuple[Timestamp, ...] | None:
+        return self.value_from_hierarchy(('timing', 'sample_timestamp'))
+    
+    @timing_sample_timestamp.setter
+    def timing_sample_timestamp(self, value: tuple[Timestamp, ...] | None) -> None:
+        self.set_through_hierarchy((('timing', Timing),),
+                                   'sample_timestamp',
+                                   value)
+
+    @property
+    def timing_sequence_number(self) -> tuple[NonNegativeInt, ...] | None:
+        return self.value_from_hierarchy(('timing', 'sequence_number'))
+    
+    @timing_sequence_number.setter
+    def timing_sequence_number(self, value: tuple[NonNegativeInt, ...] | None) -> None:
+        self.set_through_hierarchy((('timing', Timing),),
+                                   'sequence_number',
+                                   value)
+
+    @property
+    def timing_synchronization(self) -> tuple[Synchronization, ...] | None:
+        return self.value_from_hierarchy(('timing', 'synchronization'))
+    
+    @timing_synchronization.setter
+    def timing_synchronization(self, value: tuple[Synchronization, ...] | None) -> None:
+        self.set_through_hierarchy((('timing', Timing),),
+                                   'synchronization',
+                                   value)
+
+    @property
+    def timing_timecode(self) -> tuple[Timecode, ...] | None:
+        return self.value_from_hierarchy(('timing', 'timecode'))
+    
+    @timing_timecode.setter
+    def timing_timecode(self, value: tuple[Timecode, ...] | None) -> None:
+        self.set_through_hierarchy((('timing', Timing),),
+                                   'timecode',
+                                   value)

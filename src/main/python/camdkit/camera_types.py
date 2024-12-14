@@ -60,7 +60,7 @@ class StaticCamera(CompatibleBaseModel):
     shutter_angle: Annotated[float | None, Field(ge=0.0, le=360.0, alias="shutterAngle")] = None
 
     # noinspection PyNestedDecorators
-    @field_validator('capture_frame_rate', 'anamorphic_squeeze', mode='before')
+    @field_validator("capture_frame_rate", "anamorphic_squeeze", mode="before")
     @classmethod
     def coerce_to_strictly_positive_rational(cls, v):
         return rationalize_strictly_and_positively(v)

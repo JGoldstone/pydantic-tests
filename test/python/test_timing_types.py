@@ -4,18 +4,15 @@
 # SPDX-License-Identifier: BSD-3-Clause
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
-"""Tests for model types"""
+"""Types to model time, timing and synchronization"""
 
 import unittest
 
-from pydantic import ValidationError, BaseModel, Field
+from pydantic import ValidationError
 
-from camdkit.model_types import (SynchronizationSource, SynchronizationOffsets,
-                                 Synchronization, SynchronizationPTP)
+from camdkit.timing_types import SynchronizationSource, SynchronizationOffsets
 
-
-class ModelTestCases(unittest.TestCase):
-
+class TimingTestCases(unittest.TestCase):
 
     def test_synchronization_source_validation(self) -> None:
         # not perfect but better than nothing

@@ -4,13 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Prototypical first &quot;regular&quot; (i.e. periodic) lens metadata.">
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Bump version of pydantic-settings.">
+      <change afterPath="$PROJECT_DIR$/test/python/test_timing_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camdkit_implementation_notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/camdkit_implementation_notes.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/experiments/learnings.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/learnings.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/backwards.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/backwards.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/camera_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/camera_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/model_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/model_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/python/test_clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_clip.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_model_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_model_types.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,8 +24,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Jupyter Notebook" />
-        <option value="Python Unit Test" />
         <option value="Python Script" />
+        <option value="Python Unit Test" />
       </list>
     </option>
   </component>
@@ -77,13 +80,14 @@
     "Python tests.Python tests for test_clip.ClipTestCases.test_active_sensor_physical_dimensions.executor": "Debug",
     "Python tests.Python tests for test_clip.ClipTestCases.test_basic.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_frame_rate_validation.executor": "Run",
-    "Python tests.Python tests for test_clip.ClipTestCases.test_lens_regular_parameters.executor": "Debug",
+    "Python tests.Python tests for test_clip.ClipTestCases.test_lens_regular_parameters.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_old_style.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_sampleID_validation.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_sampleID_validation_old_style.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_sample_from_json.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_sample_id_to_json.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_statics.executor": "Run",
+    "Python tests.Python tests for test_clip.ClipTestCases.test_timing_regular_parameters.executor": "Run",
     "Python tests.Python tests for test_framework.MyTestCase.test_non_blank_utf8_string.executor": "Run",
     "Python tests.Python tests for test_framework.MyTestCase.test_rational_ranges.executor": "Run",
     "Python tests.Python tests for test_framework.MyTestCase.test_strictly_positive_rational_ranges.executor": "Run",
@@ -152,7 +156,7 @@
       <recent name="$PROJECT_DIR$/src/main/python/camdkit" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test_clip.ClipTestCases.test_lens_regular_parameters">
+  <component name="RunManager" selected="Python tests.Python tests in test_timing_types.py">
     <configuration name="camera_types" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -199,22 +203,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_clip.ClipTestCases.test_basic" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="pydantic tests" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/python" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_clip.ClipTestCases.test_basic&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
     <configuration name="Python tests for test_clip.ClipTestCases.test_lens_regular_parameters" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -247,7 +235,7 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests in test_string_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_clip.ClipTestCases.test_timing_regular_parameters" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -259,7 +247,23 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_string_types.py&quot;" />
+      <option name="_new_target" value="&quot;test_clip.ClipTestCases.test_timing_regular_parameters&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests in test_timing_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="pydantic tests" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/python" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_timing_types.py&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
@@ -285,26 +289,26 @@
       <item itemvalue="Python.main" />
       <item itemvalue="Python.camera_types" />
       <item itemvalue="Python tests.Unittests in python" />
+      <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_timing_regular_parameters" />
+      <item itemvalue="Python tests.Python tests in test_timing_types.py" />
       <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_lens_regular_parameters" />
-      <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_basic" />
       <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_statics" />
-      <item itemvalue="Python tests.Python tests in test_string_types.py" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests in test_timing_types.py" />
+        <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_timing_regular_parameters" />
         <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_lens_regular_parameters" />
         <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_statics" />
         <item itemvalue="Python.camera_types" />
-        <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_basic" />
-        <item itemvalue="Python tests.Python tests in test_string_types.py" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-PY-243.21565.199" />
-        <option value="bundled-python-sdk-cab1f2013843-4ae2d6a61b08-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.21565.199" />
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-PY-243.22562.180" />
+        <option value="bundled-python-sdk-85c76a3b01b3-9a18a617cbe4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.22562.180" />
       </set>
     </attachedChunks>
   </component>
@@ -334,7 +338,8 @@
       <workItem from="1733010179570" duration="1538000" />
       <workItem from="1733259270686" duration="185065000" />
       <workItem from="1734018398844" duration="5656000" />
-      <workItem from="1734029473500" duration="50371000" />
+      <workItem from="1734029473500" duration="51831000" />
+      <workItem from="1734133161202" duration="6484000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -544,15 +549,29 @@
       <option name="project" value="LOCAL" />
       <updated>1734119698306</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Lens 'regular' parameters pass unit tests">
+      <option name="closed" value="true" />
+      <created>1734132539217</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1734132539217</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Bump version of pydantic-settings.">
+      <option name="closed" value="true" />
+      <created>1734142436421</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1734142436421</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Snapshot before exploring Fields." />
-    <MESSAGE value="First experiment with field validators" />
     <MESSAGE value="Experiment with model validators" />
     <MESSAGE value="Start to bring in camdkit types" />
     <MESSAGE value="Add test of strictly positive rationals" />
@@ -576,7 +595,9 @@
     <MESSAGE value="Move types around; make to_json() be a regular method rather than a staticmethod." />
     <MESSAGE value="finish [static] camera data, static lens data" />
     <MESSAGE value="Prototypical first &quot;regular&quot; (i.e. periodic) lens metadata." />
-    <option name="LAST_COMMIT_MESSAGE" value="Prototypical first &quot;regular&quot; (i.e. periodic) lens metadata." />
+    <MESSAGE value="Lens 'regular' parameters pass unit tests" />
+    <MESSAGE value="Bump version of pydantic-settings." />
+    <option name="LAST_COMMIT_MESSAGE" value="Bump version of pydantic-settings." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -588,15 +609,27 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test/python/test_clip.py</url>
-          <line>128</line>
+          <line>127</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test/python/test_clip.py</url>
-          <line>199</line>
+          <line>198</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/python/test_clip.py</url>
+          <line>280</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
       </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
@@ -604,6 +637,6 @@
     <SUITE FILE_PATH="coverage/pydantic_tests$camera_types.coverage" NAME="camera_types Coverage Results" MODIFIED="1734106899074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
     <SUITE FILE_PATH="coverage/pydantic_tests$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1728857315751" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1734127709262" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1734142389005" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
   </component>
 </project>

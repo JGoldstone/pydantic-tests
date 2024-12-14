@@ -18,10 +18,9 @@ from camdkit.lens_types import (ExposureFalloff,
                                 FizEncoders, RawFizEncoders)
 from camdkit.numeric_types import Rational, StrictlyPositiveRational, NonNegativeFloat, NonNegativeInt
 from camdkit.string_types import NonBlankUTF8String
-from camdkit.model_types import (FrameRate,
-                                 SynchronizationSource, SynchronizationOffsets,
-                                 SynchronizationPTP, Synchronization)
 from camdkit.camera_types import PhysicalDimensions, SenselDimensions
+from camdkit.timing_types import Timestamp, Timecode, TimecodeFormat, FrameRate, SynchronizationSource, \
+    SynchronizationOffsets, SynchronizationPTP, Synchronization
 from camdkit.clip import Clip
 
 VALID_SAMPLE_ID = 'urn:uuid:abcdefab-abcd-abcd-abcd-abcdefabcdef'  # 8-4-4-4-12
@@ -252,25 +251,52 @@ class ClipTestCases(unittest.TestCase):
         clip_from_json: Clip = Clip.from_json(clip_as_json)
         self.assertEqual(clip, clip_from_json)
 
+    def test_timing_regular_parameters(self):
+        # reference values
+        timing_mode = ("internal", "internal")
+        timing_sample_timestamp = (Timestamp(1718806554, 0),
+                                    Timestamp(1718806555, 0))
+        timing_recorded_timestamp = (Timestamp(1718806000, 0),
+                                      Timestamp(1718806001, 0))
+        timing_sequence_number = (0, 1)
+        sample_rate = StrictlyPositiveRational(24000, 1001)
+        timing_sample_rate = (sample_rate, sample_rate)
+        timecode = Timecode(1, 2, 3, 4,
+                            TimecodeFormat(StrictlyPositiveRational(24000, 1001),
+                                           0))
+        timing_timecode = (timecode, timecode)
+        ptp = SynchronizationPTP(1, "00:11:22:33:44:55", 0.0)
+        sync_offsets = SynchronizationOffsets(1.0, 2.0, 3.0)
+        synchronization = Synchronization(present=True,
+                                          locked=True,
+                                          frequency=sample_rate,
+                                          source=SynchronizationSource.PTP,
+                                          ptp=ptp,
+                                          offsets=sync_offsets)
+        timing_synchronization = (synchronization, synchronization)
 
-
-    #     self.assertEqual(camera_make, clip.camera_make)  # add assertion here
-    #     print(clip.model_dump_json(indent=2))
-    #     # schema: dict[str, Any] = Clip.model_json_schema()
-    #     # print(json.dumps(schema, indent=2))
-
-    # def test_old_style(self):
-    #     sync = Synchronization(
-    #         locked=True,
-    #         source=SynchronizationSource.PTP,
-    #         frequency=StrictlyPositiveRational(24000, 1001),
-    #         offsets=SynchronizationOffsets(1.0,2.0,3.0),
-    #         present=True,
-    #         ptp=SynchronizationPTP(1,"00:11:22:33:44:55",0.0)
-    #     )
-    #     c = Clip()
-    #     c.timing_synchronization = sync
-    #     self.assertEqual(True, c.timing_synchronization.locked)
+        clip = Clip()
+        self.assertIsNone(clip.timing_mode)
+        clip.timing_mode = timing_mode
+        self.assertEqual(timing_mode, clip.timing_mode)
+        self.assertIsNone(clip.timing_sample_timestamp)
+        clip.timing_sample_timestamp = timing_sample_timestamp
+        self.assertEqual(timing_sample_timestamp, clip.timing_sample_timestamp)
+        self.assertIsNone(clip.timing_recorded_timestamp)
+        clip.timing_recorded_timestamp = timing_recorded_timestamp
+        self.assertEqual(timing_recorded_timestamp, clip.timing_recorded_timestamp)
+        self.assertIsNone(clip.timing_sequence_number)
+        clip.timing_sequence_number = timing_sequence_number
+        self.assertEqual(timing_sequence_number, clip.timing_sequence_number)
+        self.assertIsNone(clip.timing_sample_rate)
+        clip.timing_sample_rate = timing_sample_rate
+        self.assertEqual(timing_sample_rate, clip.timing_sample_rate)
+        self.assertIsNone(clip.timing_timecode)
+        clip.timing_timecode = timing_timecode
+        self.assertEqual(timing_timecode, clip.timing_timecode)
+        self.assertIsNone(clip.timing_synchronization)
+        clip.timing_synchronization = timing_synchronization
+        self.assertEqual(timing_synchronization, clip.timing_synchronization)
 
 
 if __name__ == '__main__':
