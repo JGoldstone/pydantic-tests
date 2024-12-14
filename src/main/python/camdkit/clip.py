@@ -6,13 +6,13 @@
 
 """Types for modeling clips"""
 
-from typing import Optional, Any
+from typing import Annotated, Any
 
 from pydantic import Field
 
 from camdkit.backwards import CompatibleBaseModel
 from camdkit.numeric_types import (NonNegativeInt,
-                                   NonNegativeFloat, UnityOrGreaterFloat,
+                                   UnityOrGreaterFloat,
                                    StrictlyPositiveRational)
 from camdkit.lens_types import (StaticLens, Lens,
                                 Distortion, DistortionOffset, ProjectionOffset,
@@ -21,7 +21,7 @@ from camdkit.camera_types import StaticCamera, PhysicalDimensions, SenselDimensi
 from camdkit.string_types import NonBlankUTF8String, UUIDURN
 from camdkit.tracker_types import StaticTracker, Tracker
 from camdkit.timing_types import Timing, TimingMode, Timestamp, Synchronization, Timecode
-from camdkit.transform_types import Transforms
+from camdkit.transform_types import Transform
 
 
 class GlobalPosition(CompatibleBaseModel):
@@ -31,32 +31,36 @@ class GlobalPosition(CompatibleBaseModel):
     E: float  # East (meters)
     N: float  # North (meters)
     U: float  # Up (meters)
-    lat0: float = Field(..., ge=-90, le=90)  # latitude (degrees)
-    long0: float = Field(..., ge=-180, le=180)  # longitude (degrees)
+    lat0: float  # latitude (degrees)
+    lon0: float  # longitude (degrees)
     h0: float  # height (meters)
 
-    def __init__(self, e: float, n: float, u: float, lat0: float, long0: float, h0: float):
-        super(GlobalPosition, self).__init__(E=e, N=n, U=u, lat0=lat0, long0=long0, h0=h0)
+    def __init__(self, E: float, N: float, U: float, lat0: float, lon0: float, h0: float):
+        super(GlobalPosition, self).__init__(E=E, N=N, U=U, lat0=lat0, lon0=lon0, h0=h0)
 
 
 class Static(CompatibleBaseModel):
-    duration: Optional[StrictlyPositiveRational] = None
-    camera: Optional[StaticCamera] = None
-    lens: Optional[StaticLens] = None
-    tracker: Optional[StaticTracker] = None
+    duration: StrictlyPositiveRational | None = None
+    camera: StaticCamera | None = None
+    lens: StaticLens | None = None
+    tracker: StaticTracker | None = None
 
 
 class Clip(CompatibleBaseModel):
-    static: Optional[Static] = None
-    sample_id: Optional[tuple[UUIDURN]] = None
-    source_id: Optional[tuple[UUIDURN]] = None
-    source_number: Optional[tuple[NonNegativeInt]] = None
-    related_sample_ids: Optional[tuple[tuple[UUIDURN]]] = None
-    global_stage: Optional[tuple[GlobalPosition]] = None
-    tracker: Optional[Tracker] = None
-    timing: Optional[Timing] = None
-    transforms: Optional[tuple[Transforms]] = None
-    lens: Optional[Lens] = None
+    static: Static | None = None
+
+    tracker: Tracker | None = None
+    timing: Timing | None = None
+    lens: Lens | None = None
+
+    # The "global_" prefix is here because, without it, we would have BaseModel attributes
+    # with the same name, from the user's POV, as the
+    global_sample_id: Annotated[tuple[UUIDURN, ...] | None, Field(alias="sampleId")] = None
+    global_source_id: Annotated[tuple[UUIDURN, ...] | None, Field(alias="sourceId")] = None
+    global_source_number: Annotated[tuple[NonNegativeInt, ...] | None, Field(alias="sourceNumber")] = None
+    global_related_sample_ids: Annotated[tuple[tuple[UUIDURN, ...], ...] | None, Field(alias="relatedSampleIds")] = None
+    global_global_stage: Annotated[tuple[GlobalPosition, ...] | None, Field(alias="globalStage")] = None
+    global_transforms: Annotated[tuple[Transform, ...] | None, Field(alias="transforms")] = None
 
     def value_from_hierarchy(self, attrs: tuple[str, ...]):
         obj = self
@@ -67,16 +71,27 @@ class Clip(CompatibleBaseModel):
                 return None
         return obj
 
-    def set_through_hierarchy(self, attrs_and_classes: tuple[tuple[str, type], ...],
+    def set_through_hierarchy(self, attrs_and_classes: tuple[tuple[str, type], ...] | None,
                               name: str, value: Any) -> None:
         obj = self
-        for (attr, attr_type) in attrs_and_classes:
-            if not hasattr(obj, attr) or getattr(obj, attr) is None:
-                setattr(obj, attr, attr_type())
-            obj = getattr(obj, attr)
+        if attrs_and_classes:
+            for (attr, attr_type) in attrs_and_classes:
+                if not hasattr(obj, attr) or getattr(obj, attr) is None:
+                    setattr(obj, attr, attr_type())
+                obj = getattr(obj, attr)
         setattr(obj, name, value)
 
     # TODO: introspect all of these, or at least the static ones
+
+    @property
+    def duration(self) -> StrictlyPositiveRational | None:
+        return self.value_from_hierarchy(('static', 'duration'))
+
+    @duration.setter
+    def duration(self, value: StrictlyPositiveRational | None) -> None:
+        self.set_through_hierarchy((
+            ('static', Static),),
+            'duration', value)
 
     @property
     def capture_frame_rate(self) -> StrictlyPositiveRational:
@@ -84,10 +99,10 @@ class Clip(CompatibleBaseModel):
 
     @capture_frame_rate.setter
     def capture_frame_rate(self, value: StrictlyPositiveRational | None) -> None:
-        self.set_through_hierarchy((('static', Static),
-                                    ('camera', StaticCamera)),
-                                   'capture_frame_rate',
-                                   value)
+        self.set_through_hierarchy((
+            ('static', Static),
+            ('camera', StaticCamera)),
+            'capture_frame_rate', value)
 
     @property
     def active_sensor_physical_dimensions(self) -> PhysicalDimensions:
@@ -209,14 +224,6 @@ class Clip(CompatibleBaseModel):
                                     ('camera', StaticCamera)),
                                    'shutter_angle',
                                    value)
-
-    @property
-    def duration(self) -> StrictlyPositiveRational:
-        return self.static.duration
-
-    @duration.setter
-    def duration(self, value: StrictlyPositiveRational | None) -> None:
-        self.static.duration = value
     
     @property
     def lens_distortion_overscan_max(self) -> UnityOrGreaterFloat:
@@ -599,5 +606,63 @@ class Clip(CompatibleBaseModel):
         self.set_through_hierarchy((
             ('tracker', Tracker),),
             'notes', value)
-    
-    
+
+    @property
+    def sample_id(self) -> tuple[UUIDURN, ...] | None:
+        return self.value_from_hierarchy(('global_sample_id',))
+
+    @sample_id.setter
+    def sample_id(self, value: tuple[UUIDURN, ...] | None) -> None:
+        self.set_through_hierarchy(
+            None,
+            'global_sample_id', value)
+
+    @property
+    def source_id(self) -> tuple[UUIDURN, ...] | None:
+        return self.value_from_hierarchy(('global_source_id',))
+
+    @source_id.setter
+    def source_id(self, value: tuple[UUIDURN, ...] | None) -> None:
+        self.set_through_hierarchy(
+            None,
+            'global_source_id', value)
+
+    @property
+    def source_number(self) -> tuple[NonNegativeInt, ...] | None:
+        return self.value_from_hierarchy(('global_source_number',))
+
+    @source_number.setter
+    def source_number(self, value: tuple[NonNegativeInt, ...] | None) -> None:
+        self.set_through_hierarchy(
+            None,
+            'global_source_number', value)
+
+    @property
+    def related_sample_ids(self) -> tuple[tuple[UUIDURN, ...], ...] | None:
+        return self.value_from_hierarchy(('global_related_sample_ids',))
+
+    @related_sample_ids.setter
+    def related_sample_ids(self, value: tuple[tuple[UUIDURN, ...], ...] | None) -> None:
+        self.set_through_hierarchy(
+            None,
+            'global_related_sample_ids', value)
+
+    @property
+    def global_stage(self) -> tuple[tuple[GlobalPosition, ...], ...] | None:
+        return self.value_from_hierarchy(('global_global_stage',))
+
+    @global_stage.setter
+    def global_stage(self, value: tuple[tuple[GlobalPosition, ...], ...] | None) -> None:
+        self.set_through_hierarchy(
+            None,
+            'global_global_stage', value)
+
+    @property
+    def transforms(self) -> tuple[tuple[Transform, ...], ...] | None:
+        return self.value_from_hierarchy(('global_transforms',))
+
+    @transforms.setter
+    def transforms(self, value: tuple[tuple[Transform, ...], ...] | None) -> None:
+        self.set_through_hierarchy(
+            None,
+            'global_transforms', value)

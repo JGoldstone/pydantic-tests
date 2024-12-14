@@ -32,7 +32,7 @@ class Rotator3(CompatibleBaseModel):
         super(Rotator3, self).__init__(x=x, y=y, z=z)
 
 
-class Transforms(CompatibleBaseModel):
+class Transform(CompatibleBaseModel):
     translation: Vector3
     rotation: Rotator3
     scale: Optional[Vector3] = None

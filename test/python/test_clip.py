@@ -21,7 +21,8 @@ from camdkit.string_types import NonBlankUTF8String
 from camdkit.camera_types import PhysicalDimensions, SenselDimensions
 from camdkit.timing_types import Timestamp, Timecode, TimecodeFormat, FrameRate, SynchronizationSource, \
     SynchronizationOffsets, SynchronizationPTP, Synchronization
-from camdkit.clip import Clip
+from camdkit.transform_types import Vector3,
+from camdkit.clip import GlobalPosition, Clip
 
 VALID_SAMPLE_ID = "urn:uuid:abcdefab-abcd-abcd-abcd-abcdefabcdef"  # 8-4-4-4-12
 
@@ -34,6 +35,21 @@ class ClipTestCases(unittest.TestCase):
     #     self.assertEqual(1001, rate.denominator)
     #     with self.assertRaises(ValidationError):
     #         FrameRate(-24000, 1001)
+
+    def test_global_static_parameters(self):
+        # reference value
+        duration = StrictlyPositiveRational(3, 1)
+
+        clip = Clip()
+        self.assertIsNone(clip.duration)
+        clip.duration = duration
+        self.assertEqual(clip.duration, duration)
+
+        clip_as_json = clip.to_json()
+        self.assertEqual(clip_as_json["static"]["duration"], {"num": 3, "denom": 1})
+
+        clip_from_json: Clip = Clip.from_json(clip_as_json)
+        self.assertEqual(clip, clip_from_json)
 
     def test_camera_static_parameters(self):
         # reference values
@@ -386,6 +402,58 @@ class ClipTestCases(unittest.TestCase):
 
         clip_from_json = clip.from_json(clip_as_json)
         self.assertEqual(clip, clip_from_json)
+
+    def test_global_regular_parameters(self):
+        sample_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+                     "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7")
+        source_id = ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
+                     "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9")
+        source_number = (1, 2)
+        related_sample_ids = (("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6",
+                                "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"),
+                               ("urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf8",
+                                "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf9"))
+        global_stage = (GlobalPosition(100.0, 200.0, 300.0, 100.0, 200.0, 300.0),
+                        GlobalPosition(100.0, 200.0, 300.0, 100.0, 200.0, 300.0))
+        translation = Vector3(x=1.0, y=2.0, z=3.0)
+        rotation = Rotator3(pan=1.0, tilt=2.0, roll=3.0)
+        transforms = ((Transform(translation=translation, rotation=rotation),
+                            Transform(translation=translation, rotation=rotation)),
+                           (Transform(translation=translation, rotation=rotation),
+                            Transform(translation=translation, rotation=rotation)))
+
+        clip = Clip()
+        self.assertIsNone(clip.sample_id)
+        clip.sample_id = sample_id
+        self.assertEqual(sample_id, clip.sample_id)
+        self.assertIsNone(clip.source_id)
+        clip.source_id = source_id
+        self.assertEqual(source_id, clip.source_id)
+        self.assertIsNone(clip.source_number)
+        clip.source_number = source_number
+        self.assertEqual(source_number, clip.source_number)
+        self.assertIsNone(clip.related_sample_ids)
+        clip.related_sample_ids = related_sample_ids
+        self.assertEqual(related_sample_ids, clip.related_sample_ids)
+        self.assertIsNone(clip.global_stage)
+        clip.global_stage = global_stage
+        self.assertEqual(global_stage, clip.global_stage)
+
+        clip_as_json = clip.to_json()
+        self.assertTupleEqual(clip_as_json["sampleId"], sample_id)
+        self.assertTupleEqual(clip_as_json["sourceId"], source_id)
+        self.assertTupleEqual(clip_as_json["sourceNumber"], source_number)
+        self.assertTupleEqual(clip_as_json["relatedSampleIds"], related_sample_ids)
+        self.assertTupleEqual(clip_as_json["globalStage"],
+                              ({"E": 100.0, "N": 200.0, "U": 300.0,
+                                "lat0": 100.0, "lon0": 200.0, "h0": 300.0},
+                               {"E": 100.0, "N": 200.0, "U": 300.0,
+                                "lat0": 100.0, "lon0": 200.0, "h0": 300.0})
+                              )
+
+        clip_from_json = clip.from_json(clip_as_json)
+        self.assertEqual(clip, clip_from_json)
+
 
 if __name__ == '__main__':
     unittest.main()
