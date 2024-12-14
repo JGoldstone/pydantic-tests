@@ -6,7 +6,7 @@
 
 """Types for modeling of tracker-related metadata"""
 
-from typing import Annotated, Optional
+from typing import Annotated
 
 from pydantic import Field
 
@@ -15,14 +15,23 @@ from camdkit.backwards import CompatibleBaseModel
 
 
 class StaticTracker(CompatibleBaseModel):
-    make: Optional[NonBlankUTF8String] = None
-    model_name: Optional[NonBlankUTF8String] = None
-    serial_number: Optional[NonBlankUTF8String] = None
-    firmware_version: Optional[NonBlankUTF8String] = None
+    make: NonBlankUTF8String | None = None
+    model: NonBlankUTF8String | None = None
+    serial_number: Annotated[NonBlankUTF8String | None, Field(alias="serialNumber")] = None
+    firmware: Annotated[NonBlankUTF8String | None, Field(alias="firmwareVersion")] = None
+
+    # def __init__(self, make: NonBlankUTF8String | None,
+    #              modelName: NonBlankUTF8String | None,
+    #              serialNumber: NonBlankUTF8String | None,
+    #              firmwareVersion: NonBlankUTF8String | None):
+    #     super(StaticTracker, self).__init__(make=make,
+    #                                         modelName=modelName,
+    #                                         serialNumber=serialNumber,
+    #                                         firmwareVersion=firmwareVersion)
 
 
 class Tracker(CompatibleBaseModel):
-    notes: Optional[tuple[NonBlankUTF8String, ...]] = None
-    recording: Optional[tuple[Annotated[bool, Field(strict=True)], ...]] = None
-    slate: Optional[tuple[NonBlankUTF8String, ...]] = None
-    status: Optional[tuple[NonBlankUTF8String, ...]] = None
+    notes: tuple[NonBlankUTF8String, ...] | None = None
+    recording: tuple[bool, ...] | None = None
+    slate: tuple[NonBlankUTF8String, ...] | None = None
+    status: tuple[NonBlankUTF8String, ...] | None = None

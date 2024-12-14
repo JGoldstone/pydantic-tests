@@ -23,7 +23,7 @@ from camdkit.timing_types import Timestamp, Timecode, TimecodeFormat, FrameRate,
     SynchronizationOffsets, SynchronizationPTP, Synchronization
 from camdkit.clip import Clip
 
-VALID_SAMPLE_ID = 'urn:uuid:abcdefab-abcd-abcd-abcd-abcdefabcdef'  # 8-4-4-4-12
+VALID_SAMPLE_ID = "urn:uuid:abcdefab-abcd-abcd-abcd-abcdefabcdef"  # 8-4-4-4-12
 
 class ClipTestCases(unittest.TestCase):
     pass
@@ -35,8 +35,8 @@ class ClipTestCases(unittest.TestCase):
     #     with self.assertRaises(ValidationError):
     #         FrameRate(-24000, 1001)
 
-    def test_statics(self):
-        # reference static camera values
+    def test_camera_static_parameters(self):
+        # reference values
         capture_frame_rate = Fraction(24000, 1001)
         canonical_capture_frame_rate = StrictlyPositiveRational(24000, 1001)
         active_sensor_physical_dimensions = PhysicalDimensions(width=36.0, height=24.0)
@@ -51,16 +51,6 @@ class ClipTestCases(unittest.TestCase):
         iso = 13
         fdl_link = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
         shutter_angle = 180
-
-        # reference static lens values
-        lens_distortion_overscan_max = 1.2
-        lens_undistortion_overscan_max = 1.2
-        lens_make = "ABC"
-        lens_model = "FGH"
-        lens_firmware = "1-dev.1"
-        lens_serial_number = "123456789"
-        lens_nominal_focal_length = 24
-        lens_distortion_overscan = (1.0, 1.0)
 
         clip = Clip()
         self.assertIsNone(clip.active_sensor_physical_dimensions)
@@ -100,7 +90,31 @@ class ClipTestCases(unittest.TestCase):
         clip.shutter_angle = shutter_angle
         self.assertEqual(shutter_angle, clip.shutter_angle)
 
-        # lens static stuff next
+        clip_as_json = clip.to_json()
+        self.assertEqual(clip_as_json["static"]["camera"]["captureFrameRate"], {"num": 24000, "denom": 1001})
+        self.assertDictEqual(clip_as_json["static"]["camera"]["activeSensorPhysicalDimensions"], {"height": 24.0, "width": 36.0})
+        self.assertDictEqual(clip_as_json["static"]["camera"]["activeSensorResolution"], {"height": 2160, "width": 3840})
+        self.assertEqual(clip_as_json["static"]["camera"]["make"], camera_make)
+        self.assertEqual(clip_as_json["static"]["camera"]["model"], camera_model)
+        self.assertEqual(clip_as_json["static"]["camera"]["serialNumber"], camera_serial_number)
+        self.assertEqual(clip_as_json["static"]["camera"]["firmwareVersion"], "7.1")
+        self.assertEqual(clip_as_json["static"]["camera"]["label"], "A")
+
+        clip_from_json: Clip = Clip.from_json(clip_as_json)
+        self.assertEqual(clip, clip_from_json)
+
+    def test_lens_static_parameters(self):
+        # reference values
+        lens_distortion_overscan_max = 1.2
+        lens_undistortion_overscan_max = 1.2
+        lens_make = "ABC"
+        lens_model = "FGH"
+        lens_firmware = "1-dev.1"
+        lens_serial_number = "123456789"
+        lens_nominal_focal_length = 24
+        lens_distortion_overscan = (1.0, 1.0)
+
+        clip = Clip()
         self.assertIsNone(clip.lens_distortion_overscan_max)
         clip.lens_distortion_overscan_max = lens_distortion_overscan_max
         self.assertEqual(lens_distortion_overscan_max, clip.lens_distortion_overscan_max)
@@ -122,36 +136,47 @@ class ClipTestCases(unittest.TestCase):
         self.assertIsNone(clip.lens_nominal_focal_length)
         clip.lens_nominal_focal_length = lens_nominal_focal_length
 
-        # lens dynamic stuff
-        self.assertIsNone(clip.lens_distortion_overscan)
-        clip.lens_distortion_overscan = lens_distortion_overscan
-        self.assertEqual(lens_distortion_overscan, clip.lens_distortion_overscan)
+        clip_as_json = clip.to_json()
+        self.assertEqual(clip_as_json["static"]["lens"]["distortionOverscanMax"], 1.2)
+        self.assertEqual(clip_as_json["static"]["lens"]["undistortionOverscanMax"], 1.2)
+        self.assertEqual(clip_as_json["static"]["lens"]["make"], "ABC")
+        self.assertEqual(clip_as_json["static"]["lens"]["model"], "FGH")
+        self.assertEqual(clip_as_json["static"]["lens"]["serialNumber"], "123456789")
+        self.assertEqual(clip_as_json["static"]["lens"]["firmwareVersion"], "1-dev.1")
+        self.assertEqual(clip_as_json["static"]["lens"]["nominalFocalLength"], 24)
 
+        clip_from_json: Clip = Clip.from_json(clip_as_json)
+        self.assertEqual(clip, clip_from_json)
 
+    def test_tracker_static_parameters(self):
+        # reference values
+        tracker_make = "ABC"
+        tracker_model = "FGH"
+        tracker_serial_number = "1234567890A"
+        tracker_firmware = "1.0.1a"
 
-        d = clip.to_json()
-        self.assertEqual(d["static"]["camera"]["captureFrameRate"], {"num": 24000, "denom": 1001})
-        self.assertDictEqual(d["static"]["camera"]["activeSensorPhysicalDimensions"], {"height": 24.0, "width": 36.0})
-        self.assertDictEqual(d["static"]["camera"]["activeSensorResolution"], {"height": 2160, "width": 3840})
-        self.assertEqual(d["static"]["camera"]["make"], camera_make)
-        self.assertEqual(d["static"]["camera"]["model"], camera_model)
-        self.assertEqual(d["static"]["camera"]["serialNumber"], camera_serial_number)
-        self.assertEqual(d["static"]["camera"]["firmwareVersion"], "7.1")
-        self.assertEqual(d["static"]["camera"]["label"], "A")
+        clip = Clip()
+        self.assertIsNone(clip.tracker_make)
+        clip.tracker_make = tracker_make
+        self.assertEqual(tracker_make, clip.tracker_make)
+        self.assertIsNone(clip.tracker_model)
+        clip.tracker_model = tracker_model
+        self.assertEqual(tracker_model, clip.tracker_model)
+        self.assertIsNone(clip.tracker_serial_number)
+        clip.tracker_serial_number = tracker_serial_number
+        self.assertEqual(tracker_serial_number, clip.tracker_serial_number)
+        self.assertIsNone(clip.tracker_firmware)
+        clip.tracker_firmware = tracker_firmware
+        self.assertEqual(tracker_firmware, clip.tracker_firmware)
 
-        self.assertEqual(d["static"]["lens"]["distortionOverscanMax"], 1.2)
-        self.assertEqual(d["static"]["lens"]["undistortionOverscanMax"], 1.2)
-        self.assertEqual(d["static"]["lens"]["make"], "ABC")
-        self.assertEqual(d["static"]["lens"]["model"], "FGH")
-        self.assertEqual(d["static"]["lens"]["serialNumber"], "123456789")
-        self.assertEqual(d["static"]["lens"]["firmwareVersion"], "1-dev.1")
-        self.assertEqual(d["static"]["lens"]["nominalFocalLength"], 24)
+        clip_as_json = clip.to_json()
+        self.assertEqual(clip_as_json["static"]["tracker"]["make"], tracker_make)
+        self.assertEqual(clip_as_json["static"]["tracker"]["model"], tracker_model)
+        self.assertEqual(clip_as_json["static"]["tracker"]["serialNumber"], tracker_serial_number)
+        self.assertEqual(clip_as_json["static"]["tracker"]["firmwareVersion"], tracker_firmware)
 
-        self.assertTupleEqual(d["lens"]["distortionOverscan"], (1.0, 1.0))
-
-        rt: Clip = Clip.from_json(d)
-        self.assertEqual(clip, rt)
-
+        clip_from_json: Clip = Clip.from_json(clip_as_json)
+        self.assertEqual(clip, clip_from_json)
 
     def test_lens_regular_parameters(self):
         # reference values
@@ -249,7 +274,7 @@ class ClipTestCases(unittest.TestCase):
         self.assertTupleEqual(clip_as_json["lens"]["projectionOffset"], ({"x": 0.1, "y": 0.2}, {"x": 0.1, "y": 0.2}))
 
         clip_from_json: Clip = Clip.from_json(clip_as_json)
-        self.assertEqual(clip, clip_from_json)
+        self.assertDictEqual(clip, clip_from_json)
 
     def test_timing_regular_parameters(self):
         # reference values
@@ -330,7 +355,10 @@ class ClipTestCases(unittest.TestCase):
                               (expected_synchronization_dict,
                                expected_synchronization_dict))
         clip_from_json: Clip = Clip.from_json(clip_as_json)
-        self.assertEqual(clip, clip_from_json)
+        self.assertDictEqual(clip, clip_from_json)
+
+    def test_tracker_regular_parameters(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()

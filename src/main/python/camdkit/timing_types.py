@@ -105,7 +105,7 @@ class Synchronization(BaseModel):
 
 class Timing(CompatibleBaseModel):
     mode: tuple[TimingMode, ...] | None = None
-    recorded_timestamp: Annotated[tuple[Timestamp, ...], Field(alias="recordedTimestamp")] = None
+    recorded_timestamp: Annotated[tuple[Timestamp, ...] | None, Field(alias="recordedTimestamp")] = None
     sample_rate: Annotated[tuple[StrictlyPositiveRational, ...] | None, Field(alias="sampleRate")] = None
     sample_timestamp: Annotated[tuple[Timestamp, ...] | None, Field(alias="sampleTimestamp")] = None
     sequence_number: Annotated[tuple[NonNegativeInt, ...] | None, Field(alias="sequenceNumber")] = None

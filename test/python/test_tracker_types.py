@@ -3,7 +3,6 @@ import unittest
 from pydantic import ValidationError
 
 from camdkit.string_types import NonBlankUTF8String
-
 from camdkit.tracker_types import StaticTracker, Tracker
 
 
@@ -27,19 +26,19 @@ class TrackerTestCases(unittest.TestCase):
 
     def test_tracker_model_name(self):
         st = StaticTracker()
-        self.assertIsNone(st.model_name)
+        self.assertIsNone(st.model)
         with self.assertRaises(ValidationError):
-            st.model_name = 0+0.1j
+            st.model = 0 + 0.1j
         with self.assertRaises(ValidationError):
-            st.model_name = ""
+            st.model = ""
         smallest_valid_model_name: str = "x"
-        st.model_name = "x"
-        self.assertEqual(smallest_valid_model_name, st.model_name)
+        st.model = "x"
+        self.assertEqual(smallest_valid_model_name, st.model)
         largest_valid_model_name: str = "x" * 1023
-        st.model_name = largest_valid_model_name
-        self.assertEqual(largest_valid_model_name, st.model_name)
+        st.model = largest_valid_model_name
+        self.assertEqual(largest_valid_model_name, st.model)
         with self.assertRaises(ValidationError):
-            st.model_name = "x" * 1024
+            st.model = "x" * 1024
 
     def test_tracker_serial_number(self):
         st = StaticTracker()

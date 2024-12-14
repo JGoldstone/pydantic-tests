@@ -514,3 +514,92 @@ class Clip(CompatibleBaseModel):
         self.set_through_hierarchy((('timing', Timing),),
                                    'timecode',
                                    value)
+
+    @property
+    def tracker_make(self) -> tuple[NonBlankUTF8String, ...] | None:
+        return self.value_from_hierarchy(('static', 'tracker', 'make'))
+
+    @tracker_make.setter
+    def tracker_make(self, value: tuple[NonBlankUTF8String, ...] | None) -> None:
+        self.set_through_hierarchy((
+            ('static', Static),
+            ('tracker', StaticTracker)),
+            'make',
+            value)
+
+    @property
+    def tracker_model(self) -> tuple[NonBlankUTF8String, ...] | None:
+        return self.value_from_hierarchy(('static', 'tracker', 'model'))
+
+    @tracker_model.setter
+    def tracker_model(self, value: tuple[NonBlankUTF8String, ...] | None) -> None:
+        self.set_through_hierarchy((
+            ('static', Static),
+            ('tracker', StaticTracker)),
+            'model', value)
+
+    @property
+    def tracker_firmware(self) -> tuple[NonBlankUTF8String, ...] | None:
+        return self.value_from_hierarchy(('static', 'tracker', 'firmware'))
+
+    @tracker_firmware.setter
+    def tracker_firmware(self, value: tuple[NonBlankUTF8String, ...] | None) -> None:
+        self.set_through_hierarchy((
+            ('static', Static),
+            ('tracker', StaticTracker)),
+            'firmware', value)
+
+    @property
+    def tracker_serial_number(self) -> tuple[NonBlankUTF8String, ...] | None:
+        return self.value_from_hierarchy(('static', 'tracker', 'serial_number'))
+
+    @tracker_serial_number.setter
+    def tracker_serial_number(self, value: tuple[NonBlankUTF8String, ...] | None) -> None:
+        self.set_through_hierarchy((
+            ('static', Static),
+            ('tracker', StaticTracker)),
+            'serial_number', value)
+
+    @property
+    def tracker_status(self) -> tuple[NonBlankUTF8String, ...] | None:
+        return self.value_from_hierarchy(('tracker', 'status'))
+    
+    @tracker_status.setter
+    def tracker_status(self, value: tuple[NonBlankUTF8String, ...] | None) -> None:
+        self.set_through_hierarchy((
+            ('static', Static),
+            ('tracker', StaticTracker)),
+            'status', value)
+
+    @property
+    def tracker_recording(self) -> tuple[bool, ...] | None:
+        return self.value_from_hierarchy(('tracker', 'recording'))
+    
+    @tracker_recording.setter
+    def tracker_recording(self, value: tuple[bool, ...] | None) -> None:
+        self.set_through_hierarchy((
+            ('static', Static),
+            ('tracker', StaticTracker)),
+            'recording', value)
+
+    @property
+    def tracker_slate(self) -> tuple[NonBlankUTF8String, ...] | None:
+        return self.value_from_hierarchy(('tracker', 'slate'))
+    
+    @tracker_slate.setter
+    def tracker_slate(self, value: tuple[NonBlankUTF8String, ...] | None) -> None:
+        self.set_through_hierarchy((('tracker', Tracker),),
+                                   'slate',
+                                   value)
+
+    @property
+    def tracker_notes(self) -> tuple[NonBlankUTF8String, ...] | None:
+        return self.value_from_hierarchy(('tracker', 'notes'))
+    
+    @tracker_notes.setter
+    def tracker_notes(self, value: tuple[NonBlankUTF8String, ...] | None) -> None:
+        self.set_through_hierarchy((('tracker', Tracker),),
+                                   'notes',
+                                   value)
+    
+    
