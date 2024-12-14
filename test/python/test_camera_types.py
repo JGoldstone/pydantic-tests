@@ -174,6 +174,7 @@ class CameraTypesTestCases(unittest.TestCase):
                                                                      ALEXA_265_HEIGHT_MM)
         sc.active_sensor_physical_dimensions = valid_active_sensor_physical_dimensions
         self.assertEqual(valid_active_sensor_physical_dimensions, sc.active_sensor_physical_dimensions)
+        print(json.dumps(sc.active_sensor_physical_dimensions.make_json_schema(), indent=4))
 
         self.assertIsNone(sc.active_sensor_resolution)
         with self.assertRaises(ValidationError):
@@ -190,12 +191,12 @@ class CameraTypesTestCases(unittest.TestCase):
         sc.make = valid_make
         self.assertEqual(valid_make, sc.make)
 
-        self.assertIsNone(sc.model_name)
+        self.assertIsNone(sc.model)
         with self.assertRaises(ValidationError):
-            sc.model_name = 1
+            sc.model = 1
         valid_model = "delta penelope"
-        sc.model_name = valid_model
-        self.assertEqual(valid_model, sc.model_name)
+        sc.model = valid_model
+        self.assertEqual(valid_model, sc.model)
 
         self.assertIsNone(sc.serial_number)
         with self.assertRaises(ValidationError):
@@ -219,8 +220,8 @@ class CameraTypesTestCases(unittest.TestCase):
         self.assertEqual(valid_label, sc.label)
 
         self.assertIsNone(sc.anamorphic_squeeze)
-        with self.assertRaises(ValidationError):
-            sc.anamorphic_squeeze = 1
+        # test promotion via field validator for StrictlyPositiveRational
+        sc.anamorphic_squeeze = 1
         valid_anamorphic_squeeze = StrictlyPositiveRational(4, 3)
         sc.anamorphic_squeeze = valid_anamorphic_squeeze
         self.assertEqual(valid_anamorphic_squeeze, sc.anamorphic_squeeze)
