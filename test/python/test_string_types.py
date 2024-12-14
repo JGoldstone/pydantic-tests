@@ -14,7 +14,7 @@ from typing import Optional
 from pydantic import ValidationError
 
 from camdkit.backwards import CompatibleBaseModel
-from camdkit.string_types import NonBlankUTF8String, UUIDURN
+from camdkit.string_types import NonBlankUTF8String, UUID_URN_PATTERN, UUIDURN
 
 VALID_SAMPLE_ID_URN_0 = "urn:uuid:5ca5f233-11b5-4f43-8815-948d73e48a33"
 VALID_SAMPLE_ID_URN_1 = "urn:uuid:5ca5f233-11b5-dead-beef-948d73e48a33"
@@ -41,8 +41,6 @@ class StringsTestCases(unittest.TestCase):
         smallest_too_long_non_blank_utf8_string: NonBlankUTF8String = "x" * 1024
         with self.assertRaises(ValidationError):
             x.value = smallest_too_long_non_blank_utf8_string
-
-    def test_non_blank_utf8_string_schema_matches(self):
         expected_schema = {
             "type": "string",
             "minLength": 1,
@@ -56,10 +54,9 @@ class StringsTestCases(unittest.TestCase):
 
     def test_uuid_urn(self):
         class UUIDTestbed(CompatibleBaseModel):
-            value: Optional[UUIDURN] = None
+            value: UUIDURN
 
-        x = UUIDTestbed()
-        self.assertIsNone(x.value)
+        x = UUIDTestbed(value=VALID_SAMPLE_ID_URN_0)
         with self.assertRaises(ValidationError):
             x.value = 1
         with self.assertRaises(ValidationError):
@@ -70,6 +67,14 @@ class StringsTestCases(unittest.TestCase):
         self.assertEqual(VALID_SAMPLE_ID_URN_0, x.value)
         x.value = VALID_SAMPLE_ID_URN_1
         self.assertEqual(VALID_SAMPLE_ID_URN_1, x.value)
+        original_re = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+        expected_schema = {
+            "type": "string",
+            "pattern": f"^urn:uuid:{original_re}$"
+        }
+        entire_schema = UUIDTestbed.make_json_schema()
+        uuid_schema = entire_schema["properties"]["value"]
+        self.assertDictEqual(expected_schema, uuid_schema)
 
 
 if __name__ == '__main__':
