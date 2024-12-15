@@ -28,13 +28,13 @@ MAX_INT_32: Final[int] = 2**31-1
 
 type NonNegativeInt = Annotated[int, Field(..., ge=0, le=MAX_UINT_32, strict=True)]
 
-type StrictlyPositiveInt = Annotated[int, Field(..., gt=0, le=MAX_UINT_32, strict=True)]
+type StrictlyPositiveInt = Annotated[int, Field(..., ge=1, le=MAX_UINT_32, strict=True)]
 
-type NonNegativeFloat = Annotated[float, Field(..., ge=0, le=sys.float_info.max, strict=True)]
+type NonNegativeFloat = Annotated[float, Field(..., ge=0, strict=True)]
 
-type StrictlyPositiveFloat = Annotated[float, Field(..., gt=0.0, le=sys.float_info.max, strict=True)]
+type StrictlyPositiveFloat = Annotated[float, Field(..., gt=0.0, strict=True)]
 
-type UnityOrGreaterFloat = Annotated[float, Field(..., ge=1, le=sys.float_info.max, strict=True)]
+type UnityOrGreaterFloat = Annotated[float, Field(..., ge=1.0, strict=True)]
 
 # init methods because by default Pydantic BaseModel doesn't let you use positional arguments,
 # and camdkit 0.9 uses that style of object instantiation

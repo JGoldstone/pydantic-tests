@@ -24,7 +24,7 @@ class TimingTestCases(unittest.TestCase):
 
     def test_synchronization_offsets_validation(self) -> None:
         with self.assertRaises(ValidationError):
-            SynchronizationOffsets(translation='a', rotation=2.0, lens_encoders=3.0)
+            SynchronizationOffsets(translation='a', rotation=2.0, lensEncoders=3.0)
 
 
 if __name__ == '__main__':

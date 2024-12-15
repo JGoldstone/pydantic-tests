@@ -16,6 +16,7 @@ from camdkit.backwards import CompatibleBaseModel
 from camdkit.numeric_types import (MIN_INT_32, MAX_UINT_32, MAX_INT_32,
                                    NonNegativeInt, StrictlyPositiveInt,
                                    NonNegativeFloat, StrictlyPositiveFloat,
+                                   UnityOrGreaterFloat,
                                    Rational, StrictlyPositiveRational)
 
 
@@ -48,41 +49,110 @@ class NumericsTestCases(unittest.TestCase):
         non_negative_int_schema = entire_schema["properties"]["value"]
         self.assertDictEqual(expected_schema, non_negative_int_schema)
 
-    # TODO: write test cases for StrictlyPositiveInt
-    # def test_strictly_positive_int(self):
-    #     with self.assertRaises(ValidationError):
-    #         StrictlyPositiveInt('bar')
-    #     with self.assertRaises(ValidationError):
-    #         StrictlyPositiveInt(1.0)
-    #     with self.assertRaises(ValidationError):
-    #         StrictlyPositiveInt(-1)
-    #     with self.assertRaises(ValidationError):
-    #         StrictlyPositiveInt(0)
-    #     StrictlyPositiveInt(1)
-    #     StrictlyPositiveInt(MAX_UINT_32)
-    #     with self.assertRaises(ValidationError):
-    #         StrictlyPositiveInt(MAX_UINT_32 + 1)
+    def test_strictly_positive_int(self):
+        class StrictlyPositiveIntTestbed(CompatibleBaseModel):
+            value: StrictlyPositiveInt
+        x = StrictlyPositiveIntTestbed(value=1)
+        with self.assertRaises(ValidationError):
+            x.value = 'foo'
+        with self.assertRaises(ValidationError):
+            x.value = -1
+        with self.assertRaises(ValidationError):
+            x.value = 0
+        with self.assertRaises(ValidationError):
+            x.value = 0.0
+        x.value = 1
+        self.assertEqual(1, x.value)
+        x.value = MAX_UINT_32
+        self.assertEqual(MAX_UINT_32, x.value)
+        with self.assertRaises(ValidationError):
+            x.value = MAX_UINT_32 + 1
+        expected_schema = {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": MAX_UINT_32
+        }
+        entire_schema = StrictlyPositiveIntTestbed.make_json_schema()
+        strictly_positive_int_schema = entire_schema["properties"]["value"]
+        self.assertDictEqual(expected_schema, strictly_positive_int_schema)
 
-    # TODO: write test cases for NonNegativeFloat
-    # def test_non_negative_float(self):
-    #     with self.assertRaises(ValidationError):
-    #         NonNegativeFloat(0+1j)
-    #     with self.assertRaises(ValidationError):
-    #         NonNegativeFloat(-0.1)
-    #     NonNegativeFloat(0.0)
-    #     NonNegativeFloat(0.1)
-    #     NonNegativeFloat(sys.float_info.max)
+    def test_non_negative_float(self):
+        class NonNegativeFloatTestbed(CompatibleBaseModel):
+            value: NonNegativeFloat
+        x = NonNegativeFloatTestbed(value=0)
+        with self.assertRaises(ValidationError):
+            x.value = 'foo'
+        with self.assertRaises(ValidationError):
+            x.value = -1.0
+        with self.assertRaises(ValidationError):
+            x.value = -sys.float_info.epsilon
+        x.value = 0.0
+        self.assertEqual(0.0, x.value)
+        x.value = sys.float_info.epsilon
+        self.assertEqual(sys.float_info.epsilon, x.value)
+        x.value = 1.0
+        self.assertEqual(1, x.value)
+        x.value = sys.float_info.max
+        self.assertEqual(sys.float_info.max, x.value)
+        expected_schema = {
+            "type": "number",
+            "minimum": 0.0,
+        }
+        entire_schema = NonNegativeFloatTestbed.make_json_schema()
+        non_negative_float_schema = entire_schema["properties"]["value"]
+        self.assertDictEqual(expected_schema, non_negative_float_schema)
 
-    # TODO: write test cases for StrictlyPositiveFloat
-    # def test_strictly_positive_float(self):
-    #     with self.assertRaises(ValidationError):
-    #         StrictlyPositiveFloat(1+1j)
-    #     with self.assertRaises(ValidationError):
-    #         StrictlyPositiveFloat(-0.1)
-    #     with self.assertRaises(ValidationError):
-    #         StrictlyPositiveFloat(0.0)
-    #     StrictlyPositiveFloat(0.1)
-    #     StrictlyPositiveFloat(sys.float_info.max)
+    def test_strictly_positive_float(self):
+        class StrictlyPositiveFloatTestbed(CompatibleBaseModel):
+            value: StrictlyPositiveFloat
+        x = StrictlyPositiveFloatTestbed(value=sys.float_info.epsilon)
+        with self.assertRaises(ValidationError):
+            x.value = 'foo'
+        with self.assertRaises(ValidationError):
+            x.value = -1.0
+        with self.assertRaises(ValidationError):
+            x.value = -sys.float_info.epsilon
+        with self.assertRaises(ValidationError):
+            x.value = 0.0
+        x.value = sys.float_info.epsilon
+        self.assertEqual(sys.float_info.epsilon, x.value)
+        x.value = 1.0
+        self.assertEqual(1, x.value)
+        x.value = sys.float_info.max
+        self.assertEqual(sys.float_info.max, x.value)
+        expected_schema = {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+        }
+        entire_schema = StrictlyPositiveFloatTestbed.make_json_schema()
+        strictly_positive_float_schema = entire_schema["properties"]["value"]
+        self.assertDictEqual(expected_schema, strictly_positive_float_schema)
+
+    def test_unity_or_greater_float(self):
+        class UnityOrGreaterFloatTestbed(CompatibleBaseModel):
+            value: UnityOrGreaterFloat
+        x = UnityOrGreaterFloatTestbed(value=1.0)
+        with self.assertRaises(ValidationError):
+            x.value = 'foo'
+        with self.assertRaises(ValidationError):
+            x.value = -1.0
+        with self.assertRaises(ValidationError):
+            x.value = -sys.float_info.epsilon
+        with self.assertRaises(ValidationError):
+            x.value = 0.0
+        with self.assertRaises(ValidationError):
+            x.value = sys.float_info.epsilon
+        with self.assertRaises(ValidationError):
+            x.value = 1.0 - sys.float_info.epsilon
+        x.value = 1.0
+        self.assertEqual(1, x.value)
+        expected_schema = {
+            "type": "number",
+            "minimum": 1.0,
+        }
+        entire_schema = UnityOrGreaterFloatTestbed.make_json_schema()
+        unity_or_greater_float_schema = entire_schema["properties"]["value"]
+        self.assertDictEqual(expected_schema, unity_or_greater_float_schema)
 
     def test_rational(self):
         with self.assertRaises(ValidationError):

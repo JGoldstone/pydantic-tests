@@ -179,7 +179,6 @@ class CameraTypesTestCases(unittest.TestCase):
                                                                      ALEXA_265_HEIGHT_MM)
         sc.active_sensor_physical_dimensions = valid_active_sensor_physical_dimensions
         self.assertEqual(valid_active_sensor_physical_dimensions, sc.active_sensor_physical_dimensions)
-        print(json.dumps(sc.active_sensor_physical_dimensions.make_json_schema(), indent=4))
 
         self.assertIsNone(sc.active_sensor_resolution)
         with self.assertRaises(ValidationError):
@@ -267,8 +266,6 @@ class CameraTypesTestCases(unittest.TestCase):
             # sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES + 128 * sys.float_info.epsilon
             # and this, the extreme case, should likewise fail, but likewise does not:
             # sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES + sys.float_info.epsilon
-
-        # print(json.dumps(sc.make_json_schema(), indent=2))
 
 
 if __name__ == '__main__':

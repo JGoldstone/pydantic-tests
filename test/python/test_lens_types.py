@@ -7,8 +7,11 @@
 """Tests for lens types"""
 
 import unittest
+import json
 
-from pydantic import ValidationError, json
+from typing import Any
+
+from pydantic import ValidationError
 
 from camdkit.lens_types import Distortion
 
@@ -39,37 +42,31 @@ class LensTypesTestCases(unittest.TestCase):
             Distortion((1.0,), (1.0,), "")  # invalid: blank model
         valid = Distortion((1.0,), (1.0,), "Brown-Conrady")
         Distortion.validate(valid)
-        expected_json: json = {
+        expected_json: dict[str, Any] = {
             "radial": (1.0,),
             "tangential": (1.0,),
             "model": "Brown-Conrady"
         }
-        json_from_instance: json = valid.to_json()
+        json_from_instance: dict[str, Any] = valid.to_json()
         self.assertDictEqual(expected_json, json_from_instance)
         instance_from_json: Distortion = Distortion.from_json(json_from_instance)
         self.assertEqual(valid, instance_from_json)
-        expected_schema: json = {
-            "$defs": {
-                "NonBlankUTF8String": {
-                    "maxLength": 1023,
-                    "minLength": 1,
-                    "type": "string"
-                }
-            },
+        expected_schema: dict[str, Any] = {
+            "type": "object",
             "properties": {
                 "radial": {
+                    "type": "array",
                     "items": {
                         "type": "number"
-                    },
-                    "type": "array"
+                    }
                 },
                 "tangential": {
                     "anyOf": [
                         {
+                            "type": "array",
                             "items": {
                                 "type": "number"
-                            },
-                            "type": "array"
+                            }
                         },
                         {
                             "type": "null"
@@ -80,7 +77,9 @@ class LensTypesTestCases(unittest.TestCase):
                 "model": {
                     "anyOf": [
                         {
-                            "$ref": "#/$defs/NonBlankUTF8String"
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 1023
                         },
                         {
                             "type": "null"
@@ -92,11 +91,10 @@ class LensTypesTestCases(unittest.TestCase):
             "required": [
                 "radial"
             ],
-            "type": "object"
+            "additionalProperties": False
         }
-        schema_from_model: json = Distortion.make_json_schema()
+        schema_from_model: dict[str, Any] = Distortion.make_json_schema()
         self.assertDictEqual(expected_schema, schema_from_model)
-
 
 
 if __name__ == '__main__':

@@ -56,7 +56,9 @@ class CompatibleBaseModel(BaseModel):
     @classmethod
     def make_json_schema(cls) -> json:
         with_refs = cls.model_json_schema(schema_generator=SortlessSchemaGenerator)
-        without_refs = jsonref.replace_refs(with_refs)
+        without_refs = jsonref.replace_refs(with_refs, proxies=False)
+        if "$defs" in without_refs:
+            del without_refs["$defs"]
         return without_refs
 
 def scrub_title(json_data: json) -> json:

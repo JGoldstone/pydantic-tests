@@ -58,19 +58,19 @@ class TrackerTestCases(unittest.TestCase):
 
     def test_tracker_firmware_version(self):
         st = StaticTracker()
-        self.assertIsNone(st.firmware_version)
+        self.assertIsNone(st.firmware)
         with self.assertRaises(ValidationError):
-            st.firmware_version = 0+0.1j
+            st.firmware = 0+0.1j
         with self.assertRaises(ValidationError):
-            st.firmware_version = ""
+            st.firmware = ""
         smallest_valid_firmware_version: str = "x"
-        st.firmware_version = "x"
-        self.assertEqual(smallest_valid_firmware_version, st.firmware_version)
+        st.firmware = "x"
+        self.assertEqual(smallest_valid_firmware_version, st.firmware)
         largest_valid_firmware_version: str = "x" * 1023
-        st.firmware_version = largest_valid_firmware_version
-        self.assertEqual(largest_valid_firmware_version, st.firmware_version)
+        st.firmware = largest_valid_firmware_version
+        self.assertEqual(largest_valid_firmware_version, st.firmware)
         with self.assertRaises(ValidationError):
-            st.firmware_version = "x" * 1024
+            st.firmware = "x" * 1024
 
     def test_tracker_notes(self):
         t = Tracker()
@@ -101,7 +101,7 @@ class TrackerTestCases(unittest.TestCase):
         t.recording = empty_tuple
         self.assertEqual(empty_tuple, t.recording)
         with self.assertRaises(ValidationError):
-            t.recording = (1,)
+            t.recording = ('foo',)
         valid_single_recording: tuple[bool, ...] = (True,)
         t.recording = valid_single_recording
         self.assertEqual(valid_single_recording, t.recording)

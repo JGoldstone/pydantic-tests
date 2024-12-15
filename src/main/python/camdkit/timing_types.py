@@ -58,7 +58,7 @@ class SynchronizationSource(StrEnum):
     NTP = "ntp"
 
 
-class SynchronizationOffsets(BaseModel):
+class SynchronizationOffsets(CompatibleBaseModel):
     """Synchronization offsets"""
 
     translation: float | None = None
@@ -71,7 +71,7 @@ class SynchronizationOffsets(BaseModel):
                                                      lensEncoders=lensEncoders)
 
 
-class SynchronizationPTP(BaseModel):
+class SynchronizationPTP(CompatibleBaseModel):
     """needs better explanation"""
 
     domain: int | None = None  # ???
@@ -82,7 +82,7 @@ class SynchronizationPTP(BaseModel):
         super(SynchronizationPTP, self).__init__(domain=domain, master=master, offset=offset)
 
 
-class Synchronization(BaseModel):
+class Synchronization(CompatibleBaseModel):
     locked: bool
     source: SynchronizationSource
     frequency: StrictlyPositiveRational | None = None
