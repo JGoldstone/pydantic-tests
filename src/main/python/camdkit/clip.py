@@ -19,24 +19,9 @@ from camdkit.lens_types import (StaticLens, Lens,
                                 FizEncoders, RawFizEncoders)
 from camdkit.camera_types import StaticCamera, PhysicalDimensions, SenselDimensions
 from camdkit.string_types import NonBlankUTF8String, UUIDURN
-from camdkit.tracker_types import StaticTracker, Tracker
+from camdkit.tracker_types import StaticTracker, Tracker, GlobalPosition
 from camdkit.timing_types import Timing, TimingMode, Timestamp, Synchronization, Timecode
 from camdkit.transform_types import Transform
-
-
-class GlobalPosition(CompatibleBaseModel):
-    """Global ENU and geodetic coördinates
-    Reference:. https://en.wikipedia.org/wiki/Local_tangent_plane_coordinates
-    """
-    E: float  # East (meters)
-    N: float  # North (meters)
-    U: float  # Up (meters)
-    lat0: float  # latitude (degrees)
-    lon0: float  # longitude (degrees)
-    h0: float  # height (meters)
-
-    def __init__(self, E: float, N: float, U: float, lat0: float, lon0: float, h0: float):
-        super(GlobalPosition, self).__init__(E=E, N=N, U=U, lat0=lat0, lon0=lon0, h0=h0)
 
 
 class Static(CompatibleBaseModel):

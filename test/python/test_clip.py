@@ -20,6 +20,7 @@ from camdkit.timing_types import Timestamp, Timecode, TimecodeFormat, Synchroniz
     SynchronizationOffsets, SynchronizationPTP, Synchronization
 from camdkit.transform_types import Vector3, Rotator3, Transform
 from camdkit.clip import GlobalPosition, Clip
+from camdkit.tracker_types import GlobalPosition
 
 VALID_SAMPLE_ID = "urn:uuid:abcdefab-abcd-abcd-abcd-abcdefabcdef"  # 8-4-4-4-12
 
