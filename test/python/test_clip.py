@@ -6,6 +6,7 @@
 
 """Tests for clips"""
 
+import json
 import unittest
 
 from fractions import Fraction
@@ -401,7 +402,7 @@ class ClipTestCases(unittest.TestCase):
         self.assertTupleEqual(clip_as_json["tracker"]["slate"], tracker_slate)
         self.assertTupleEqual(clip_as_json["tracker"]["notes"], tracker_notes)
 
-        clip_from_json = clip.from_json(clip_as_json)
+        clip_from_json = Clip.from_json(clip_as_json)
         self.assertEqual(clip, clip_from_json)
 
     def test_global_regular_parameters(self):
@@ -455,6 +456,9 @@ class ClipTestCases(unittest.TestCase):
 
         clip_from_json = clip.from_json(clip_as_json)
         self.assertEqual(clip, clip_from_json)
+
+    def test_schema_printing(self):
+        print(json.dumps(Clip.make_json_schema(), indent=4))
 
 
 if __name__ == '__main__':

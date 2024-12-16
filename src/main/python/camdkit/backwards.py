@@ -14,24 +14,54 @@ from copy import deepcopy
 from pydantic import BaseModel, ValidationError, ConfigDict, json
 from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue
 
+def scrub_titles(d: dict[str, Any]) -> dict[str, Any]:
+    for key, value in d.items():
+        if isinstance(value, dict):
+            scrub_titles(value)
+    if 'title' in d:
+        d.pop('title')
+    return d
+
+def append_newlines_to_descriptions(d: dict[str, Any]) -> dict[str, Any]:
+    for key, value in d.items():
+        if isinstance(value, dict):
+            append_newlines_to_descriptions(value)
+        # TODO: the endswith() thing is a horrible hack. Fix this cleanly.
+        if "description" in d and not d["description"].endswith("\n"):
+            d["description"] = d["description"] + "\n"
+    return d
+
 class SortlessSchemaGenerator(GenerateJsonSchema):
+
+    def generate(self, schema, mode='validation'):
+        json_schema = super().generate(schema, mode=mode)
+        json_schema = jsonref.replace_refs(json_schema, proxies=False)
+        scrub_titles(json_schema)
+        append_newlines_to_descriptions(json_schema)
+        # if "title" in json_schema:
+        #     json_schema.pop("title")
+        # if "description" in json_schema:
+        #     json_schema["description"] = json_schema["description"] + "\n"
+        # json_schema = scrub_titles(json_schema)
+        return json_schema
+
     def sort(
         self, value: JsonSchemaValue, parent_key: str | None = None
     ) -> JsonSchemaValue:
         """No-op, we don't want to sort schema values at all."""
         return value
 
-def title_stripper(schema: dict[str, Any]) -> None:
-    for prop in schema.get('properties', {}).values():
-        prop.pop('title', None)
-    schema.pop('title', None)
+def compatibility_cleanups(schema: dict[str, Any]) -> None:
+    if 'description' in schema:
+        # Pydantic strips away the final newline, but classic camdkit does not.
+        schema["description"] = schema["description"] + "\n"
 
 # For compatibility with existing code
 class CompatibleBaseModel(BaseModel):
 
     model_config = ConfigDict(validate_assignment=True,
                               use_enum_values=True,
-                              json_schema_extra=title_stripper,
+                              # json_schema_extra=compatibility_cleanups,
                               extra="forbid")
 
     @classmethod

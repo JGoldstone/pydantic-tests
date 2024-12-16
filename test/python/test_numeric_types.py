@@ -13,14 +13,45 @@ import unittest
 from pydantic import ValidationError
 
 from camdkit.backwards import CompatibleBaseModel
-from camdkit.numeric_types import (MIN_INT_32, MAX_UINT_32, MAX_INT_32,
-                                   NonNegativeInt, StrictlyPositiveInt,
+from camdkit.numeric_types import (MAX_INT_8, MIN_INT_32,
+                                   MAX_UINT_32, MAX_UINT_48, MAX_INT_32,
+                                   NonNegative8BitInt,
+                                   NonNegativeInt,
+                                   NonNegative48BitInt,
+                                   StrictlyPositiveInt,
                                    NonNegativeFloat, StrictlyPositiveFloat,
                                    UnityOrGreaterFloat,
                                    Rational, StrictlyPositiveRational)
 
 
 class NumericsTestCases(unittest.TestCase):
+
+    def test_non_negative_8bit_int(self):
+        class NonNegative8BitIntTestbed(CompatibleBaseModel):
+            value: NonNegative8BitInt
+        x = NonNegative8BitIntTestbed(value=0)
+        with self.assertRaises(ValidationError):
+            x.value = 'foo'
+        with self.assertRaises(ValidationError):
+            x.value = -1
+        with self.assertRaises(ValidationError):
+            x.value = 0.0
+        x.value = 0
+        self.assertEqual(0, x.value)
+        x.value = 1
+        self.assertEqual(1, x.value)
+        x.value = MAX_INT_8
+        self.assertEqual(MAX_INT_8, x.value)
+        with self.assertRaises(ValidationError):
+            x.value = MAX_INT_8 + 1
+        expected_schema = {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": MAX_INT_8,
+        }
+        entire_schema = NonNegative8BitIntTestbed.make_json_schema()
+        non_negative_8bit_int_schema = entire_schema["properties"]["value"]
+        self.assertDictEqual(expected_schema, non_negative_8bit_int_schema)
 
     def test_non_negative_int(self):
         class NonNegativeIntTestbed(CompatibleBaseModel):
@@ -46,6 +77,34 @@ class NumericsTestCases(unittest.TestCase):
             "maximum": MAX_UINT_32,
         }
         entire_schema = NonNegativeIntTestbed.make_json_schema()
+        non_negative_int_schema = entire_schema["properties"]["value"]
+        self.assertDictEqual(expected_schema, non_negative_int_schema)
+
+    def test_non_negative_48bit_int(self):
+        class NonNegative48BitIntTestbed(CompatibleBaseModel):
+            value: NonNegative48BitInt
+
+        x = NonNegative48BitIntTestbed(value=0)
+        with self.assertRaises(ValidationError):
+            x.value = 'foo'
+        with self.assertRaises(ValidationError):
+            x.value = -1
+        with self.assertRaises(ValidationError):
+            x.value = 0.0
+        x.value = 0
+        self.assertEqual(0, x.value)
+        x.value = 1
+        self.assertEqual(1, x.value)
+        x.value = MAX_UINT_48
+        self.assertEqual(MAX_UINT_48, x.value)
+        with self.assertRaises(ValidationError):
+            x.value = MAX_UINT_48 + 1
+        expected_schema = {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": MAX_UINT_48,
+        }
+        entire_schema = NonNegative48BitIntTestbed.make_json_schema()
         non_negative_int_schema = entire_schema["properties"]["value"]
         self.assertDictEqual(expected_schema, non_negative_int_schema)
 

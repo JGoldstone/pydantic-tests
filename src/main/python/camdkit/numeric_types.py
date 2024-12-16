@@ -15,18 +15,28 @@ from pydantic import Field, StringConstraints
 
 from camdkit.backwards import CompatibleBaseModel
 
-__all__ = ['MIN_UINT_32', 'MAX_UINT_32',
+__all__ = ['MIN_INT_8', 'MAX_INT_8',
+           'MIN_UINT_32', 'MAX_UINT_32',
            'MIN_INT_32', 'MAX_INT_32',
-           'NonNegativeInt', 'StrictlyPositiveInt',
+           'MAX_UINT_48',
+           'NonNegative8BitInt',
+           'NonNegativeInt', 'NonNegative48BitInt', 'StrictlyPositiveInt',
            'NonNegativeFloat', 'StrictlyPositiveFloat', 'UnityOrGreaterFloat',
            'Rational', 'StrictlyPositiveRational', 'rationalize_strictly_and_positively']
 
+MIN_INT_8: Final[int] = -2**7
+MAX_INT_8: Final[int] = 2**7-1
 MIN_UINT_32: Final[int] = 0
 MAX_UINT_32: Final[int] = 2**32-1
 MIN_INT_32: Final[int] = -2**31
 MAX_INT_32: Final[int] = 2**31-1
+MAX_UINT_48: Final[int] = 2**48-1
+
+type NonNegative8BitInt = Annotated[int, Field(..., ge=0, le=MAX_INT_8, strict=True)]
 
 type NonNegativeInt = Annotated[int, Field(..., ge=0, le=MAX_UINT_32, strict=True)]
+
+type NonNegative48BitInt = Annotated[int, Field(..., ge=0, le=MAX_UINT_48, strict=True)]
 
 type StrictlyPositiveInt = Annotated[int, Field(..., ge=1, le=MAX_UINT_32, strict=True)]
 
