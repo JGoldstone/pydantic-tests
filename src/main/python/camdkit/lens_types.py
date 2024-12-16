@@ -10,7 +10,7 @@ from typing import Any, Annotated, Self
 
 from pydantic import Field, model_validator
 
-from camdkit.backwards import CompatibleBaseModel
+from camdkit.compatibility import CompatibleBaseModel
 from camdkit.numeric_types import (NonNegativeFloat, StrictlyPositiveFloat,
                                    NonNegativeInt, UnityOrGreaterFloat)
 from camdkit.string_types import NonBlankUTF8String

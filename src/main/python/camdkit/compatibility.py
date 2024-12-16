@@ -9,7 +9,6 @@
 import jsonref
 
 from typing import Any
-from copy import deepcopy
 
 from pydantic import BaseModel, ValidationError, ConfigDict, json
 from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue
@@ -38,11 +37,6 @@ class SortlessSchemaGenerator(GenerateJsonSchema):
         json_schema = jsonref.replace_refs(json_schema, proxies=False)
         scrub_titles(json_schema)
         append_newlines_to_descriptions(json_schema)
-        # if "title" in json_schema:
-        #     json_schema.pop("title")
-        # if "description" in json_schema:
-        #     json_schema["description"] = json_schema["description"] + "\n"
-        # json_schema = scrub_titles(json_schema)
         return json_schema
 
     def sort(
@@ -90,16 +84,3 @@ class CompatibleBaseModel(BaseModel):
         if "$defs" in without_refs:
             del without_refs["$defs"]
         return without_refs
-
-def scrub_title(json_data: json) -> json:
-    if "title" in json_data:
-        del json_data["title"]
-    return json_data
-
-def hoist_pod_and_scrub_title(json) -> None:
-    assert(len(json["properties"]) == 1)
-    pod_name = list(json["properties"].keys())[0]
-    pod_json =  deepcopy(json["properties"][pod_name])  # probably overkill
-    json.clear()
-    for k, v in scrub_title(pod_json).items():
-        json[k] = v

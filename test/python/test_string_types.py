@@ -13,7 +13,7 @@ from typing import Optional
 
 from pydantic import ValidationError
 
-from camdkit.backwards import CompatibleBaseModel
+from camdkit.compatibility import CompatibleBaseModel
 from camdkit.string_types import NonBlankUTF8String, UUID_URN_PATTERN, UUIDURN
 
 VALID_SAMPLE_ID_URN_0 = "urn:uuid:5ca5f233-11b5-4f43-8815-948d73e48a33"

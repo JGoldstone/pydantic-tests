@@ -10,7 +10,7 @@ from typing import Optional
 
 from pydantic import Field
 
-from camdkit.backwards import CompatibleBaseModel
+from camdkit.compatibility import CompatibleBaseModel
 from camdkit.string_types import UUIDURN
 
 

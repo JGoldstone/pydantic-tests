@@ -11,7 +11,7 @@ from typing import Annotated, Optional
 
 from pydantic import Field
 
-from camdkit.backwards import CompatibleBaseModel
+from camdkit.compatibility import CompatibleBaseModel
 from camdkit.numeric_types import (StrictlyPositiveRational,
                                    NonNegative8BitInt,
                                    NonNegativeInt,

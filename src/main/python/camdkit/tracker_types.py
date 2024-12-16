@@ -11,7 +11,7 @@ from typing import Annotated
 from pydantic import Field
 
 from camdkit.string_types import NonBlankUTF8String
-from camdkit.backwards import CompatibleBaseModel
+from camdkit.compatibility import CompatibleBaseModel
 
 
 class StaticTracker(CompatibleBaseModel):

@@ -13,7 +13,7 @@ from typing import Any, Final, Annotated
 from annotated_types import Predicate
 from pydantic import Field, StringConstraints
 
-from camdkit.backwards import CompatibleBaseModel
+from camdkit.compatibility import CompatibleBaseModel
 
 __all__ = ['MIN_INT_8', 'MAX_INT_8',
            'MIN_UINT_32', 'MAX_UINT_32',

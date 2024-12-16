@@ -4,13 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="All tests written so far pass.">
-      <change afterPath="$PROJECT_DIR$/test/python/test_transform_types.py" afterDir="false" />
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Update a couple packages; continue to clean up directory structure.">
+      <change afterPath="$PROJECT_DIR$/src/main/python/camdkit/versioning_types.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/python/test_versioning_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiments/learnings.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/learnings.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/backwards.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/camera_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/camera_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/numeric_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/numeric_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/tracker_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/tracker_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/transform_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/transform_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_clip.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_numeric_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_numeric_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_string_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_string_types.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,7 +197,7 @@
       <recent name="$PROJECT_DIR$/src/main/python/camdkit" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests in test_transform_types.py">
+  <component name="RunManager" selected="Python tests.Unittests in python">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -365,7 +374,7 @@
       <workItem from="1734018398844" duration="5656000" />
       <workItem from="1734029473500" duration="51831000" />
       <workItem from="1734133161202" duration="93607000" />
-      <workItem from="1734368060036" duration="11718000" />
+      <workItem from="1734368060036" duration="17072000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit.">
       <option name="closed" value="true" />
@@ -711,15 +720,29 @@
       <option name="project" value="LOCAL" />
       <updated>1734309583251</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Transform types pass tests.">
+      <option name="closed" value="true" />
+      <created>1734384507724</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1734384507724</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Update a couple packages; continue to clean up directory structure.">
+      <option name="closed" value="true" />
+      <created>1734384577932</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1734384577932</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fully flesh out and test tracker types." />
-    <MESSAGE value="Move NonBlankUTF8String into string_types.py and put tests into test_string_types.py" />
     <MESSAGE value="More remodularization and unit tests." />
     <MESSAGE value="Jupyter notebook for experiments during development." />
     <MESSAGE value="Notes on the existing implementation and comments as to how it motivated the proposed replacement; comments on compatibility." />
@@ -743,7 +766,9 @@
     <MESSAGE value="Various things to get all unit tests working again" />
     <MESSAGE value="All timing types tests pass." />
     <MESSAGE value="All tests written so far pass." />
-    <option name="LAST_COMMIT_MESSAGE" value="All tests written so far pass." />
+    <MESSAGE value="Transform types pass tests." />
+    <MESSAGE value="Update a couple packages; continue to clean up directory structure." />
+    <option name="LAST_COMMIT_MESSAGE" value="Update a couple packages; continue to clean up directory structure." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -759,14 +784,9 @@
           <option name="timeStamp" value="55" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/main/python/camdkit/backwards.py</url>
+          <url>file://$PROJECT_DIR$/src/main/python/camdkit/compatibility.py</url>
           <line>43</line>
           <option name="timeStamp" value="59" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/test/python/test_transform_types.py</url>
-          <line>241</line>
-          <option name="timeStamp" value="63" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -780,7 +800,7 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/pydantic_tests$camera_types.coverage" NAME="camera_types Coverage Results" MODIFIED="1734106899074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1734309558127" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1734384592049" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/pydantic_tests$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1728857315751" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1734384250832" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />

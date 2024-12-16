@@ -14,7 +14,7 @@ from typing import Annotated, Optional
 
 from pydantic import Field, field_validator, StringConstraints
 
-from camdkit.backwards import CompatibleBaseModel
+from camdkit.compatibility import CompatibleBaseModel
 from camdkit.numeric_types import (MAX_INT_32,
                                    StrictlyPositiveInt,
                                    StrictlyPositiveRational, rationalize_strictly_and_positively)

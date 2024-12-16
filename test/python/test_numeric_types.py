@@ -12,7 +12,7 @@ import unittest
 
 from pydantic import ValidationError
 
-from camdkit.backwards import CompatibleBaseModel
+from camdkit.compatibility import CompatibleBaseModel
 from camdkit.numeric_types import (MAX_INT_8, MIN_INT_32,
                                    MAX_UINT_32, MAX_UINT_48, MAX_INT_32,
                                    NonNegative8BitInt,
