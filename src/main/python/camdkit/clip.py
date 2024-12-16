@@ -54,7 +54,7 @@ class Clip(CompatibleBaseModel):
     lens: Lens | None = None
 
     # The "global_" prefix is here because, without it, we would have BaseModel attributes
-    # with the same name, from the user's POV, as the
+    # with the same name, from the user's POV, as the property
     global_sample_id: Annotated[tuple[UUIDURN, ...] | None, Field(alias="sampleId")] = None
     global_source_id: Annotated[tuple[UUIDURN, ...] | None, Field(alias="sourceId")] = None
     global_source_number: Annotated[tuple[NonNegativeInt, ...] | None, Field(alias="sourceNumber")] = None

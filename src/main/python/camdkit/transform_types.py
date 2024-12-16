@@ -38,3 +38,6 @@ class Transform(CompatibleBaseModel):
     scale: Optional[Vector3] = None
     id: Optional[UUIDURN] = None
     parent_id: Optional[UUIDURN] = None
+
+    # Nothing in the original code base initializes Transform objects with
+    # positional arguments, thus, no need for one
