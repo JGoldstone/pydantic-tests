@@ -309,8 +309,8 @@ class ClipTestCases(unittest.TestCase):
                             TimecodeFormat(StrictlyPositiveRational(24, 1),
                                            0))
         timing_timecode = (timecode0, timecode1)
-        ptp = SynchronizationPTP(1, "00:11:22:33:44:55", 0.0)
-        sync_offsets = SynchronizationOffsets(1.0, 2.0, 3.0)
+        ptp = SynchronizationPTP(domain=1, master="00:11:22:33:44:55", offset=0.0)
+        sync_offsets = SynchronizationOffsets(translation=1.0, rotation=2.0, lensEncoders=3.0)
         synchronization = Synchronization(present=True,
                                           locked=True,
                                           frequency=sample_rate,
@@ -457,8 +457,8 @@ class ClipTestCases(unittest.TestCase):
         clip_from_json = clip.from_json(clip_as_json)
         self.assertEqual(clip, clip_from_json)
 
-    def test_schema_printing(self):
-        print(json.dumps(Clip.make_json_schema(), indent=4))
+    # def test_schema_printing(self):
+    #     print(json.dumps(Clip.make_json_schema(), indent=4))
 
 
 if __name__ == '__main__':
