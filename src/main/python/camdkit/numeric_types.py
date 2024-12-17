@@ -21,7 +21,7 @@ __all__ = ['MIN_INT_8', 'MAX_INT_8',
            'MAX_UINT_48',
            'NonNegative8BitInt',
            'NonNegativeInt', 'NonNegative48BitInt', 'StrictlyPositiveInt',
-           'NonNegativeFloat', 'StrictlyPositiveFloat', 'UnityOrGreaterFloat',
+           'NonNegativeFloat', 'StrictlyPositiveFloat', 'NormalizedFloat', 'UnityOrGreaterFloat',
            'Rational', 'StrictlyPositiveRational', 'rationalize_strictly_and_positively']
 
 MIN_INT_8: Final[int] = -2**7
@@ -43,6 +43,8 @@ type StrictlyPositiveInt = Annotated[int, Field(..., ge=1, le=MAX_UINT_32, stric
 type NonNegativeFloat = Annotated[float, Field(..., ge=0, strict=True)]
 
 type StrictlyPositiveFloat = Annotated[float, Field(..., gt=0.0, strict=True)]
+
+type NormalizedFloat = Annotated[float, Field(..., ge=0.0, le=1.0, strict=True)]
 
 type UnityOrGreaterFloat = Annotated[float, Field(..., ge=1.0, strict=True)]
 

@@ -4,22 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Update a couple packages; continue to clean up directory structure.">
-      <change afterPath="$PROJECT_DIR$/src/main/python/camdkit/versioning_types.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/python/test_versioning_types.py" afterDir="false" />
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Move GlobalPosition from clip.py to tracker_types.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiments/learnings.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/learnings.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/backwards.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/camera_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/camera_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/numeric_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/numeric_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/tracker_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/tracker_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/transform_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/transform_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/python/test_clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_clip.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/python/test_numeric_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_numeric_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/python/test_string_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_string_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_timing_types.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,6 +31,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -134,6 +129,7 @@
     "Python tests.Python tests for test_numeric_types.NumericsTestCases.test_non_negative_8bit_int.executor": "Run",
     "Python tests.Python tests for test_numeric_types.NumericsTestCases.test_non_negative_float.executor": "Run",
     "Python tests.Python tests for test_numeric_types.NumericsTestCases.test_non_negative_int.executor": "Run",
+    "Python tests.Python tests for test_numeric_types.NumericsTestCases.test_normalized_float.executor": "Run",
     "Python tests.Python tests for test_numeric_types.NumericsTestCases.test_rational.executor": "Run",
     "Python tests.Python tests for test_numeric_types.NumericsTestCases.test_strictly_positive_float.executor": "Run",
     "Python tests.Python tests for test_numeric_types.NumericsTestCases.test_strictly_positive_int.executor": "Run",
@@ -158,6 +154,7 @@
     "Python tests.Python tests for test_tracker_types.TrackerTestCases.test_tracker_status.executor": "Run",
     "Python tests.Python tests for test_transform_types.TestTransformCases.test_transform.executor": "Debug",
     "Python tests.Python tests for test_transform_types.TestTransformCases.test_vector3.executor": "Run",
+    "Python tests.Python tests for test_versioning_types.VersioningTypesTestCases.test_versioning_type.executor": "Run",
     "Python tests.Python tests in test_base_types.py.executor": "Run",
     "Python tests.Python tests in test_camera_types.py.executor": "Run",
     "Python tests.Python tests in test_clip.py.executor": "Run",
@@ -169,6 +166,7 @@
     "Python tests.Python tests in test_timing_types.py.executor": "Run",
     "Python tests.Python tests in test_tracker_types.py.executor": "Run",
     "Python tests.Python tests in test_transform_types.py.executor": "Run",
+    "Python tests.Python tests in test_versioning_types.py.executor": "Run",
     "Python tests.Unittests in python.executor": "Run",
     "Python.camera_types.executor": "Run",
     "Python.main.executor": "Run",
@@ -197,7 +195,7 @@
       <recent name="$PROJECT_DIR$/src/main/python/camdkit" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Unittests in python">
+  <component name="RunManager" selected="Python tests.Python tests for test_timing_types.TimingTestCases.test_synchronization_offsets_validation">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -221,7 +219,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_timing_types.TimingTestCases.test_timecode" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_numeric_types.NumericsTestCases.test_normalized_float" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -233,11 +231,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_timing_types.TimingTestCases.test_timecode&quot;" />
+      <option name="_new_target" value="&quot;test_numeric_types.NumericsTestCases.test_normalized_float&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_transform_types.TestTransformCases.test_transform" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_timing_types.TimingTestCases.test_synchronization_offsets_validation" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -249,11 +247,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_transform_types.TestTransformCases.test_transform&quot;" />
+      <option name="_new_target" value="&quot;test_timing_types.TimingTestCases.test_synchronization_offsets_validation&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_transform_types.TestTransformCases.test_vector3" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_versioning_types.VersioningTypesTestCases.test_versioning_type" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -265,24 +263,8 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_transform_types.TestTransformCases.test_vector3&quot;" />
+      <option name="_new_target" value="&quot;test_versioning_types.VersioningTypesTestCases.test_versioning_type&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests in test_timing_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="pydantic tests" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/python" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_timing_types.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
     <configuration name="Python tests in test_transform_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
@@ -298,6 +280,22 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_transform_types.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests in test_versioning_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="pydantic tests" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/python" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_versioning_types.py&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
@@ -322,19 +320,19 @@
     <list>
       <item itemvalue="Python.main" />
       <item itemvalue="Python tests.Unittests in python" />
-      <item itemvalue="Python tests.Python tests for test_transform_types.TestTransformCases.test_transform" />
-      <item itemvalue="Python tests.Python tests for test_transform_types.TestTransformCases.test_vector3" />
+      <item itemvalue="Python tests.Python tests for test_numeric_types.NumericsTestCases.test_normalized_float" />
+      <item itemvalue="Python tests.Python tests for test_timing_types.TimingTestCases.test_synchronization_offsets_validation" />
+      <item itemvalue="Python tests.Python tests for test_versioning_types.VersioningTypesTestCases.test_versioning_type" />
       <item itemvalue="Python tests.Python tests in test_transform_types.py" />
-      <item itemvalue="Python tests.Python tests for test_timing_types.TimingTestCases.test_timecode" />
-      <item itemvalue="Python tests.Python tests in test_timing_types.py" />
+      <item itemvalue="Python tests.Python tests in test_versioning_types.py" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for test_timing_types.TimingTestCases.test_synchronization_offsets_validation" />
+        <item itemvalue="Python tests.Python tests for test_numeric_types.NumericsTestCases.test_normalized_float" />
+        <item itemvalue="Python tests.Python tests in test_versioning_types.py" />
+        <item itemvalue="Python tests.Python tests for test_versioning_types.VersioningTypesTestCases.test_versioning_type" />
         <item itemvalue="Python tests.Python tests in test_transform_types.py" />
-        <item itemvalue="Python tests.Python tests for test_transform_types.TestTransformCases.test_transform" />
-        <item itemvalue="Python tests.Python tests for test_transform_types.TestTransformCases.test_vector3" />
-        <item itemvalue="Python tests.Python tests in test_timing_types.py" />
-        <item itemvalue="Python tests.Python tests for test_timing_types.TimingTestCases.test_timecode" />
       </list>
     </recent_temporary>
   </component>
@@ -374,31 +372,7 @@
       <workItem from="1734018398844" duration="5656000" />
       <workItem from="1734029473500" duration="51831000" />
       <workItem from="1734133161202" duration="93607000" />
-      <workItem from="1734368060036" duration="17072000" />
-    </task>
-    <task id="LOCAL-00001" summary="Initial commit.">
-      <option name="closed" value="true" />
-      <created>1727964734108</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1727964734108</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Add dump functions; add Poetry lock and workspace.xml file.">
-      <option name="closed" value="true" />
-      <created>1727974724515</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1727974724515</updated>
-    </task>
-    <task id="LOCAL-00003" summary="First experiment with field validators">
-      <option name="closed" value="true" />
-      <created>1727991279693</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1727991279693</updated>
+      <workItem from="1734368060036" duration="27907000" />
     </task>
     <task id="LOCAL-00004" summary="Experiment with model validators">
       <option name="closed" value="true" />
@@ -736,17 +710,80 @@
       <option name="project" value="LOCAL" />
       <updated>1734384577932</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="Add a VersionedProtocol type.">
+      <option name="closed" value="true" />
+      <created>1734392043477</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1734392043477</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Rename backwards.py to compatibility.py">
+      <option name="closed" value="true" />
+      <created>1734392075196</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1734392075196</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Rename backwards.py to compatibility.py">
+      <option name="closed" value="true" />
+      <created>1734392179324</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1734392179324</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Rename backwards.py to compatibility.py">
+      <option name="closed" value="true" />
+      <created>1734392242285</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1734392242285</updated>
+    </task>
+    <task id="LOCAL-00050" summary="A missed move of backwards.py to compatibility.py">
+      <option name="closed" value="true" />
+      <created>1734392325735</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1734392325736</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Move GlobalPosition from clip.py to tracker_types.py">
+      <option name="closed" value="true" />
+      <created>1734392457338</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1734392457338</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Move GlobalPosition from clip.py to tracker_types.py">
+      <option name="closed" value="true" />
+      <created>1734392485500</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1734392485500</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="More remodularization and unit tests." />
-    <MESSAGE value="Jupyter notebook for experiments during development." />
-    <MESSAGE value="Notes on the existing implementation and comments as to how it motivated the proposed replacement; comments on compatibility." />
-    <MESSAGE value="Move types around; make to_json() be a regular method rather than a staticmethod." />
     <MESSAGE value="finish [static] camera data, static lens data" />
     <MESSAGE value="Prototypical first &quot;regular&quot; (i.e. periodic) lens metadata." />
     <MESSAGE value="Lens 'regular' parameters pass unit tests" />
@@ -768,25 +805,29 @@
     <MESSAGE value="All tests written so far pass." />
     <MESSAGE value="Transform types pass tests." />
     <MESSAGE value="Update a couple packages; continue to clean up directory structure." />
-    <option name="LAST_COMMIT_MESSAGE" value="Update a couple packages; continue to clean up directory structure." />
+    <MESSAGE value="Add a VersionedProtocol type." />
+    <MESSAGE value="Rename backwards.py to compatibility.py" />
+    <MESSAGE value="A missed move of backwards.py to compatibility.py" />
+    <MESSAGE value="Move GlobalPosition from clip.py to tracker_types.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Move GlobalPosition from clip.py to tracker_types.py" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
-          <url>file://$PROJECT_DIR$/experiments/learnings.ipynb</url>
-          <line>13</line>
-          <option name="timeStamp" value="50" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test/python/test_timing_types.py</url>
-          <line>814</line>
+          <line>793</line>
           <option name="timeStamp" value="55" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/src/main/python/camdkit/compatibility.py</url>
           <line>43</line>
           <option name="timeStamp" value="59" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/python/test_timing_types.py</url>
+          <line>397</line>
+          <option name="timeStamp" value="66" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -800,9 +841,9 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/pydantic_tests$camera_types.coverage" NAME="camera_types Coverage Results" MODIFIED="1734106899074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1734384592049" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1734449324657" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/pydantic_tests$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1728857315751" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1734384250832" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1734450934047" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
   </component>
 </project>

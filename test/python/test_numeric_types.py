@@ -19,7 +19,7 @@ from camdkit.numeric_types import (MAX_INT_8, MIN_INT_32,
                                    NonNegativeInt,
                                    NonNegative48BitInt,
                                    StrictlyPositiveInt,
-                                   NonNegativeFloat, StrictlyPositiveFloat,
+                                   NonNegativeFloat, StrictlyPositiveFloat, NormalizedFloat,
                                    UnityOrGreaterFloat,
                                    Rational, StrictlyPositiveRational)
 
@@ -184,6 +184,40 @@ class NumericsTestCases(unittest.TestCase):
             "exclusiveMinimum": 0.0,
         }
         entire_schema = StrictlyPositiveFloatTestbed.make_json_schema()
+        strictly_positive_float_schema = entire_schema["properties"]["value"]
+        self.assertDictEqual(expected_schema, strictly_positive_float_schema)
+
+    def test_normalized_float(self):
+        class NormalizedFloatTestbed(CompatibleBaseModel):
+            value: NormalizedFloat
+        valid_value: float = 0.5
+        x = NormalizedFloatTestbed(value=sys.float_info.epsilon)
+        with self.assertRaises(ValidationError):
+            x.value = 'foo'
+        with self.assertRaises(ValidationError):
+            x.value = -0.5
+        with self.assertRaises(ValidationError):
+            x.value = 0.0 - sys.float_info.epsilon
+        x.value = 0.0
+        self.assertEqual(0.0, x.value)
+        x.value = 0.0 + sys.float_info.epsilon
+        self.assertEqual(0.0 + sys.float_info.epsilon, x.value)
+        x.value = 0.5
+        self.assertEqual(0.5, x.value)
+        x.value = 1.0 - sys.float_info.epsilon
+        self.assertEqual(1.0 - sys.float_info.epsilon, x.value)
+        x.value = 1.0
+        self.assertEqual(1.0, x.value)
+        with self.assertRaises(ValidationError):
+            x.value = 1.0 + sys.float_info.epsilon
+        with self.assertRaises(ValidationError):
+            x.value = 1.5
+        expected_schema = {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0
+        }
+        entire_schema = NormalizedFloatTestbed.make_json_schema()
         strictly_positive_float_schema = entire_schema["properties"]["value"]
         self.assertDictEqual(expected_schema, strictly_positive_float_schema)
 

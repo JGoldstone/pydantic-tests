@@ -11,7 +11,7 @@ from typing import Any, Annotated, Self
 from pydantic import Field, model_validator
 
 from camdkit.compatibility import CompatibleBaseModel
-from camdkit.numeric_types import (NonNegativeFloat, StrictlyPositiveFloat,
+from camdkit.numeric_types import (NonNegativeFloat, StrictlyPositiveFloat, NormalizedFloat,
                                    NonNegativeInt, UnityOrGreaterFloat)
 from camdkit.string_types import NonBlankUTF8String
 
@@ -66,9 +66,9 @@ class ProjectionOffset(PlanarOffset):
 
 
 class FizEncoders(CompatibleBaseModel):
-    focus: NonNegativeFloat | None = None
-    iris: NonNegativeFloat | None = None
-    zoom: NonNegativeFloat | None = None
+    focus: NormalizedFloat | None = None
+    iris: NormalizedFloat | None = None
+    zoom: NormalizedFloat | None = None
 
     def __init__(self, focus: float, iris: float, zoom: float):
         super(FizEncoders, self).__init__(focus=focus, iris=iris, zoom=zoom)
