@@ -407,36 +407,15 @@ class TimingTestCases(unittest.TestCase):
             "additionalProperties": False,
             "properties": {
                 "translation": {
-                    "anyOf": [
-                        {
-                            "type": "number"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
+                    "anyOf": [ { "type": "number" }, { "type": "null" } ],
                     "default": None
                 },
                 "rotation": {
-                    "anyOf": [
-                        {
-                            "type": "number"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
+                    "anyOf": [ { "type": "number" }, {  "type": "null" } ],
                     "default": None
                 },
                 "lensEncoders": {
-                    "anyOf": [
-                        {
-                            "type": "number"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
+                    "anyOf": [ {  "type": "number" }, {  "type": "null" } ],
                     "default": None
                 }
             }

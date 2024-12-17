@@ -55,7 +55,6 @@ class CompatibleBaseModel(BaseModel):
 
     model_config = ConfigDict(validate_assignment=True,
                               use_enum_values=True,
-                              # json_schema_extra=compatibility_cleanups,
                               extra="forbid")
 
     @classmethod
