@@ -8,12 +8,13 @@
 
 from typing import Annotated, Any
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from camdkit.compatibility import CompatibleBaseModel
 from camdkit.numeric_types import (NonNegativeInt,
                                    UnityOrGreaterFloat,
-                                   StrictlyPositiveRational)
+                                   StrictlyPositiveRational,
+                                   rationalize_strictly_and_positively)
 from camdkit.lens_types import (StaticLens, Lens,
                                 Distortion, DistortionOffset, ProjectionOffset,
                                 FizEncoders, RawFizEncoders)
@@ -30,6 +31,11 @@ class Static(CompatibleBaseModel):
     lens: StaticLens | None = None
     tracker: StaticTracker | None = None
 
+    # noinspection PyNestedDecorators
+    @field_validator("duration", mode="before")
+    @classmethod
+    def coerce_global__type_to_strictly_positive_rational(cls, v):
+        return rationalize_strictly_and_positively(v)
 
 class Clip(CompatibleBaseModel):
     static: Static | None = None

@@ -63,7 +63,7 @@ class StaticCamera(CompatibleBaseModel):
     # noinspection PyNestedDecorators
     @field_validator("capture_frame_rate", "anamorphic_squeeze", mode="before")
     @classmethod
-    def coerce_to_strictly_positive_rational(cls, v):
+    def coerce_camera_type_to_strictly_positive_rational(cls, v):
         return rationalize_strictly_and_positively(v)
 
 

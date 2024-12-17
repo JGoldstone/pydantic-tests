@@ -68,7 +68,9 @@ class StrictlyPositiveRational(CompatibleBaseModel):
 
 def rationalize_strictly_and_positively(x: Any) -> StrictlyPositiveRational:
     if not isinstance(x, StrictlyPositiveRational):
-        if isinstance(x, numbers.Rational):
+        if isinstance(x, int) and x <= MAX_INT_32:
+            return StrictlyPositiveRational(x, 1)
+        elif isinstance(x, numbers.Rational):
             return StrictlyPositiveRational(int(x.numerator), int(x.denominator))
         elif isinstance(x, dict) and len(x) == 2 and "num" in x and "denom" in x:
             return StrictlyPositiveRational(int(x["num"]), int(x["denom"]))
