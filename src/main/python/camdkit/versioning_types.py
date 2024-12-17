@@ -12,6 +12,7 @@ from camdkit.string_types import NonBlankUTF8String
 __all__ = ['OPENTRACKIO_PROTOCOL_NAME', 'VersionedProtocol']
 
 OPENTRACKIO_PROTOCOL_NAME = "OpenTrackIO"
+OPENTRACKIO_PROTOCOL_VERSION = (0, 9, 2)
 
 
 class VersionedProtocol(CompatibleBaseModel):
