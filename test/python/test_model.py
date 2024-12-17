@@ -13,6 +13,9 @@ from camdkit.framework import *
 from camdkit.model import *
 
 from camdkit.camera_types import PhysicalDimensions, SenselDimensions
+from camdkit.numeric_types import StrictlyPositiveRational
+
+
 class ModelTest(unittest.TestCase):
 
   def test_duration(self):
@@ -22,7 +25,7 @@ class ModelTest(unittest.TestCase):
 
     clip.duration = 3
 
-    self.assertEqual(clip.duration, 3)
+    self.assertEqual(clip.duration, StrictlyPositiveRational(3, 1))
 
   def test_serialize(self):
     self.maxDiff = None # Make sure we log large diffs here
@@ -227,7 +230,7 @@ class ModelTest(unittest.TestCase):
     with self.assertRaises(ValueError):
       clip.duration = 0.7
 
-    self.assertEqual(clip.duration, Fraction(6, 7))
+    self.assertEqual(clip.duration, StrictlyPositiveRational(6, 7))
 
   def test_active_sensor_physical_dimensions(self):
     clip = Clip()
