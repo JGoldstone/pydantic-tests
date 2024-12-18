@@ -6,7 +6,7 @@
 
 """Types for lens modeling"""
 
-from typing import Any, Annotated, Self
+from typing import Any, Annotated, Self, Optional
 
 from pydantic import Field, model_validator
 
@@ -77,8 +77,12 @@ class FizEncoders(CompatibleBaseModel):
     iris: NormalizedFloat | None = None
     zoom: NormalizedFloat | None = None
 
-    def __init__(self, focus: float, iris: float, zoom: float):
+    def __init__(self, focus: Optional[float] = None,
+                 iris: Optional[float] = None,
+                 zoom: Optional[float] = None):
         super(FizEncoders, self).__init__(focus=focus, iris=iris, zoom=zoom)
+        if self.focus is None and self.iris is None and self.zoom is None:
+            raise ValueError("FizEncoders requires at least one of focus or iris or zoom")
 
 
 class RawFizEncoders(CompatibleBaseModel):
@@ -86,9 +90,12 @@ class RawFizEncoders(CompatibleBaseModel):
     iris: NonNegativeInt | None = None
     zoom: NonNegativeInt | None = None
 
-    def __init__(self, focus: int, iris: int, zoom: int):
+    def __init__(self, focus: Optional[NonNegativeInt] = None,
+                 iris: Optional[NonNegativeInt] = None,
+                 zoom: Optional[NonNegativeInt] = None):
         super(RawFizEncoders, self).__init__(focus=focus, iris=iris, zoom=zoom)
-
+        if self.focus is None and self.iris is None and self.zoom is None:
+            raise ValueError("RawFizEncoders requires at least one of focus or iris or zoom")
 
 class ExposureFalloff(CompatibleBaseModel):
     a1: float
