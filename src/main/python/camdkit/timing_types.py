@@ -9,10 +9,11 @@
 from enum import Enum, verify, UNIQUE, StrEnum
 from typing import Annotated, Optional
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from camdkit.compatibility import CompatibleBaseModel
-from camdkit.numeric_types import (StrictlyPositiveRational,
+from camdkit.numeric_types import (rationalize_strictly_and_positively,
+                                   StrictlyPositiveRational,
                                    NonNegative8BitInt,
                                    NonNegativeInt,
                                    NonNegative48BitInt)
@@ -31,8 +32,13 @@ class TimecodeFormat(CompatibleBaseModel):
     """
     frame_rate: Annotated[StrictlyPositiveRational, Field(alias="frameRate")]
     sub_frame: Annotated[NonNegativeInt, Field(alias="subFrame", strict=True)] = 0
+    # noinspection PyNestedDecorators
+    @field_validator("frame_rate", mode="before")
+    @classmethod
+    def coerce_global__type_to_strictly_positive_rational(cls, v):
+        return rationalize_strictly_and_positively(v)
 
-    def __init__(self, frameRate: StrictlyPositiveRational, subFrame: int):
+    def __init__(self, frameRate: StrictlyPositiveRational, subFrame: int = 0):
         super(TimecodeFormat, self).__init__(frameRate=frameRate, subFrame=subFrame)
 
 
