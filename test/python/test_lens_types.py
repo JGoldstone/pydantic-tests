@@ -54,43 +54,19 @@ class LensTypesTestCases(unittest.TestCase):
         expected_schema: dict[str, Any] = {
             "type": "object",
             "properties": {
-                "radial": {
-                    "type": "array",
-                    "items": {
-                        "type": "number"
-                    }
-                },
+                "radial": { "type": "array", "items": { "type": "number" } },
                 "tangential": {
-                    "anyOf": [
-                        {
-                            "type": "array",
-                            "items": {
-                                "type": "number"
-                            }
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
+                    "anyOf": [ { "type": "array", "items": { "type": "number" } },
+                               { "type": "null" } ],
                     "default": None
                 },
                 "model": {
-                    "anyOf": [
-                        {
-                            "type": "string",
-                            "minLength": 1,
-                            "maxLength": 1023
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
+                    "anyOf": [ { "type": "string", "minLength": 1, "maxLength": 1023 },
+                               { "type": "null" } ],
                     "default": None
                 }
             },
-            "required": [
-                "radial"
-            ],
+            "required": [ "radial" ],
             "additionalProperties": False
         }
         schema_from_model: dict[str, Any] = Distortion.make_json_schema()
