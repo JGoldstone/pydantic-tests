@@ -365,11 +365,11 @@ class TimingTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             SynchronizationOffsets(translation="foo",
                                    rotation=valid_rotation,
-                                   lens_encoders=valid_lens_encoders)
+                                   lensEncoders=valid_lens_encoders)
         with self.assertRaises(ValidationError):
             SynchronizationOffsets(translation=valid_translation,
                                    rotation="foo",
-                                   lens_encoders=valid_lens_encoders)
+                                   lensEncoders=valid_lens_encoders)
         with self.assertRaises(ValidationError):
             SynchronizationOffsets(translation=valid_translation,
                                    rotation=valid_rotation,
@@ -385,8 +385,8 @@ class TimingTestCases(unittest.TestCase):
         self.assertEqual(doubled_translation, valid_offsets.translation)
         valid_offsets.rotation = doubled_rotation
         self.assertEqual(doubled_rotation, valid_offsets.rotation)
-        valid_offsets.lens_encoders = doubled_lens_encoders
-        self.assertEqual(doubled_lens_encoders, valid_offsets.lens_encoders)
+        valid_offsets.lensEncoders = doubled_lens_encoders
+        self.assertEqual(doubled_lens_encoders, valid_offsets.lensEncoders)
         with self.assertRaises(ValidationError):
             valid_offsets.translation = "foo"
         with self.assertRaises(ValidationError):

@@ -4,10 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Make the expected schema more visually compact.">
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Convert an integer supplied as a frame rate into a rational">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/camdkit_implementation_notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/camdkit_implementation_notes.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiments/learnings.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/learnings.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_clip.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/python/test_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_timing_types.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,6 +110,9 @@
     "Python tests.Python tests for test_model.ModelTest.test_duration_fraction.executor": "Run",
     "Python tests.Python tests for test_model.ModelTest.test_f_number.executor": "Run",
     "Python tests.Python tests for test_model.ModelTest.test_focus_position.executor": "Run",
+    "Python tests.Python tests for test_model.ModelTest.test_lens_distortion_to_dict.executor": "Debug",
+    "Python tests.Python tests for test_model.ModelTest.test_lens_distortions.executor": "Run",
+    "Python tests.Python tests for test_model.ModelTest.test_serialize.executor": "Debug",
     "Python tests.Python tests for test_model_types.ModelTestCases.test_Standalone_sample_id_no_args.executor": "Run",
     "Python tests.Python tests for test_model_types.ModelTestCases.test_ctor.executor": "Run",
     "Python tests.Python tests for test_model_types.ModelTestCases.test_open_coded_sample_id.executor": "Run",
@@ -197,7 +206,7 @@
       <recent name="$PROJECT_DIR$/src/main/python/camdkit" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Unittests in python">
+  <component name="RunManager" selected="Python tests.Python tests for test_model.ModelTest.test_serialize">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -237,7 +246,7 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_model.ModelTest.test_duration_fraction" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_model.ModelTest.test_lens_distortion_to_dict" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -249,11 +258,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_model.ModelTest.test_duration_fraction&quot;" />
+      <option name="_new_target" value="&quot;test_model.ModelTest.test_lens_distortion_to_dict&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_model.ModelTest.test_f_number" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_model.ModelTest.test_lens_distortions" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -265,11 +274,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_model.ModelTest.test_f_number&quot;" />
+      <option name="_new_target" value="&quot;test_model.ModelTest.test_lens_distortions&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_model.ModelTest.test_focus_position" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_model.ModelTest.test_serialize" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -281,11 +290,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_model.ModelTest.test_focus_position&quot;" />
+      <option name="_new_target" value="&quot;test_model.ModelTest.test_serialize&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests in test_model.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests in test_timing_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -297,7 +306,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_model.py&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_timing_types.py&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
@@ -323,18 +332,18 @@
       <item itemvalue="Python.main" />
       <item itemvalue="Python tests.Unittests in python" />
       <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_lens_static_parameters" />
-      <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_duration_fraction" />
-      <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_f_number" />
-      <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_focus_position" />
-      <item itemvalue="Python tests.Python tests in test_model.py" />
+      <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_lens_distortion_to_dict" />
+      <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_lens_distortions" />
+      <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_serialize" />
+      <item itemvalue="Python tests.Python tests in test_timing_types.py" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_serialize" />
+        <item itemvalue="Python tests.Python tests in test_timing_types.py" />
+        <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_lens_distortions" />
+        <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_lens_distortion_to_dict" />
         <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_lens_static_parameters" />
-        <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_focus_position" />
-        <item itemvalue="Python tests.Python tests in test_model.py" />
-        <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_f_number" />
-        <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_duration_fraction" />
       </list>
     </recent_temporary>
   </component>
@@ -374,15 +383,7 @@
       <workItem from="1734018398844" duration="5656000" />
       <workItem from="1734029473500" duration="51831000" />
       <workItem from="1734133161202" duration="93607000" />
-      <workItem from="1734368060036" duration="51148000" />
-    </task>
-    <task id="LOCAL-00018" summary="Continued creation of test cases; shabang, emacs-style coding lines and BSD-3-clause licenses at the top of every Python file.">
-      <option name="closed" value="true" />
-      <created>1733944643921</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1733944643921</updated>
+      <workItem from="1734368060036" duration="66131000" />
     </task>
     <task id="LOCAL-00019" summary="Fully flesh out and test tracker types.">
       <option name="closed" value="true" />
@@ -768,7 +769,15 @@
       <option name="project" value="LOCAL" />
       <updated>1734480417653</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="Convert an integer supplied as a frame rate into a rational">
+      <option name="closed" value="true" />
+      <created>1734481576554</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1734481576554</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -786,7 +795,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="UUID URN schema matches" />
     <MESSAGE value="NonNegativeInt and StrictlyPositiveRational schema match original implementation" />
     <MESSAGE value="Various things to get all unit tests working again" />
     <MESSAGE value="All timing types tests pass." />
@@ -811,7 +819,8 @@
     <MESSAGE value="Add lens_distortion_is_projection to static lens metadata" />
     <MESSAGE value="Don't try and convert None to a rational in field validation used by a couple of rational attributes" />
     <MESSAGE value="Make the expected schema more visually compact." />
-    <option name="LAST_COMMIT_MESSAGE" value="Make the expected schema more visually compact." />
+    <MESSAGE value="Convert an integer supplied as a frame rate into a rational" />
+    <option name="LAST_COMMIT_MESSAGE" value="Convert an integer supplied as a frame rate into a rational" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -827,9 +836,14 @@
           <option name="timeStamp" value="66" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/main/python/camdkit/clip.py</url>
-          <line>72</line>
-          <option name="timeStamp" value="75" />
+          <url>file://$PROJECT_DIR$/test/python/test_model.py</url>
+          <line>1040</line>
+          <option name="timeStamp" value="76" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/python/test_model.py</url>
+          <line>196</line>
+          <option name="timeStamp" value="78" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
           <url>file://$PROJECT_DIR$/experiments/learnings.ipynb</url>
@@ -848,9 +862,9 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/pydantic_tests$camera_types.coverage" NAME="camera_types Coverage Results" MODIFIED="1734106899074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1734480446913" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1734536369476" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/pydantic_tests$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1728857315751" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1734480225898" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1734537094307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
   </component>
 </project>

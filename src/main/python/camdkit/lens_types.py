@@ -21,7 +21,7 @@ class StaticLens(CompatibleBaseModel):
       Field(alias="distortionOverscanMax")] = None
     undistortion_overscan_max: Annotated[UnityOrGreaterFloat | None,
       Field(alias="undistortionOverscanMax")] = None
-    distortion_is_projection: Annotated[bool | None, Field(alias="distortionIsProjection")] = None
+    distortion_is_projection: Annotated[bool | None, Field(alias="distortionProjection")] = None
     make: NonBlankUTF8String | None = None
     model: NonBlankUTF8String | None = None
     serial_number: Annotated[NonBlankUTF8String | None, Field(alias="serialNumber")] = None
@@ -30,8 +30,14 @@ class StaticLens(CompatibleBaseModel):
 
 
 class Distortion(CompatibleBaseModel):
-    radial: Annotated[tuple[float, ...], Field(strict=True)]
-    tangential: Annotated[tuple[float, ...] | None, Field(strict=True)] = None
+    # TODO ask the group about strictness of type checking.
+    #    Let Pydantic convert silently?
+    #    Restore strict=True?
+    #    Change type to typing.Sequence? collections.abc.Sequence or collections.abc.MutableSequence?
+    # radial: Annotated[tuple[float, ...], Field(strict=True)]
+    # tangential: Annotated[tuple[float, ...] | None, Field(strict=True)] = None
+    radial: tuple[float, ...]
+    tangential: tuple[float, ...] | None = None
     model: NonBlankUTF8String | None = None
 
     @model_validator(mode="after")
@@ -96,7 +102,7 @@ class ExposureFalloff(CompatibleBaseModel):
 class Lens(CompatibleBaseModel):
     # TODO: watch GitHub issue #127 to see if we can get rid of the 'custom' field
     custom: tuple[tuple[Any, ...], ...] | None = None  # WTF?
-    distortion: tuple[Distortion, ...] | None = None
+    distortion: tuple[tuple[Distortion, ...], ...] | None = None
     distortion_overscan: Annotated[tuple[UnityOrGreaterFloat, ...] | None, Field(alias="distortionOverscan")] = None
     undistortion_overscan: Annotated[tuple[UnityOrGreaterFloat, ...] | None, Field(alias="undistortionOverscan")] = None
     distortion_offset: Annotated[tuple[DistortionOffset, ...] | None, Field(alias="distortionOffset")] = None
@@ -110,4 +116,4 @@ class Lens(CompatibleBaseModel):
     projection_offset: Annotated[tuple[ProjectionOffset, ...], Field(alias="projectionOffset")] = None
     raw_encoders: Annotated[tuple[RawFizEncoders, ...] | None, Field(alias="rawEncoders")] = None
     t_number: Annotated[tuple[StrictlyPositiveFloat, ...] | None, Field(alias="tStop")] = None
-    undistortion: tuple[Distortion, ...] | None = None
+    undistortion: tuple[tuple[Distortion, ...], ...] | None = None

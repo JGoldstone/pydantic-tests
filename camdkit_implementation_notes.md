@@ -92,4 +92,30 @@ Go over all the attributes of the original clip
 # See this for a discussion of why #noexception PyNestedDecorators is used above field decorators
 https://youtrack.jetbrains.com/issue/PY-34368/False-warning-This-decorator-will-not-receive-a-callable-it-may-expect-when-classmethod-is-not-the-last-applied
 
-Note that for some reason our ability to use the compatibility classmethod from_json requires `__init__` argument names to match the aliases we use for validation, which is counterintuitive 
+Note that for some reason our ability to use the compatibility classmethod from_json requires `__init__` argument names to match the aliases we use for validation, which is counterintuitive
+
+### notes from test_model.py
+Changes:
+
+test_serialize():
+distinguish between physical and sensel dimensions; the old code did not.
+
+test_active_sensor_physical_dimensions()
+use PhysicalDimensions, not Dimensions
+
+test_active_sensor_resolution()
+use SenselResolution, not Dimensions
+
+test_duration()
+compare result of assignment to StrictlyPositiveRational
+
+test_duration_fraction()
+same
+
+test_f_number()
+commented out what looks like detection of assigning a list to a tuple attribute
+
+test_t_number()
+same as test_f_number()
+
+

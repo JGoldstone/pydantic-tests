@@ -22,6 +22,7 @@ from camdkit.camera_types import StaticCamera, PhysicalDimensions, SenselDimensi
 from camdkit.string_types import NonBlankUTF8String, UUIDURN
 from camdkit.tracker_types import StaticTracker, Tracker, GlobalPosition
 from camdkit.timing_types import Timing, TimingMode, Timestamp, Synchronization, Timecode
+from camdkit.versioning_types import VersionedProtocol
 from camdkit.transform_types import Transform
 
 
@@ -34,7 +35,7 @@ class Static(CompatibleBaseModel):
     # noinspection PyNestedDecorators
     @field_validator("duration", mode="before")
     @classmethod
-    def coerce_global__type_to_strictly_positive_rational(cls, v):
+    def coerce_duration_to_strictly_positive_rational(cls, v):
         return rationalize_strictly_and_positively(v)
 
 class Clip(CompatibleBaseModel):
@@ -46,12 +47,13 @@ class Clip(CompatibleBaseModel):
 
     # The "global_" prefix is here because, without it, we would have BaseModel attributes
     # with the same name, from the user's POV, as the property
+    global_protocol: Annotated[tuple[VersionedProtocol, ...] | None, Field(alias="protocol")] = None
     global_sample_id: Annotated[tuple[UUIDURN, ...] | None, Field(alias="sampleId")] = None
     global_source_id: Annotated[tuple[UUIDURN, ...] | None, Field(alias="sourceId")] = None
     global_source_number: Annotated[tuple[NonNegativeInt, ...] | None, Field(alias="sourceNumber")] = None
     global_related_sample_ids: Annotated[tuple[tuple[UUIDURN, ...], ...] | None, Field(alias="relatedSampleIds")] = None
     global_global_stage: Annotated[tuple[GlobalPosition, ...] | None, Field(alias="globalStage")] = None
-    global_transforms: Annotated[tuple[Transform, ...] | None, Field(alias="transforms")] = None
+    global_transforms: Annotated[tuple[tuple[Transform, ...], ...] | None, Field(alias="transforms")] = None
 
     def value_from_hierarchy(self, attrs: tuple[str, ...]):
         obj = self
@@ -315,11 +317,11 @@ class Clip(CompatibleBaseModel):
                                    value)
 
     @property
-    def lens_distortion(self) -> tuple[Distortion, ...] | None:
+    def lens_distortions(self) -> tuple[tuple[Distortion, ...], ...] | None:
         return self.value_from_hierarchy(('lens', 'distortion'))
 
-    @lens_distortion.setter
-    def lens_distortion(self, value: tuple[Distortion, ...] | None) -> None:
+    @lens_distortions.setter
+    def lens_distortions(self, value: tuple[tuple[Distortion, ...], ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'distortion',
                                    value)
@@ -445,11 +447,11 @@ class Clip(CompatibleBaseModel):
                                    value)
 
     @property
-    def lens_undistortion(self) -> tuple[Distortion, ...] | None:
+    def lens_undistortions(self) -> tuple[tuple[Distortion, ...], ...] | None:
         return self.value_from_hierarchy(('lens', 'undistortion'))
 
-    @lens_undistortion.setter
-    def lens_undistortion(self, value: tuple[Distortion, ...] | None) -> None:
+    @lens_undistortions.setter
+    def lens_undistortions(self, value: tuple[tuple[Distortion, ...], ...] | None) -> None:
         self.set_through_hierarchy((('lens', Lens),),
                                    'undistortion',
                                    value)
@@ -608,6 +610,16 @@ class Clip(CompatibleBaseModel):
         self.set_through_hierarchy((
             ('tracker', Tracker),),
             'notes', value)
+
+    @property
+    def protocol(self) -> tuple[VersionedProtocol, ...] | None:
+        return self.value_from_hierarchy(('global_protocol',))
+
+    @protocol.setter
+    def protocol(self, value):
+        self.set_through_hierarchy(
+            None,
+            'global_protocol', value)
 
     @property
     def sample_id(self) -> tuple[UUIDURN, ...] | None:

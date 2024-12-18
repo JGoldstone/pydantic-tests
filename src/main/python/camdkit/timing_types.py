@@ -32,10 +32,11 @@ class TimecodeFormat(CompatibleBaseModel):
     """
     frame_rate: Annotated[StrictlyPositiveRational, Field(alias="frameRate")]
     sub_frame: Annotated[NonNegativeInt, Field(alias="subFrame", strict=True)] = 0
+
     # noinspection PyNestedDecorators
     @field_validator("frame_rate", mode="before")
     @classmethod
-    def coerce_global__type_to_strictly_positive_rational(cls, v):
+    def coerce_frame_rate_to_strictly_positive_rational(cls, v):
         return rationalize_strictly_and_positively(v)
 
     def __init__(self, frameRate: StrictlyPositiveRational, subFrame: int = 0):
@@ -81,12 +82,12 @@ class SynchronizationOffsets(CompatibleBaseModel):
 
     translation: float | None = None
     rotation: float | None = None
-    lens_encoders: Annotated[float | None, Field(alias="lensEncoders")] = None
+    lensEncoders: Annotated[float | None, Field(alias="lensEncoders")] = None
 
-    # def __init__(self, translation: float, rotation: float, lensEncoders: float) -> None:
-    #     super(SynchronizationOffsets, self).__init__(translation=translation,
-    #                                                  rotation=rotation,
-    #                                                  lensEncoders=lensEncoders)
+    def __init__(self, translation: float, rotation: float, lensEncoders: float) -> None:
+        super(SynchronizationOffsets, self).__init__(translation=translation,
+                                                     rotation=rotation,
+                                                     lensEncoders=lensEncoders)
 
 
 class SynchronizationPTP(CompatibleBaseModel):
@@ -95,10 +96,10 @@ class SynchronizationPTP(CompatibleBaseModel):
     master: Annotated[str | None, Field(pattern=PTP_MASTER_PATTERN)] = None
     offset: float | None = None
 
-    # def __init__(self, domain: Optional[int],
-    #              master: Optional[str],
-    #              offset: Optional[float]) -> None:
-    #     super(SynchronizationPTP, self).__init__(domain=domain, master=master, offset=offset)
+    def __init__(self, domain: Optional[int],
+                 master: Optional[str],
+                 offset: Optional[float]) -> None:
+        super(SynchronizationPTP, self).__init__(domain=domain, master=master, offset=offset)
 
 
 class Synchronization(CompatibleBaseModel):
@@ -151,6 +152,12 @@ class Synchronization(CompatibleBaseModel):
                                               present=present,
                                               ptp=ptp)
 
+    # noinspection PyNestedDecorators
+    @field_validator("frequency", mode="before")
+    @classmethod
+    def coerce_frequency_to_strictly_positive_rational(cls, v):
+        return rationalize_strictly_and_positively(v)
+
 
 class Timing(CompatibleBaseModel):
     mode: tuple[TimingMode, ...] | None = None
@@ -161,17 +168,11 @@ class Timing(CompatibleBaseModel):
     synchronization: tuple[Synchronization, ...] | None = None
     timecode: tuple[Timecode, ...] | None = None
 
-    # @field_validator("mode", mode="before")
-    # @classmethod
-    # def enumify(cls, v):
-    #     if isinstance(v, tuple):
-    #         try:
-    #             result = [TimingMode(elem) for elem in v]
-    #             return result
-    #             # return TimingMode(v)
-    #         except ValueError:
-    #             pass
-    #     return v
+    # noinspection PyNestedDecorators
+    @field_validator("sample_rate", mode="before")
+    @classmethod
+    def coerce_sample_rates_to_strictly_positive_rationals(cls, vs):
+        return tuple([rationalize_strictly_and_positively(v) for v in vs])
 
 
 class Sampling(Enum):

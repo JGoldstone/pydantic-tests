@@ -67,6 +67,7 @@ class CompatibleBaseModel(BaseModel):
 
     def to_json(self, *_) -> json:
         return self.model_dump(by_alias=True,
+                               exclude_none=True,
                                exclude={"canonical_name",
                                         "sampling",
                                         "units",

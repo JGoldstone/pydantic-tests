@@ -158,7 +158,7 @@ class ClipTestCases(unittest.TestCase):
         clip_as_json = clip.to_json()
         self.assertEqual(clip_as_json["static"]["lens"]["distortionOverscanMax"], 1.2)
         self.assertEqual(clip_as_json["static"]["lens"]["undistortionOverscanMax"], 1.2)
-        self.assertEqual(clip_as_json["static"]["lens"]["distortionIsProjection"], True)
+        self.assertEqual(clip_as_json["static"]["lens"]["distortionProjection"], True)
         self.assertEqual(clip_as_json["static"]["lens"]["make"], "ABC")
         self.assertEqual(clip_as_json["static"]["lens"]["model"], "FGH")
         self.assertEqual(clip_as_json["static"]["lens"]["serialNumber"], "123456789")
@@ -219,10 +219,11 @@ class ClipTestCases(unittest.TestCase):
         #                    Distortion([1.0, 2.0, 3.0], [1.0, 2.0], "Brown-Conrady D-U"))
         # lens_undistortion = (Distortion([1.0, 2.0, 3.0], [1.0, 2.0], "Brown-Conrady U-D"),
         #                      Distortion([1.0, 2.0, 3.0], [1.0, 2.0], "Brown-Conrady U-D"))
-        lens_distortion = (Distortion((1.0, 2.0, 3.0), (1.0, 2.0), "Brown-Conrady D-U"),
-                           Distortion((1.0, 2.0, 3.0), (1.0, 2.0), "Brown-Conrady D-U"))
-        lens_undistortion = (Distortion((1.0, 2.0, 3.0), (1.0, 2.0), "Brown-Conrady U-D"),
-                             Distortion((1.0, 2.0, 3.0), (1.0, 2.0), "Brown-Conrady U-D"))
+        lens_distortion_d_u = Distortion((1.0, 2.0, 3.0), (1.0, 2.0), "Brown-Conrady D-U")
+        lens_distortion_u_d = Distortion((1.0, 2.0, 3.0), (1.0, 2.0), "Brown-Conrady U-D")
+        lens_distortion = (lens_distortion_d_u, lens_distortion_u_d)
+        lens_distortions = (lens_distortion, lens_distortion)
+        lens_undistortions = (lens_distortion, lens_distortion)
         lens_distortion_offset = (DistortionOffset(1.0, 2.0), DistortionOffset(1.0, 2.0))
         lens_projection_offset = (ProjectionOffset(0.1, 0.2), ProjectionOffset(0.1, 0.2))
 
@@ -258,12 +259,12 @@ class ClipTestCases(unittest.TestCase):
         self.assertIsNone(clip.lens_exposure_falloff)
         clip.lens_exposure_falloff = lens_exposure_falloff
         self.assertEqual(lens_exposure_falloff, clip.lens_exposure_falloff)
-        self.assertIsNone(clip.lens_distortion)
-        clip.lens_distortion = lens_distortion
-        self.assertEqual(lens_distortion, clip.lens_distortion)
-        self.assertIsNone(clip.lens_undistortion)
-        clip.lens_undistortion = lens_undistortion
-        self.assertEqual(lens_undistortion, clip.lens_undistortion)
+        self.assertIsNone(clip.lens_distortions)
+        clip.lens_distortions = lens_distortions
+        self.assertEqual(lens_distortions, clip.lens_distortions)
+        self.assertIsNone(clip.lens_undistortions)
+        clip.lens_undistortions = lens_undistortions
+        self.assertEqual(lens_undistortions, clip.lens_undistortions)
         self.assertIsNone(clip.lens_distortion_offset)
         clip.lens_distortion_offset = lens_distortion_offset
         self.assertEqual(lens_distortion_offset, clip.lens_distortion_offset)
@@ -286,12 +287,12 @@ class ClipTestCases(unittest.TestCase):
         self.assertTupleEqual(clip_as_json["lens"]["undistortionOverscan"], lens_undistortion_overscan)
         self.assertTupleEqual(clip_as_json["lens"]["exposureFalloff"], ({"a1": 1.0, "a2": 2.0, "a3": 3.0},
                                                              {"a1": 1.0, "a2": 2.0, "a3": 3.0}))
-        self.assertTupleEqual(clip_as_json["lens"]["distortion"],
-                              ({"radial": (1.0, 2.0, 3.0), "tangential": (1.0, 2.0), "model": "Brown-Conrady D-U"},
-                               {"radial": (1.0, 2.0, 3.0), "tangential": (1.0, 2.0), "model": "Brown-Conrady D-U"}))
-        self.assertTupleEqual(clip_as_json["lens"]["undistortion"],
-                              ({"radial": (1.0, 2.0, 3.0), "tangential": (1.0, 2.0), "model": "Brown-Conrady U-D"},
-                               {"radial": (1.0, 2.0, 3.0), "tangential": (1.0, 2.0), "model": "Brown-Conrady U-D"}))
+        self.assertTupleEqual(clip_as_json["lens"]["distortion"],(
+            (lens_distortion_d_u.to_json(), lens_distortion_u_d.to_json()),
+            (lens_distortion_d_u.to_json(), lens_distortion_u_d.to_json())))
+        self.assertTupleEqual(clip_as_json["lens"]["undistortion"],(
+            (lens_distortion_d_u.to_json(), lens_distortion_u_d.to_json()),
+            (lens_distortion_d_u.to_json(), lens_distortion_u_d.to_json())))
         self.assertTupleEqual(clip_as_json["lens"]["distortionOffset"], ({"x": 1.0, "y": 2.0}, {"x": 1.0, "y": 2.0}))
         self.assertTupleEqual(clip_as_json["lens"]["projectionOffset"], ({"x": 0.1, "y": 0.2}, {"x": 0.1, "y": 0.2}))
 
