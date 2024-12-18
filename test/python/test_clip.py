@@ -122,6 +122,7 @@ class ClipTestCases(unittest.TestCase):
         # reference values
         lens_distortion_overscan_max = 1.2
         lens_undistortion_overscan_max = 1.2
+        lens_distortion_is_projection = True
         lens_make = "ABC"
         lens_model = "FGH"
         lens_firmware = "1-dev.1"
@@ -136,6 +137,9 @@ class ClipTestCases(unittest.TestCase):
         self.assertIsNone(clip.lens_undistortion_overscan_max)
         clip.lens_undistortion_overscan_max = lens_undistortion_overscan_max
         self.assertEqual(lens_undistortion_overscan_max, clip.lens_undistortion_overscan_max)
+        self.assertIsNone(clip.lens_distortion_is_projection)
+        clip.lens_distortion_is_projection = lens_distortion_is_projection
+        self.assertEqual(lens_distortion_is_projection, clip.lens_distortion_is_projection)
         self.assertIsNone(clip.lens_make)
         clip.lens_make = lens_make
         self.assertEqual(lens_make, clip.lens_make)
@@ -154,6 +158,7 @@ class ClipTestCases(unittest.TestCase):
         clip_as_json = clip.to_json()
         self.assertEqual(clip_as_json["static"]["lens"]["distortionOverscanMax"], 1.2)
         self.assertEqual(clip_as_json["static"]["lens"]["undistortionOverscanMax"], 1.2)
+        self.assertEqual(clip_as_json["static"]["lens"]["distortionIsProjection"], True)
         self.assertEqual(clip_as_json["static"]["lens"]["make"], "ABC")
         self.assertEqual(clip_as_json["static"]["lens"]["model"], "FGH")
         self.assertEqual(clip_as_json["static"]["lens"]["serialNumber"], "123456789")

@@ -21,6 +21,7 @@ class StaticLens(CompatibleBaseModel):
       Field(alias="distortionOverscanMax")] = None
     undistortion_overscan_max: Annotated[UnityOrGreaterFloat | None,
       Field(alias="undistortionOverscanMax")] = None
+    distortion_is_projection: Annotated[bool | None, Field(alias="distortionIsProjection")] = None
     make: NonBlankUTF8String | None = None
     model: NonBlankUTF8String | None = None
     serial_number: Annotated[NonBlankUTF8String | None, Field(alias="serialNumber")] = None

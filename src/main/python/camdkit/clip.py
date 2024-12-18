@@ -239,6 +239,17 @@ class Clip(CompatibleBaseModel):
                                    value)
 
     @property
+    def lens_distortion_is_projection(self) -> bool:
+        return self.value_from_hierarchy(('static', 'lens', 'distortion_is_projection'))
+
+    @lens_distortion_is_projection.setter
+    def lens_distortion_is_projection(self, value: bool) -> None:
+        self.set_through_hierarchy((('static', Static),
+                                    ('lens', StaticLens)),
+                                   'distortion_is_projection',
+                                   value)
+
+    @property
     def lens_make(self) -> NonBlankUTF8String | None:
         return self.value_from_hierarchy(('static', 'lens', 'make'))
 
