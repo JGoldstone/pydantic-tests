@@ -67,14 +67,15 @@ class StrictlyPositiveRational(CompatibleBaseModel):
         super(StrictlyPositiveRational, self).__init__(num=num, denom=denom)
 
 def rationalize_strictly_and_positively(x: Any) -> StrictlyPositiveRational:
-    if not isinstance(x, StrictlyPositiveRational):
-        if isinstance(x, int) and x <= MAX_INT_32:
-            return StrictlyPositiveRational(x, 1)
-        elif isinstance(x, numbers.Rational):
-            return StrictlyPositiveRational(int(x.numerator), int(x.denominator))
-        elif isinstance(x, dict) and len(x) == 2 and "num" in x and "denom" in x:
-            return StrictlyPositiveRational(int(x["num"]), int(x["denom"]))
-        raise ValueError(f"could not convert input of type {type(x)} to a StrictlyPositiveRational")
+    if x:
+        if not isinstance(x, StrictlyPositiveRational):
+            if isinstance(x, int) and x <= MAX_INT_32:
+                return StrictlyPositiveRational(x, 1)
+            elif isinstance(x, numbers.Rational):
+                return StrictlyPositiveRational(int(x.numerator), int(x.denominator))
+            elif isinstance(x, dict) and len(x) == 2 and "num" in x and "denom" in x:
+                return StrictlyPositiveRational(int(x["num"]), int(x["denom"]))
+            raise ValueError(f"could not convert input of type {type(x)} to a StrictlyPositiveRational")
     return x
 
 # looked promising at first, and might work in clever IDE, but Pydantic can't serialize the type
