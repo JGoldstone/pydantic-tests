@@ -28,6 +28,12 @@ class VersioningTypesTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             VersionedProtocol(valid_name, "0.9.2")
         with self.assertRaises(ValidationError):
+            VersionedProtocol(valid_name, "10.9.2")
+        with self.assertRaises(ValidationError):
+            VersionedProtocol(valid_name, "0.10.2")
+        with self.assertRaises(ValidationError):
+            VersionedProtocol(valid_name, "0.9.10")
+        with self.assertRaises(ValidationError):
             VersionedProtocol(valid_name, 0.92)
         with self.assertRaises(ValidationError):
             VersionedProtocol(valid_name, 0.9+2j)  # creative thinking

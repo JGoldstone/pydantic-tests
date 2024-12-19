@@ -7,6 +7,7 @@
 """Types for versioning protocols"""
 
 from camdkit.compatibility import CompatibleBaseModel
+from camdkit.numeric_types import SingleDigitInt
 from camdkit.string_types import NonBlankUTF8String
 
 __all__ = ['OPENTRACKIO_PROTOCOL_NAME', 'VersionedProtocol']
@@ -19,7 +20,7 @@ class VersionedProtocol(CompatibleBaseModel):
     name: NonBlankUTF8String
     version: tuple[int, int, int]
 
-    def __init__(self, name: NonBlankUTF8String, version: tuple[int, int, int]):
+    def __init__(self, name: NonBlankUTF8String, version: tuple[SingleDigitInt, SingleDigitInt, SingleDigitInt]):
         super(VersionedProtocol, self).__init__(name=name, version=version)
         if name != OPENTRACKIO_PROTOCOL_NAME:
             raise ValueError("The only currently accepted name for a versioned protocol"
