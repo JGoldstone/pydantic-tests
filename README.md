@@ -7,10 +7,12 @@ involvement is mostly about "how do I transport this info with ST 2110"
 or "how do I process received metadata on hardware that might not even
 support floating point", please don't waste time reading this.
 
-## This README.md is a work in progress
-I started writing it less than five hours before our next camera tracking
-meeting, and am going to commit and push it in chunks so that even if I
-don't finish, you can still get the broad outlines.
+## Discussion
+Though the concept is simple (see "Desired end state" below) neither the
+rationality of deploying it nor the issue of whether others find the
+implementation pleasing have been discussed. At all.
+
+So there's now a `camdkit` [GitHub discussion topic for this project](https://github.com/SMPTE/ris-osvp-metadata-camdkit/discussions/141).
 
 ## Desired end state
 All code built on the current `framework.py` and `model.py` "just works",
@@ -353,7 +355,8 @@ and
 ```angular2html
 type SingleDigitInt = Annotated[int, Field(..., ge=0, le=9, strict=True)]
 ```
-respectively.
+respectively. And they can be re-used. OK, `SingleDigitInt` hasn't gotten re-used
+yet, but NonBlankUTF8String gets re-used **all** **the** **time**.
 
 ### How does it _do_ that?
 
@@ -413,5 +416,18 @@ be changed.
 
 ## State of the implementation
 
+All 43 of my unit tests pass. 45 out of the 59 unit tests in the current
+`test_model.py`'s module pass.
+
+I am going to work on something other than this project this afternoon, but
+will return to it full-time Saturday and work through the holidays.
+
+### Plan:
+- [ ] make all unit tests in `test_model.py` pass
+- [ ] make generated schema match
+- [ ] make documentation match
+- [ ] make new branch on my fork of `ris-osvp-metadata-camdkit` and integrate Pydantic-based code
+- [ ] verify everything still works
+- [ ] subnmit PR
 
 
