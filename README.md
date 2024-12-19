@@ -39,9 +39,10 @@ TimingTimestamp.validate(Timestamp(seconds=-1, nanoseconds=2))
 will return False. In the Pydantic-based code, it raises `ValidationError`
 while constructing the argument to `TimingTimestamp.validate()`, before the
 code for `TimingTimestamp.validate()` is ever even entered. Pydantic does
-validation early and often.
+validation early. It is trying to make it the case that invalid objects
+cannot exist. Period.
 
-But in general: the idea is compatible code that's easier for outsiders to
+But in general, the idea is: compatible code that's easier for outsiders to
 understand and easier for insiders to maintain.
 
 ## Motivation
@@ -248,7 +249,7 @@ schema could get more complex. I've heard others bring this up; it's not just me
 
 ## So what's Pydantic and why is it relevant?
 
-Pydantic (website here) is a "data validation library for Python". It calls 
+Pydantic (website [here](https://docs.pydantic.dev/latest/concepts/models/)) is a "data validation library for Python". It calls 
 aggregated structures _models_, which it says are "... similar to structs in
 languages like C ...". Its models (built on `pydantic.Basemodel`) aggregate
 POD types or other aggregates of POD types, and provide _validation_,
