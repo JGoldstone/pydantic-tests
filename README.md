@@ -24,18 +24,18 @@ schema, etc), unit tests, and anything anyone has written outside the
 
 I will weaken "identical results" slightly. If the original code produces
 the string
-```angular2html
+```python
 '{ "foo": 1, "bar": 2 }'
 ```
 and the Pydantic-based code produces the string
-```angular2html
+```python
 '{ "bar": 2, "foo": 1 }'
 ```
 then I'm going to say the results are identical.
 
 There are some edge cases from the unit tests. More about this in "What are
 some downsides" below, but: in the current implementation,
-```angular2html
+```python
 TimingTimestamp.validate(Timestamp(seconds=-1, nanoseconds=2))
 ```
 will return False. In the Pydantic-based code, it raises `ValidationError`
@@ -71,7 +71,7 @@ uses of those `Parameter`s were in `model.py` and had arbitrary names.
 
 An example will make this more clear. Here is the definition of a parameter to
 generically handle strings:
-```angular2html
+```python
 class StringParameter(Parameter):
 
   @staticmethod
@@ -98,7 +98,7 @@ class StringParameter(Parameter):
     }
 ```
 and here is how it would be used in `model.py`:
-```angular2html
+```python
 class LensSerialNumber(StringParameter):
   """Non-blank string uniquely identifying the lens"""
 
@@ -114,7 +114,7 @@ including geometric transform chains, device synchronization, semantic
 versioning, &c. For something like a set of 1-3 coefficients representing
 exposure falloff, `framework.py` carried those coefficients in a `dataclass`
 object:
-```angular2html
+```python
 @dataclasses.dataclass
 class ExposureFalloff:
   """Coefficients for the calculation of exposure fall-off"""
@@ -128,7 +128,7 @@ in `model.py` tied much more closely to the parameter's _use_. Thus in
 `model.py` one would have a class built on top of a generic `Parameter`, the
 root class for all of `framework.py`'s parameter types:
 
-```angular2html
+```python
 class LensExposureFalloff(Parameter):
   """Coefficients for calculating the exposure fall-off (vignetting) of
   a lens
@@ -165,7 +165,7 @@ class LensExposureFalloff(Parameter):
 
   @staticmethod
   def make_json_schema() -> dict:
-    return &#123;
+    return { 
       "type": "object",
       "additionalProperties": False,
       "required": ["a1"],
@@ -210,7 +210,7 @@ type, sometimes the existing code can take care of this expansion, but other
 times the expansion ends up being done manually. Take this code fragment from
 `Transforms.make_json_schema()`, for example:
 
-```angular2html
+```python
           "id": {
             "type": "string",
             "minLength": 1,
@@ -228,7 +228,7 @@ a very common element to parameters that aggregate POD parameters or other
 aggregating parameters. And yet that JSON schema has already been defined
 elsewhere: this is `StringParameter.make_json_schema` from `framework.py`:
 
-```angular2html
+```python
   @staticmethod
   def make_json_schema() -> dict:
     return {
@@ -261,7 +261,7 @@ from JSON), and JSON _schema generation_.
 This can lead to more compact and maintainable code. Picking a not atypical
 case from `model.py`:
 
-```angular2html
+```python
 class Protocol(Parameter):
   """Name of the protocol in which the sample is being employed, and
   version of that protocol
@@ -332,7 +332,7 @@ class Protocol(Parameter):
 In the re-implementation of `framework.py` and `model.py` the same parameter
 is defined with:
 
-```angular2html
+```python
 class VersionedProtocol(CompatibleBaseModel):
     name: NonBlankUTF8String
     version: tuple[int, int, int]
@@ -348,11 +348,11 @@ class VersionedProtocol(CompatibleBaseModel):
 For the record, the complete definitions of `NonBlankUTF8String` and
 `SingleDigitInt` are:
 
-```angular2html
+```python
 type NonBlankUTF8String = Annotated[str, StringConstraints(min_length=1, max_length=1023)]
 ```
 and
-```angular2html
+```python
 type SingleDigitInt = Annotated[int, Field(..., ge=0, le=9, strict=True)]
 ```
 respectively. And they can be re-used. OK, `SingleDigitInt` hasn't gotten re-used
@@ -374,7 +374,7 @@ running 3.13; the [VFX reference platform](https://vfxplatform.com) is at 3.11.
 A really nice thing is that modern IDEs like Visual Studio Code and PyCharm
 understand type hints _deeply_ and while you are coding, you'll get immediate
 feedback -- it's validate-as-you-go. If I type
-```angular2html
+```python
 foo = VersionedProtocol("bar", (1, 2, 10))
 ```
 then my IDE is going to flag that 10 as invalid within a fraction of a second
@@ -396,7 +396,7 @@ existing codebase where existing unit tests no longer pass. An example was
 given in the "Desired end state" section, where caveats on 'identical results'
 were being laid out. This code from `test_model.py`'s `test_timestamp_limits`
 method will fail on a Pydantic base:
-```angular2html
+```python
 self.assertFalse(TimingTimestamp.validate(Timestamp(-1,2)))
 ```
 The reason it will fail is that in the existing implementation, one is allowed
