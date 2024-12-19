@@ -26,7 +26,10 @@ requirements for transport or storage.
 
 With the exception of the `Dimension` class, all the metadata described were
 what one would call POD [Plain Old Data] types. They might be _constrained_ POD
-types, such as "non-negative integer", but they were very simple. The classes
+types, such as "non-negative integer", but they were very simple.
+
+### Weakened functional division between two key Python modules
+The classes
 that implemented a representation of these types without regard to their use
 were named something like PODType`Parameter` and were in `framework.py`; the
 uses of those `Parameter`s were in `model.py` and had arbitrary names.
@@ -159,4 +162,57 @@ in `framework.py` for example and its multipicity of uses (`CameraMake`,
 
 The now-diffused responsibility required the maintainer to make more choices
 than they had previously needed to make.
+
+### JSON schema consistency
+
+As `framework.py` and `model.py` currently stand, the schema describing a
+parameter is hand-coded as part of the definition of the underlying parameter
+type or of the parameter itself. The schema needs to be complete, that is,
+it needs to be expanded "all the way down".
+
+When there are multiple parameters that have elements of the same parameter
+type, sometimes the existing code can take care of this expansion, but other
+times the expansion ends up being done manually. Take this code fragment from
+`Transforms.make_json_schema()`, for example:
+
+```angular2html
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1023
+          },
+          "parentId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1023
+          }
+```
+
+That's the representation of a non-blank string no longer than 1023 characters,
+a very common element to parameters that aggregate POD parameters or other 
+aggregating parameters. And yet that JSON schema has already been defined
+elsewhere: this is `StringParameter.make_json_schema` from `framework.py`:
+
+```angular2html
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023
+    }
+```
+
+This is at odds with the Python DRY ("Don't repeat yourself") philosophy. It's
+not like there are Python police (well, not yet) that are going to levy a fine on
+us for repeating ourselves but still. If we decided we needed to limit the maximum
+length to 511 bytes, we would need to change all relevant occurences of 1023,
+_vs._ changing it in one place.
+
+Plus, it's _hard_ to hand-code JSON schema. So far we have been good, I think, but
+if we are to start adding even more structures, either to define things like 
+transport mechanisms, or more likely, to formalize the notion of "Sample", the
+schema could get more complex. I've heard others bring this up; it's not just me.
+
+## So what's Pydantic and why is it relevant?
 
