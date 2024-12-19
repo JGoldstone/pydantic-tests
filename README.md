@@ -216,3 +216,134 @@ schema could get more complex. I've heard others bring this up; it's not just me
 
 ## So what's Pydantic and why is it relevant?
 
+Pydantic (website here) is a "data validation library for Python". It calls 
+aggregated structures _models_, which it says are "... similar to structs in
+languages like C ...". Its models (built on `pydantic.Basemodel`) aggregate
+POD types or other aggregates of POD types, and provide _validation_,
+_serialization_ (i.e. conversion to JSON), _deserialization_ (initialization 
+from JSON), and JSON _schema generation_.
+
+This can lead to more compact and maintainable code. Picking a not atypical
+case from `model.py`:
+
+```angular2html
+class Protocol(Parameter):
+  """Name of the protocol in which the sample is being employed, and
+  version of that protocol
+  """
+  canonical_name = "protocol"
+  sampling = Sampling.REGULAR
+  units = None
+
+  @staticmethod
+  def validate(value) -> bool:
+    """Protocol name is nonblank string; protocol version is basic x.y.z
+     semantic versioning string
+     """
+
+    if not isinstance(value, VersionedProtocol):
+      return False
+
+    if not isinstance(value.name, str):
+      return False
+    if not len(value.name):
+      return False
+    if value.name != OPENTRACKIO_PROTOCOL_NAME:  # Temporary restriction
+      return False
+
+    if not isinstance(value.version, tuple):
+      return False
+    if len(value.version) != 3:
+      return False
+    return all([
+      isinstance(version_number_component, int) \
+                and version_number_component >= 0 \
+                and version_number_component <= 9 \
+                for version_number_component in value.version])
+
+  @staticmethod
+  def to_json(value: typing.Any) -> typing.Any:
+    return {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
+
+  @staticmethod
+  def from_json(value: typing.Any) -> typing.Any:
+    return VersionedProtocol(**value)
+
+  @staticmethod
+  def make_json_schema() -> dict:
+    return {
+      "type": "object",
+      "additionalProperties": False,
+      "properties": {
+        "name": {
+          "type": "string",
+            "minLength": 1,
+            "maxLength": 1023
+        },
+        "version": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minValue": 0,
+            "maxValue": 9
+          },
+          "minItems": 3,
+          "maxItems": 3
+        }
+      }
+    }
+```
+
+In the re-implementation of `framework.py` and `model.py` the same parameter
+is defined with:
+
+```angular2html
+class VersionedProtocol(CompatibleBaseModel):
+    name: NonBlankUTF8String
+    version: tuple[int, int, int]
+
+    def __init__(self, name: NonBlankUTF8String, version: tuple[SingleDigitInt, SingleDigitInt, SingleDigitInt]):
+        super(VersionedProtocol, self).__init__(name=name, version=version)
+        if name != OPENTRACKIO_PROTOCOL_NAME:
+            raise ValueError("The only currently accepted name for a versioned protocol"
+                             " is {OPENTRACKIO_PROTOCOL_NAME}")
+
+```
+
+For the record, the complete definitions of `NonBlankUTF8String` and
+`SingleDigitInt` are:
+
+```angular2html
+type NonBlankUTF8String = Annotated[str, StringConstraints(min_length=1, max_length=1023)]
+```
+and
+```angular2html
+type SingleDigitInt = Annotated[int, Field(..., ge=0, le=9, strict=True)]
+```
+respectively.
+
+### How does it _do_ that?
+
+Pydantic is built on type hints. Deeply, deeply built on type hints. To make
+this reimplementation of `framework.py` and `clip.py` work, one needs to read
+up on type hints. I read up on type hints a lot. They are pretty clear in what
+they mean; but syntactically, learning about them is a chore. Fortunately, 
+there's enough of a variety of examples in the new code so that in the future,
+type hinting can almost always be guided by precedent.
+
+Much of the type hinting mechanism is in base Python already, if one is running
+semi-modern Python. I believe what's required came in around Python 3.9. I'm
+running 3.13; the [VFX reference platform](https://vfxplatform.com) is at 3.11.
+
+A really nice thing is that modern IDEs like Visual Studio Code and PyCharm
+understand type hints _deeply_ and while you are coding, you'll get immediate
+feedback -- it's validate-as-you-go. If I type
+```angular2html
+foo = VersionedProtocol("bar", (1, 2, 10))
+```
+then my IDE is going to flag that 10 as invalid within a fraction of a second
+of my typing it.
+
+### What are some downsides?
+
+
