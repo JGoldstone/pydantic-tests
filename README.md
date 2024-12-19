@@ -12,6 +12,38 @@ I started writing it less than five hours before our next camera tracking
 meeting, and am going to commit and push it in chunks so that even if I
 don't finish, you can still get the broad outlines.
 
+## Desired end state
+All code built on the current `framework.py` and `model.py` "just works",
+producing identical results when compared to those of the current code.
+
+This means the example code, the code to make various artifacts (documentation,
+schema, etc), unit tests, and anything anyone has written outside the
+`ris-osvp-metadata-camdkit` repository.
+
+I will weaken "identical results" slightly. If the original code produces
+the string
+```angular2html
+'{ "foo": 1, "bar": 2 }'
+```
+and the Pydantic-based code produces the string
+```angular2html
+'{ "bar": 2, "foo": 1 }'
+```
+then I'm going to say the results are identical.
+
+There are some edge cases from the unit tests. More about this in "What are
+some downsides" below, but: in the current implementation,
+```angular2html
+TimingTimestamp.validate(Timestamp(seconds=-1, nanoseconds=2))
+```
+will return False. In the Pydantic-based code, it raises `ValidationError`
+while constructing the argument to `TimingTimestamp.validate()`, before the
+code for `TimingTimestamp.validate()` is ever even entered. Pydantic does
+validation early and often.
+
+But in general: the idea is compatible code that's easier for outsiders to
+understand and easier for insiders to maintain.
+
 ## Motivation
 
 The road to `camdkit` was long and twisty. Originally its charter was to be a
@@ -344,6 +376,41 @@ foo = VersionedProtocol("bar", (1, 2, 10))
 then my IDE is going to flag that 10 as invalid within a fraction of a second
 of my typing it.
 
+By the way, `mypy` has a great 
+[cheat sheet for type hints](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html), covering the obvious
+cases but considerably more subtle ones as well.
+
 ### What are some downsides?
+
+The idea was to basically throw the burden of validation, serialization,
+deserialization and JSON schema creation onto Pydantic and the type system. In
+doing so, the existing distinction between parameter and parameter type is
+more or less erased.
+
+This is mostly OK, but there are certain areas of the
+existing codebase where existing unit tests no longer pass. An example was
+given in the "Desired end state" section, where caveats on 'identical results'
+were being laid out. This code from `test_model.py`'s `test_timestamp_limits`
+method will fail on a Pydantic base:
+```angular2html
+self.assertFalse(TimingTimestamp.validate(Timestamp(-1,2)))
+```
+The reason it will fail is that in the existing implementation, one is allowed
+to construct invalid objects of a `Parameter`'s "underlying type(s)" -- which
+would fail if their `validate()` method was called, for sure -- and then when
+the `Parameter` itself is constructed, it will call that `validate()` method.
+But in the meantime, there's an invalid object on the stack/heap/whatever.
+
+Pydantic doesn't let that happen; the moment you try and create a `Timestamp`
+with a negative hour, it will raise a `ValidationException`.
+
+The existing code needs to be examined and tested to see if this poses a
+serious problem, or if this is a case where an existing unit test could
+be changed.
+
+...other things here, eventually...
+
+## State of the implementation
+
 
 
