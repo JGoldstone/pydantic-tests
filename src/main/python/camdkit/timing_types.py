@@ -18,7 +18,12 @@ from camdkit.numeric_types import (rationalize_strictly_and_positively,
                                    NonNegativeInt,
                                    NonNegative48BitInt)
 
-PTP_MASTER_PATTERN = "^([A-F0-9]{2}:){5}[A-F0-9]{2}$"
+# This was in the classic implementation, but Pydantic doesn't currently
+# allow backreferences in regular expressions. Brute force it.
+# PTP_MASTER_PATTERN = "[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$"
+#
+# highly recommended: regex101.com in Python mode
+PTP_MASTER_PATTERN = r"(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
 
 class TimingMode(StrEnum):
     INTERNAL = "internal"
