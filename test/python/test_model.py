@@ -662,21 +662,21 @@ class ModelTest(unittest.TestCase):
 
   def test_transforms_to_dict(self):
     j = Transforms.to_json((Transform(
-      translation=Vector3(1,2,3), \
+      translation=Vector3(1,2,3),
       rotation=Rotator3(1,2,3)), ))
-    self.assertListEqual(j, [{
+    self.assertEqual(j, ({
       "translation": { "x": 1, "y": 2, "z": 3 },
-      "rotation": { "pan": 1, "tilt": 2, "roll": 3 } 
-    }])
+      "rotation": { "pan": 1, "tilt": 2, "roll": 3 }
+    },))
     j = Transforms.to_json((Transform(
       translation=Vector3(1,2,3),
       rotation=Rotator3(1,2,3),
       scale=Vector3(1,2,3)), ))
-    self.assertListEqual(j, [{
+    self.assertEqual(j, ({
       "translation": { "x": 1, "y": 2, "z": 3 },
       "rotation": { "pan": 1, "tilt": 2, "roll": 3 },
       "scale": { "x": 1, "y": 2, "z": 3 }
-    }])
+    },))
 
   def test_transforms_from_dict(self):
     t = Transforms.from_json(({
@@ -1050,21 +1050,23 @@ class ModelTest(unittest.TestCase):
                                    "TestModel"),))
     
   def test_lens_distortion_to_dict(self):
-    j = LensDistortions.to_json((Distortion([0.1,0.2,0.3]),))
-    self.assertListEqual(j, [{
-      "radial": [0.1,0.2,0.3],
-    }])
-    j = LensDistortions.to_json((Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel"),
-                                 Distortion([0.1,0.2,0.3],[0.1,0.2,0.3],"TestModel2")))
-    self.assertListEqual(j, [{
-      "radial": [0.1,0.2,0.3],
-      "tangential": [0.1,0.2,0.3],
+    j = LensDistortions.to_json((Distortion((0.1,0.2,0.3)),))
+    self.assertEqual(j, ({  "radial": (0.1,0.2,0.3),},))
+    j = LensDistortions.to_json((Distortion((0.1,0.2,0.3),
+                                            (0.1,0.2,0.3),
+                                            "TestModel"),
+                                 Distortion((0.1,0.2,0.3),
+                                            (0.1,0.2,0.3),
+                                            "TestModel2")))
+    self.assertEqual(j, ({
+      "radial": (0.1,0.2,0.3),
+      "tangential": (0.1,0.2,0.3),
       "model": "TestModel",
     }, {
-      "radial": [0.1,0.2,0.3],
-      "tangential": [0.1,0.2,0.3],
+      "radial": (0.1,0.2,0.3),
+      "tangential": (0.1,0.2,0.3),
       "model": "TestModel2",
-    }])
+    }))
     
   def test_lens_distortion_offset(self):
     clip = Clip()
