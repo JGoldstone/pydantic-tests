@@ -108,11 +108,11 @@ class SynchronizationPTP(CompatibleBaseModel):
 
     domain: NonNegative8BitInt | None = None
     master: Annotated[str | None, Field(pattern=PTP_MASTER_PATTERN)] = None
-    offset: float | None = None
+    offset: Annotated[float | None, Field(strict=True)] = None
 
-    def __init__(self, domain: Optional[int],
-                 master: Optional[str],
-                 offset: Optional[float]) -> None:
+    def __init__(self, domain: Optional[int] = None,
+                 master: Optional[str] = None,
+                 offset: Optional[float] = None) -> None:
         super(SynchronizationPTP, self).__init__(domain=domain, master=master, offset=offset)
 
 
@@ -156,9 +156,9 @@ class Synchronization(CompatibleBaseModel):
     def __init__(self, locked: bool,
                  source: SynchronizationSource,
                  frequency: StrictlyPositiveRational | None,
-                 offsets: SynchronizationOffsets | None,
-                 present: bool | None,
-                 ptp: SynchronizationPTP | None) -> None:
+                 offsets: SynchronizationOffsets | None = None,
+                 present: bool | None = None,
+                 ptp: SynchronizationPTP | None = None) -> None:
         super(Synchronization, self).__init__(locked=locked,
                                               source=source,
                                               frequency=frequency,
@@ -186,7 +186,9 @@ class Timing(CompatibleBaseModel):
     @field_validator("sample_rate", mode="before")
     @classmethod
     def coerce_sample_rates_to_strictly_positive_rationals(cls, vs):
-        return tuple([rationalize_strictly_and_positively(v) for v in vs])
+        if isinstance(vs, (tuple, list)):
+            return tuple([rationalize_strictly_and_positively(v) for v in vs])
+        return rationalize_strictly_and_positively(vs)
 
 
 class Sampling(Enum):

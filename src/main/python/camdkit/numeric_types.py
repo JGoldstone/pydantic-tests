@@ -19,6 +19,7 @@ __all__ = ['MIN_INT_8', 'MAX_INT_8',
            'MIN_UINT_32', 'MAX_UINT_32',
            'MIN_INT_32', 'MAX_INT_32',
            'MAX_UINT_48',
+           'SingleDigitInt',
            'NonNegative8BitInt',
            'NonNegativeInt', 'NonNegative48BitInt', 'StrictlyPositiveInt',
            'NonNegativeFloat', 'StrictlyPositiveFloat', 'NormalizedFloat', 'UnityOrGreaterFloat',
@@ -31,6 +32,8 @@ MAX_UINT_32: Final[int] = 2**32-1
 MIN_INT_32: Final[int] = -2**31
 MAX_INT_32: Final[int] = 2**31-1
 MAX_UINT_48: Final[int] = 2**48-1
+
+type SingleDigitInt = Annotated[int, Field(..., ge=0, le=9, strict=True)]
 
 type NonNegative8BitInt = Annotated[int, Field(..., ge=0, le=MAX_INT_8, strict=True)]
 

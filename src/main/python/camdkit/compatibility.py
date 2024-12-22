@@ -58,24 +58,41 @@ class CompatibleBaseModel(BaseModel):
                               extra="forbid")
 
     @classmethod
-    def validate(cls, value) -> bool:
+    def validate(cls, value:Any) -> bool:
         try:
             cls.model_validate(value)
             return True
         except ValidationError:
             return False
 
-    def to_json(self, *_) -> json:
-        return self.model_dump(by_alias=True,
-                               exclude_none=True,
-                               exclude={"canonical_name",
-                                        "sampling",
-                                        "units",
-                                        "section"})
+    @staticmethod
+    def to_json(value: Any) -> json:
+        return value.model_dump(by_alias=True,
+                                exclude_none=True,
+                                exclude={"canonical_name",
+                                         "sampling",
+                                         "units",
+                                         "section"})
+
+    # @classmethod
+    # def from_json(cls, json_data: json) -> Any:
+    #     return cls.model_validate(json_data)
 
     @classmethod
-    def from_json(cls, json_data: json) -> Any:
-        return cls.model_validate(json_data)
+    def from_json(cls, json_or_tuple: dict[str, Any] | tuple[Any, ...]) -> Any:
+        """Return a validated object from a JSON dict, or tuple of validated objects
+        from a tuple of JSON dicts, or a tuple of tuples of validated objects from
+        a tuple of tuples of JSON dicts, or ... it's basically JSON all the way down
+        """
+        def inner(value):  # TODO since return type is whatever cls is, can we say that?
+            if isinstance(value, dict) and all([type(k) == str for k in value.keys()]):
+                return cls.model_validate(value)
+            elif isinstance(value, tuple):
+                return tuple([inner(v) for v in value])
+            else:
+                raise ValueError(f"unhandled type {type(value)} supplied to"
+                                 f" {cls.__name__}.from_json()")
+        return inner(json_or_tuple)
 
     @classmethod
     def make_json_schema(cls) -> json:
@@ -84,3 +101,47 @@ class CompatibleBaseModel(BaseModel):
         if "$defs" in without_refs:
             del without_refs["$defs"]
         return without_refs
+
+
+# class RecursiveModel(BaseModel):
+#     model_config = ConfigDict(validate_assignment=True,
+#                               use_enum_values=True)
+#
+#
+#     @classmethod
+#     def from_json(cls, json_or_tuple: dict[str, Any] | tuple[Any, ...]) -> Any:
+#         def all_keys_are_strings(d):
+#             return all([type(k) == str for k in d.keys()])
+#         def inner(value):  # TODO since return type is whatever cls is, can we say that?
+#             # if it's a dict and all the keys are strings, let's guess it's JSON
+#             is_dict: bool = isinstance(value, dict)
+#             all_string_keys: bool = is_dict and all_keys_are_strings(value)
+#             if is_dict and all_string_keys:
+#                 result = cls.model_validate(value)
+#                 print(f"base case result: {result}")
+#                 return result
+#             elif isinstance(value, tuple):
+#                 tuple_result = tuple([inner(v) for v in value])
+#                 print(f"tuple case result: {tuple_result}")
+#                 return tuple_result
+#             else:
+#                 raise ValueError(f"unhandled type {type(value)} supplied to from_json() of {cls.__name__}")
+#         print(f"about to call inner({json_or_tuple})", flush=True)
+#         return inner(json_or_tuple)
+#
+# class Frob(RecursiveModel):
+#     fred: int
+#     wilma: complex
+#
+# def test_basic_frob_json_loads():
+#     data = {"fred": 6, "wilma": 7+2j }
+#     foo = Frob.from_json(data)
+#     print(f"foo is ---{foo}---")
+#     first_level_data = ({'fred': 1, 'wilma': 0+1j}, {'fred': 2, 'wilma': 0+2j})
+#     print(f"processed tuples of data: {Frob.from_json(first_level_data)}")
+#     second_level_data = (({'fred': 1, 'wilma': 0+1j}, {'fred': 2, 'wilma': 0+2j}),
+#                          ({'fred': 3, 'wilma': 0+3j}, {'fred': 4, 'wilma': 0+4j}))
+#     print(f"processed tuples of tuples of data: {Frob.from_json(second_level_data)}")
+#
+# if __name__ == '__main__':
+#     test_basic_frob_json_loads()

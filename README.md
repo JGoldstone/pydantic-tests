@@ -412,6 +412,21 @@ The existing code needs to be examined and tested to see if this poses a
 serious problem, or if this is a case where an existing unit test could
 be changed.
 
+Another issue is that when a type is coerced (or to use an alternative term,
+"promoted") to match the type of field of a model, the type isn't preserved.
+So, if you have a field X that's defined as a float, and you initialize it with
+an int, there's a gizmo (technically, a pydantic `field_validator` decorator)
+that coerces / promotes the int to a float. But if you turn around and ask
+an instance of the model "what's your value of X?", you get back a float and
+not an int. If you assign a `Fraction` to a field that is defined to be a
+`StrictlyPositiveRational`, then read it back, you get an object the type of
+which is `StrictlyPositiveRational`, not `Fraction`.
+
+I mean, one _could_ make the field validator store the type of the original
+value and restore it when that field was accessed but that seems super
+excessive, with each coerced/promoted field now requiring an additional field
+to back it.
+
 ...other things here, eventually...
 
 ## State of the implementation

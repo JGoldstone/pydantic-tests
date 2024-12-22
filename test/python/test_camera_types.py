@@ -78,7 +78,7 @@ class CameraTypesTestCases(unittest.TestCase):
         #   self.assertFalse(PhysicalDimensions.validate(faux_dims))
         #
         # verify correct conversion to json
-        json_from_instance: dict[str, Any] = d.to_json()
+        json_from_instance: dict[str, Any] = PhysicalDimensions.to_json(d)
         self.assertDictEqual({'width': RED_V_RAPTOR_XL_8K_VV_WIDTH_MM,
                               'height': RED_V_RAPTOR_XL_8K_VV_HEIGHT_MM},
                              json_from_instance)
@@ -135,7 +135,7 @@ class CameraTypesTestCases(unittest.TestCase):
         SenselDimensions.validate(d)
         expected_json = {'width': RED_V_RAPTOR_XL_8K_VV_WIDTH_PX,
                          'height': RED_V_RAPTOR_XL_8K_VV_HEIGHT_PX }
-        json_from_instance: dict[str, Any] = d.to_json()
+        json_from_instance: dict[str, Any] = SenselDimensions.to_json(d)
         self.assertDictEqual(expected_json, json_from_instance)
         instance_from_json: SenselDimensions = SenselDimensions.from_json(json_from_instance)
         self.assertEqual(d, instance_from_json)

@@ -92,6 +92,23 @@ Here is a list of such:
   - the duration issue with `Fraction`s and `StrictlyPositiveRational` objects occurs in 
     `test_serialize` as well and is dealt with in the same manner, by changing the expected value
     to be of type `StrictlyPositiveRational`.
+  - it also occurs in `test_timing_sample_rate_model()`
+- `test_timestamp()`
+  - tests required the temporary construction of an invalid `Timestamp` before validating it,
+    but Pydantic doesn't allow even temporary construction of invalid objects. Changed to check
+    for Pydantic raising an error rather than having the invalid object's validator return `False`.
+- `test_timecode_format()`
+  Other than the test code, the classic implementation calls a `to_int()` just once, on an instance
+  of TimecodeFormat. In the test code, it calls `to_int()` six times, five of which are as a
+  `@staticmethod` and one of which calls `to_int()` as an instance. Since the classic implementation
+  defines `to_int()` as an instance method, the calls here were changed from (_e.g._):
+  ```python
+  self.assertEqual(TimecodeFormat.to_int(TimecodeFormat(24)), 24)
+  ```
+  to
+  ```python
+  self.assertEqual(TimecodeFormat(24).to_int(), 24)
+  ```
 - `test_duration()`
   - the same issue as `test_duration()` except instead of promoting an `int`, it is a `Fraction`
     that gets promoted. Same solution: change the expected result to be a `StrictlyPositiveRational`.
@@ -104,10 +121,12 @@ Here is a list of such:
 - `test_frame_rate`:
   - same issue as `test_duration()`; same solution. 
 - `test_f_number`():
-  The [Pydantic conversion table[(https://docs.pydantic.dev/latest/concepts/conversion_table/#__tabbed_1_4)]
+  the [Pydantic conversion table[(https://docs.pydantic.dev/latest/concepts/conversion_table/#__tabbed_1_4)]
   suggests that a Field that is defined as a tuple should fail validation when a list is assigned
   to it. It does not fail. Test commented out for the moment.  COME BACK TO THIS
 - `test_t_number()`: same as `test_f_number()` above.
+- `test_transforms_model`: same as `test_f_number()` above.
+- `test_timing_mode_enum()`: same as `test_f_number` above.
 - `test_focus_position()`: Pydantic is promoting a Fraction to a float even though the Field is
   defined with `strict=True`. COME BACK TO THIS
 - ` test_synchronization()`: This final test:
@@ -117,6 +136,19 @@ Here is a list of such:
   ```
   required the construction of an invalid master (only lower-case hex digits are permitted),
   so the assignment couldn't be tested because the value to be assigned couldn't be created.
+- `test_timing_mode_enum()`
+  - the classic implementation had a TimingModeEnum enum class and a TimingMode parameter. In the
+    Pydantic implementation an enum field does it all. The test was changed to fit this pattern
+    while still testing the same idea: construction of `TimingMode` objects with valid existing
+    TimingCode objects as arguments should work and construction of `TimingMode` objects with 
+    invalid objects as arguments should fail (though here, as above in `test_f_number`, the test
+    becomes one of verifying an exception is raised at construction time).
+- `test_transforms_from_dict()`
+  - `CompatibleModel.from_json()` now handles being fed tuples or tuples of tuples or whatever; but
+    this test case was handing `Transforms.from_json()` a tuple wrapping a list rather than
+    a tuple wrapping a tuple. The test case was changed to wrap a tuple, not a list, and passes.
+- `test_lens_distortion_from_dict`
+  - same as `test_transforms_from_dict()`
 
 ## Remaining issues
 
@@ -158,6 +190,7 @@ def test_lens_distortions_from_dict(self):
     },))
     self.assertEqual(r,(Distortion([0.1,0.2,0.3]),))
 ```
+and is also seen in `test_transforms_from_dict()` and `test_transforms_to_dict()`.
 
 ### assigning an empty tuple to a regular parameter should raise
 

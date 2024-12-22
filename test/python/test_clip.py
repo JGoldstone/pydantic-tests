@@ -43,7 +43,7 @@ class ClipTestCases(unittest.TestCase):
         clip.duration = duration
         self.assertEqual(clip.duration, duration)
 
-        clip_as_json = clip.to_json()
+        clip_as_json = Clip.to_json(clip)
         self.assertEqual(clip_as_json["static"]["duration"], {"num": 3, "denom": 1})
 
         clip_from_json: Clip = Clip.from_json(clip_as_json)
@@ -105,7 +105,7 @@ class ClipTestCases(unittest.TestCase):
         clip.shutter_angle = shutter_angle
         self.assertEqual(shutter_angle, clip.shutter_angle)
 
-        clip_as_json = clip.to_json()
+        clip_as_json = Clip.to_json(clip)
         self.assertEqual(clip_as_json["static"]["camera"]["captureFrameRate"], {"num": 24000, "denom": 1001})
         self.assertDictEqual(clip_as_json["static"]["camera"]["activeSensorPhysicalDimensions"], {"height": 24.0, "width": 36.0})
         self.assertDictEqual(clip_as_json["static"]["camera"]["activeSensorResolution"], {"height": 2160, "width": 3840})
@@ -155,7 +155,7 @@ class ClipTestCases(unittest.TestCase):
         self.assertIsNone(clip.lens_nominal_focal_length)
         clip.lens_nominal_focal_length = lens_nominal_focal_length
 
-        clip_as_json = clip.to_json()
+        clip_as_json = Clip.to_json(clip)
         self.assertEqual(clip_as_json["static"]["lens"]["distortionOverscanMax"], 1.2)
         self.assertEqual(clip_as_json["static"]["lens"]["undistortionOverscanMax"], 1.2)
         self.assertEqual(clip_as_json["static"]["lens"]["distortionProjection"], True)
@@ -190,7 +190,7 @@ class ClipTestCases(unittest.TestCase):
         clip.tracker_firmware = tracker_firmware
         self.assertEqual(tracker_firmware, clip.tracker_firmware)
 
-        clip_as_json = clip.to_json()
+        clip_as_json = Clip.to_json(clip)
         self.assertEqual(clip_as_json["static"]["tracker"]["make"], tracker_make)
         self.assertEqual(clip_as_json["static"]["tracker"]["model"], tracker_model)
         self.assertEqual(clip_as_json["static"]["tracker"]["serialNumber"], tracker_serial_number)
@@ -272,7 +272,7 @@ class ClipTestCases(unittest.TestCase):
         clip.lens_projection_offset = lens_projection_offset
         self.assertEqual(lens_projection_offset, clip.lens_projection_offset)
         
-        clip_as_json = clip.to_json()
+        clip_as_json = Clip.to_json(clip)
         # self.assertTupleEqual(clip_as_json["lens"]["custom"], lens_custom)
         self.assertTupleEqual(clip_as_json["lens"]["tStop"], lens_t_number)
         self.assertTupleEqual(clip_as_json["lens"]["fStop"], lens_f_number)
@@ -288,11 +288,11 @@ class ClipTestCases(unittest.TestCase):
         self.assertTupleEqual(clip_as_json["lens"]["exposureFalloff"], ({"a1": 1.0, "a2": 2.0, "a3": 3.0},
                                                              {"a1": 1.0, "a2": 2.0, "a3": 3.0}))
         self.assertTupleEqual(clip_as_json["lens"]["distortion"],(
-            (lens_distortion_d_u.to_json(), lens_distortion_u_d.to_json()),
-            (lens_distortion_d_u.to_json(), lens_distortion_u_d.to_json())))
+            (Distortion.to_json(lens_distortion_d_u), Distortion.to_json(lens_distortion_u_d)),
+            (Distortion.to_json(lens_distortion_d_u), Distortion.to_json(lens_distortion_u_d))))
         self.assertTupleEqual(clip_as_json["lens"]["undistortion"],(
-            (lens_distortion_d_u.to_json(), lens_distortion_u_d.to_json()),
-            (lens_distortion_d_u.to_json(), lens_distortion_u_d.to_json())))
+            (Distortion.to_json(lens_distortion_d_u), Distortion.to_json(lens_distortion_u_d)),
+            (Distortion.to_json(lens_distortion_d_u), Distortion.to_json(lens_distortion_u_d))))
         self.assertTupleEqual(clip_as_json["lens"]["distortionOffset"], ({"x": 1.0, "y": 2.0}, {"x": 1.0, "y": 2.0}))
         self.assertTupleEqual(clip_as_json["lens"]["projectionOffset"], ({"x": 0.1, "y": 0.2}, {"x": 0.1, "y": 0.2}))
 
@@ -350,7 +350,7 @@ class ClipTestCases(unittest.TestCase):
         clip.timing_synchronization = timing_synchronization
         self.assertEqual(timing_synchronization, clip.timing_synchronization)
 
-        clip_as_json = clip.to_json()
+        clip_as_json = Clip.to_json(clip)
         self.assertTupleEqual(clip_as_json["timing"]["mode"], timing_mode)
         self.assertTupleEqual(clip_as_json["timing"]["sampleTimestamp"], (
             {"seconds": 1718806554, "nanoseconds": 0},
@@ -403,7 +403,7 @@ class ClipTestCases(unittest.TestCase):
         clip.tracker_notes = tracker_notes
         self.assertEqual(tracker_notes, clip.tracker_notes)
 
-        clip_as_json = clip.to_json()
+        clip_as_json = Clip.to_json(clip)
         self.assertTupleEqual(clip_as_json["tracker"]["status"], tracker_status)
         self.assertTupleEqual(clip_as_json["tracker"]["recording"], tracker_recording)
         self.assertTupleEqual(clip_as_json["tracker"]["slate"], tracker_slate)
@@ -449,7 +449,7 @@ class ClipTestCases(unittest.TestCase):
         clip.global_stage = global_stage
         self.assertEqual(global_stage, clip.global_stage)
 
-        clip_as_json = clip.to_json()
+        clip_as_json = Clip.to_json(clip)
         self.assertTupleEqual(clip_as_json["sampleId"], sample_id)
         self.assertTupleEqual(clip_as_json["sourceId"], source_id)
         self.assertTupleEqual(clip_as_json["sourceNumber"], source_number)

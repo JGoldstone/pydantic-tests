@@ -47,7 +47,7 @@ class LensTypesTestCases(unittest.TestCase):
             "tangential": (1.0,),
             "model": "Brown-Conrady"
         }
-        json_from_instance: dict[str, Any] = valid.to_json()
+        json_from_instance: dict[str, Any] = Distortion.to_json(valid)
         self.assertDictEqual(expected_json, json_from_instance)
         instance_from_json: Distortion = Distortion.from_json(json_from_instance)
         self.assertEqual(valid, instance_from_json)

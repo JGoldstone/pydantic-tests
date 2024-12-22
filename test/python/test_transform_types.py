@@ -49,7 +49,7 @@ class TestTransformCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             valid_v3.x = 8+0j
         # verify that JSON is constructed as expected
-        valid_v3_as_json = valid_v3.to_json()
+        valid_v3_as_json = Vector3.to_json(valid_v3)
         self.assertEqual(valid_v3_as_json["x"], float(updated_x))
         self.assertEqual(valid_v3_as_json["y"], float(updated_y))
         self.assertEqual(valid_v3_as_json["z"], float(updated_z))
@@ -103,7 +103,7 @@ class TestTransformCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             valid_v3.pan = 8+0j
         # verify that JSON is constructed as expected
-        valid_v3_as_json = valid_v3.to_json()
+        valid_v3_as_json = Vector3.to_json(valid_v3)
         self.assertEqual(valid_v3_as_json["pan"], float(updated_pan))
         self.assertEqual(valid_v3_as_json["tilt"], float(updated_tilt))
         self.assertEqual(valid_v3_as_json["roll"], float(updated_roll))
@@ -181,10 +181,10 @@ class TestTransformCases(unittest.TestCase):
         self.assertEqual(valid_transform.scale, valid_scale)
         self.assertEqual(valid_transform.id, valid_id)
         self.assertEqual(valid_transform.parent_id, valid_parent_id)
-        valid_transform_as_json = valid_transform.to_json()
-        self.assertEqual(valid_transform_as_json["translation"], valid_translation.to_json())
-        self.assertEqual(valid_transform_as_json["rotation"], valid_rotator.to_json())
-        self.assertEqual(valid_transform_as_json["scale"], valid_scale.to_json())
+        valid_transform_as_json = Transform.to_json(valid_transform)
+        self.assertEqual(valid_transform_as_json["translation"], Vector3.to_json(valid_translation))
+        self.assertEqual(valid_transform_as_json["rotation"], Rotator3.to_json(valid_rotator))
+        self.assertEqual(valid_transform_as_json["scale"], Vector3.to_json(valid_scale))
         self.assertEqual(valid_transform_as_json["id"], valid_id)
         self.assertEqual(valid_transform_as_json["parent_id"], valid_parent_id)
         valid_transform_from_json = Transform.from_json(valid_transform_as_json)

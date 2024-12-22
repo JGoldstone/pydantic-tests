@@ -50,7 +50,7 @@ class TimingTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             TimecodeFormat(frame_rate_30fps, 1.0)
 
-        timecode_format_as_json = tf.to_json()
+        timecode_format_as_json = TimecodeFormat.to_json(tf)
         self.assertEqual(timecode_format_as_json["frameRate"]["num"],
                          frame_rate_30fps_num)
         self.assertEqual(timecode_format_as_json["frameRate"]["denom"],
@@ -207,12 +207,12 @@ class TimingTestCases(unittest.TestCase):
         tc.format = thirty_fps_drop_frame_format
         self.assertEqual(tc.format, thirty_fps_drop_frame_format)
 
-        timecode_as_json = tc.to_json()
+        timecode_as_json = Timecode.to_json(tc)
         self.assertEqual(timecode_as_json["hours"], doubled_hours)
         self.assertEqual(timecode_as_json["minutes"], doubled_minutes)
         self.assertEqual(timecode_as_json["seconds"], doubled_seconds)
         self.assertEqual(timecode_as_json["frames"], doubled_frames)
-        self.assertEqual(timecode_as_json["format"], thirty_fps_drop_frame_format.to_json())
+        self.assertEqual(timecode_as_json["format"], Timecode.to_json(thirty_fps_drop_frame_format))
 
         timecode_from_json = Timecode.from_json(timecode_as_json)
         self.assertEqual(tc, timecode_from_json)
@@ -323,7 +323,7 @@ class TimingTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             Timestamp(0, -1)
 
-        timestamp_as_json = valid_timestamp.to_json()
+        timestamp_as_json = Timestamp.to_json(valid_timestamp)
         self.assertEqual(timestamp_as_json["seconds"], 3)
         self.assertEqual(timestamp_as_json["nanoseconds"], 4)
 
@@ -394,7 +394,7 @@ class TimingTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             valid_offsets.lens_encoders = "foo"
 
-        offsets_as_json = valid_offsets.to_json()
+        offsets_as_json = SynchronizationOffsets.to_json(valid_offsets)
         self.assertEqual(offsets_as_json["translation"], doubled_translation)
         self.assertEqual(offsets_as_json["rotation"], doubled_rotation)
         self.assertEqual(offsets_as_json["lensEncoders"], doubled_lens_encoders)
@@ -458,7 +458,7 @@ class TimingTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             valid_ptp.offset = "foo"
 
-        ptp_as_json = valid_ptp.to_json()
+        ptp_as_json = SynchronizationPTP.to_json(valid_ptp)
         self.assertEqual(ptp_as_json["domain"], updated_domain)
         self.assertEqual(ptp_as_json["master"], updated_master)
         self.assertEqual(ptp_as_json["offset"], updated_offset)
@@ -620,13 +620,13 @@ class TimingTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             valid_sync.ptp = "foo"
 
-        sync_as_json = valid_sync.to_json()
+        sync_as_json = Synchronization.to_json(valid_sync)
         self.assertEqual(sync_as_json["locked"], updated_locked)
         self.assertEqual(sync_as_json["source"], updated_synchronization_source)
-        self.assertEqual(sync_as_json["frequency"], updated_frequency.to_json())
-        self.assertEqual(sync_as_json["offsets"], updated_offsets.to_json())
+        self.assertEqual(sync_as_json["frequency"], StrictlyPositiveRational.to_json(updated_frequency))
+        self.assertEqual(sync_as_json["offsets"], SynchronizationOffsets.to_json(updated_offsets))
         self.assertEqual(sync_as_json["present"], updated_present)
-        self.assertEqual(sync_as_json["ptp"], updated_ptp.to_json())
+        self.assertEqual(sync_as_json["ptp"], SynchronizationPTP.to_json(updated_ptp))
 
         sync_from_json = Synchronization.from_json(sync_as_json)
         self.assertEqual(valid_sync, sync_from_json)

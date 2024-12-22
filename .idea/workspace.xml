@@ -4,16 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Convert an integer supplied as a frame rate into a rational">
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Add model validator to ensure timecode's frame number is less than the timecode format's rate">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/camdkit_implementation_notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/camdkit_implementation_notes.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/experiments/learnings.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/learnings.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/numeric_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/numeric_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_camera_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_camera_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/python/test_clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_clip.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_lens_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_lens_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/python/test_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/python/test_timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_timing_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_transform_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_transform_types.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,6 +89,7 @@
     "Python tests.Python tests for test_camera_types.CameraTypesTestCases.test_shutter_angle.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_active_sensor_physical_dimensions.executor": "Debug",
     "Python tests.Python tests for test_clip.ClipTestCases.test_basic.executor": "Run",
+    "Python tests.Python tests for test_clip.ClipTestCases.test_camera_static_parameters.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_duration.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_frame_rate_validation.executor": "Run",
     "Python tests.Python tests for test_clip.ClipTestCases.test_global_regular_parameters.executor": "Run",
@@ -110,9 +115,20 @@
     "Python tests.Python tests for test_model.ModelTest.test_duration_fraction.executor": "Run",
     "Python tests.Python tests for test_model.ModelTest.test_f_number.executor": "Run",
     "Python tests.Python tests for test_model.ModelTest.test_focus_position.executor": "Run",
+    "Python tests.Python tests for test_model.ModelTest.test_frame_rate.executor": "Run",
     "Python tests.Python tests for test_model.ModelTest.test_lens_distortion_to_dict.executor": "Debug",
     "Python tests.Python tests for test_model.ModelTest.test_lens_distortions.executor": "Run",
+    "Python tests.Python tests for test_model.ModelTest.test_lens_distortions_from_dict.executor": "Run",
+    "Python tests.Python tests for test_model.ModelTest.test_lens_encoders_limits.executor": "Run",
     "Python tests.Python tests for test_model.ModelTest.test_serialize.executor": "Debug",
+    "Python tests.Python tests for test_model.ModelTest.test_synchronization_ptp.executor": "Run",
+    "Python tests.Python tests for test_model.ModelTest.test_timecode_format.executor": "Run",
+    "Python tests.Python tests for test_model.ModelTest.test_timecode_formats.executor": "Run",
+    "Python tests.Python tests for test_model.ModelTest.test_timestamp_limits.executor": "Run",
+    "Python tests.Python tests for test_model.ModelTest.test_timing_mode_enum.executor": "Run",
+    "Python tests.Python tests for test_model.ModelTest.test_timing_sample_rate_model.executor": "Run",
+    "Python tests.Python tests for test_model.ModelTest.test_transforms_from_dict2.executor": "Run",
+    "Python tests.Python tests for test_model.ModelTest.test_transforms_model.executor": "Run",
     "Python tests.Python tests for test_model_types.ModelTestCases.test_Standalone_sample_id_no_args.executor": "Run",
     "Python tests.Python tests for test_model_types.ModelTestCases.test_ctor.executor": "Run",
     "Python tests.Python tests for test_model_types.ModelTestCases.test_open_coded_sample_id.executor": "Run",
@@ -148,7 +164,7 @@
     "Python tests.Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string.executor": "Run",
     "Python tests.Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string_schema_matches.executor": "Run",
     "Python tests.Python tests for test_string_types.StringsTestCases.test_uuid_urn.executor": "Run",
-    "Python tests.Python tests for test_timing_types.TimingTestCases.test_synchronization.executor": "Debug",
+    "Python tests.Python tests for test_timing_types.TimingTestCases.test_synchronization.executor": "Run",
     "Python tests.Python tests for test_timing_types.TimingTestCases.test_synchronization_offsets_validation.executor": "Debug",
     "Python tests.Python tests for test_timing_types.TimingTestCases.test_synchronization_ptp.executor": "Debug",
     "Python tests.Python tests for test_timing_types.TimingTestCases.test_timecode.executor": "Run",
@@ -178,8 +194,10 @@
     "Python tests.Python tests in test_tracker_types.py.executor": "Run",
     "Python tests.Python tests in test_transform_types.py.executor": "Run",
     "Python tests.Python tests in test_versioning_types.py.executor": "Run",
+    "Python tests.Unittests for test_clip.ClipTestCases.test_lens_regular_parameters.executor": "Run",
     "Python tests.Unittests in python.executor": "Run",
     "Python.camera_types.executor": "Run",
+    "Python.compatibility.executor": "Run",
     "Python.main.executor": "Run",
     "Python.scratch.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -192,7 +210,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "run.code.analysis.last.selected.profile": "aDefault",
-    "settings.editor.selected.configurable": "preferences.keymap",
+    "settings.editor.selected.configurable": "fileTemplates",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -206,7 +224,30 @@
       <recent name="$PROJECT_DIR$/src/main/python/camdkit" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test_model.ModelTest.test_serialize">
+  <component name="RunManager" selected="Python tests.Unittests in python">
+    <configuration name="compatibility" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="pydantic tests" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/main/python/camdkit" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -230,7 +271,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_clip.ClipTestCases.test_lens_static_parameters" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_model.ModelTest.test_lens_distortions_from_dict" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -242,11 +283,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_clip.ClipTestCases.test_lens_static_parameters&quot;" />
+      <option name="_new_target" value="&quot;test_model.ModelTest.test_lens_distortions_from_dict&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_model.ModelTest.test_lens_distortion_to_dict" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_model.ModelTest.test_timing_mode_enum" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -258,11 +299,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_model.ModelTest.test_lens_distortion_to_dict&quot;" />
+      <option name="_new_target" value="&quot;test_model.ModelTest.test_timing_mode_enum&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_model.ModelTest.test_lens_distortions" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_model.ModelTest.test_timing_sample_rate_model" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -274,11 +315,11 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_model.ModelTest.test_lens_distortions&quot;" />
+      <option name="_new_target" value="&quot;test_model.ModelTest.test_timing_sample_rate_model&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for test_model.ModelTest.test_serialize" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for test_model.ModelTest.test_transforms_from_dict2" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -290,24 +331,8 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_model.ModelTest.test_serialize&quot;" />
+      <option name="_new_target" value="&quot;test_model.ModelTest.test_transforms_from_dict2&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests in test_timing_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="pydantic tests" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/python" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_timing_types.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
     <configuration name="Unittests in python" type="tests" factoryName="Unittests" nameIsGenerated="true">
@@ -330,20 +355,20 @@
     </configuration>
     <list>
       <item itemvalue="Python.main" />
+      <item itemvalue="Python.compatibility" />
       <item itemvalue="Python tests.Unittests in python" />
-      <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_lens_static_parameters" />
-      <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_lens_distortion_to_dict" />
-      <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_lens_distortions" />
-      <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_serialize" />
-      <item itemvalue="Python tests.Python tests in test_timing_types.py" />
+      <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_lens_distortions_from_dict" />
+      <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_timing_mode_enum" />
+      <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_timing_sample_rate_model" />
+      <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_transforms_from_dict2" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_serialize" />
-        <item itemvalue="Python tests.Python tests in test_timing_types.py" />
-        <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_lens_distortions" />
-        <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_lens_distortion_to_dict" />
-        <item itemvalue="Python tests.Python tests for test_clip.ClipTestCases.test_lens_static_parameters" />
+        <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_lens_distortions_from_dict" />
+        <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_transforms_from_dict2" />
+        <item itemvalue="Python.compatibility" />
+        <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_timing_sample_rate_model" />
+        <item itemvalue="Python tests.Python tests for test_model.ModelTest.test_timing_mode_enum" />
       </list>
     </recent_temporary>
   </component>
@@ -383,175 +408,7 @@
       <workItem from="1734018398844" duration="5656000" />
       <workItem from="1734029473500" duration="51831000" />
       <workItem from="1734133161202" duration="93607000" />
-      <workItem from="1734368060036" duration="66131000" />
-    </task>
-    <task id="LOCAL-00019" summary="Fully flesh out and test tracker types.">
-      <option name="closed" value="true" />
-      <created>1733948423748</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1733948423748</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Move NonBlankUTF8String into string_types.py and put tests into test_string_types.py">
-      <option name="closed" value="true" />
-      <created>1733949870807</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1733949870807</updated>
-    </task>
-    <task id="LOCAL-00021" summary="More remodularization and unit tests.">
-      <option name="closed" value="true" />
-      <created>1733953205783</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1733953205783</updated>
-    </task>
-    <task id="LOCAL-00022" summary="Jupyter notebook for experiments during development.">
-      <option name="closed" value="true" />
-      <created>1733953261605</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1733953261605</updated>
-    </task>
-    <task id="LOCAL-00023" summary="Notes on the existing implementation and comments as to how it motivated the proposed replacement; comments on compatibility.">
-      <option name="closed" value="true" />
-      <created>1733953347547</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1733953347547</updated>
-    </task>
-    <task id="LOCAL-00024" summary="Move types around; make to_json() be a regular method rather than a staticmethod.">
-      <option name="closed" value="true" />
-      <created>1734034117723</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1734034117723</updated>
-    </task>
-    <task id="LOCAL-00025" summary="finish [static] camera data, static lens data">
-      <option name="closed" value="true" />
-      <created>1734117821676</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1734117821676</updated>
-    </task>
-    <task id="LOCAL-00026" summary="Prototypical first &quot;regular&quot; (i.e. periodic) lens metadata.">
-      <option name="closed" value="true" />
-      <created>1734119698306</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1734119698306</updated>
-    </task>
-    <task id="LOCAL-00027" summary="Lens 'regular' parameters pass unit tests">
-      <option name="closed" value="true" />
-      <created>1734132539217</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1734132539217</updated>
-    </task>
-    <task id="LOCAL-00028" summary="Bump version of pydantic-settings.">
-      <option name="closed" value="true" />
-      <created>1734142436421</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1734142436421</updated>
-    </task>
-    <task id="LOCAL-00029" summary="Start of unit tests for timing parameters">
-      <option name="closed" value="true" />
-      <created>1734143003405</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1734143003405</updated>
-    </task>
-    <task id="LOCAL-00030" summary="Timing parameters fully pass.">
-      <option name="closed" value="true" />
-      <created>1734184856826</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1734184856826</updated>
-    </task>
-    <task id="LOCAL-00031" summary="Static tracking parameters pass.">
-      <option name="closed" value="true" />
-      <created>1734197047587</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1734197047587</updated>
-    </task>
-    <task id="LOCAL-00032" summary="Static regular parameters pass.">
-      <option name="closed" value="true" />
-      <created>1734197976647</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1734197976647</updated>
-    </task>
-    <task id="LOCAL-00033" summary="Global parameters pass.">
-      <option name="closed" value="true" />
-      <created>1734206378898</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1734206378898</updated>
-    </task>
-    <task id="LOCAL-00034" summary="Global parameters really pass now.">
-      <option name="closed" value="true" />
-      <created>1734206983006</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1734206983006</updated>
-    </task>
-    <task id="LOCAL-00035" summary="Fix up camera types test">
-      <option name="closed" value="true" />
-      <created>1734207729675</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1734207729675</updated>
-    </task>
-    <task id="LOCAL-00036" summary="Match original implementation schema for physical and sensel dimensions">
-      <option name="closed" value="true" />
-      <created>1734211131016</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1734211131016</updated>
-    </task>
-    <task id="LOCAL-00037" summary="Restore test that infinite pixel dimensions fail for both width and height.">
-      <option name="closed" value="true" />
-      <created>1734211228408</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1734211228408</updated>
-    </task>
-    <task id="LOCAL-00038" summary="Constrained-length strings match.">
-      <option name="closed" value="true" />
-      <created>1734212667947</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1734212667947</updated>
-    </task>
-    <task id="LOCAL-00039" summary="UUID URN schema matches">
-      <option name="closed" value="true" />
-      <created>1734213411490</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1734213411490</updated>
+      <workItem from="1734368060036" duration="141921000" />
     </task>
     <task id="LOCAL-00040" summary="NonNegativeInt and StrictlyPositiveRational schema match original implementation">
       <option name="closed" value="true" />
@@ -777,7 +634,175 @@
       <option name="project" value="LOCAL" />
       <updated>1734481576554</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="More work towards passing classic model_test.py without breaking Pydantic-tests unit tests">
+      <option name="closed" value="true" />
+      <created>1734539608977</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1734539608977</updated>
+    </task>
+    <task id="LOCAL-00069" summary="Raise ValueError if all of F, I and Z are None for FizEncoder or RawFizEncoder">
+      <option name="closed" value="true" />
+      <created>1734540849319</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1734540849319</updated>
+    </task>
+    <task id="LOCAL-00070" summary="Change test_model.py expectation: no longer assume list or Fraction assigned to a value will read back as list or Fraction; now expect how the field was defined (tuple or StrictlyPositiveRational).">
+      <option name="closed" value="true" />
+      <created>1734554398785</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1734554398785</updated>
+    </task>
+    <task id="LOCAL-00071" summary="Change expectation on reading timecode format sub-frame indicator: since it's defined as an int, read it back as an int even if what was assigned to it was a True value.">
+      <option name="closed" value="true" />
+      <created>1734554474553</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1734554474553</updated>
+    </task>
+    <task id="LOCAL-00072" summary="Use a complex rather than a Fraction to test setting the focus distance with an invalid value will raise.">
+      <option name="closed" value="true" />
+      <created>1734554531310</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1734554531310</updated>
+    </task>
+    <task id="LOCAL-00073" summary="Initial README.md">
+      <option name="closed" value="true" />
+      <created>1734614147509</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1734614147509</updated>
+    </task>
+    <task id="LOCAL-00074" summary="Add discussion of JSON schema to README.md">
+      <option name="closed" value="true" />
+      <created>1734616968814</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1734616968814</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Restrict components of version number to single digits">
+      <option name="closed" value="true" />
+      <created>1734618189861</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1734618189861</updated>
+    </task>
+    <task id="LOCAL-00076" summary="Add introduction to Pydantic">
+      <option name="closed" value="true" />
+      <created>1734619374483</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1734619374483</updated>
+    </task>
+    <task id="LOCAL-00077" summary="Add section on the overall goal; add content explaining where it cannot be reached.">
+      <option name="closed" value="true" />
+      <created>1734622250676</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1734622250676</updated>
+    </task>
+    <task id="LOCAL-00078" summary="Add missing Pydantic website URL">
+      <option name="closed" value="true" />
+      <created>1734622532990</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1734622532990</updated>
+    </task>
+    <task id="LOCAL-00079" summary="Push final changes before lunch and meeting.">
+      <option name="closed" value="true" />
+      <created>1734623734770</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1734623734770</updated>
+    </task>
+    <task id="LOCAL-00080" summary="Fix references in code Markdown; were angular2html, now are python">
+      <option name="closed" value="true" />
+      <created>1734627334672</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1734627334672</updated>
+    </task>
+    <task id="LOCAL-00081" summary="Remove some obsolete comments from pre-implementation days">
+      <option name="closed" value="true" />
+      <created>1734627467197</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1734627467197</updated>
+    </task>
+    <task id="LOCAL-00082" summary="Update notes on the implementation.">
+      <option name="closed" value="true" />
+      <created>1734835895116</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1734835895116</updated>
+    </task>
+    <task id="LOCAL-00083" summary="More notes and analyses.">
+      <option name="closed" value="true" />
+      <created>1734873668964</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1734873668964</updated>
+    </task>
+    <task id="LOCAL-00084" summary="Use classic regex for PTP master, modified b/c Pydantic doesn't handle regex backreferences">
+      <option name="closed" value="true" />
+      <created>1734873920017</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1734873920017</updated>
+    </task>
+    <task id="LOCAL-00085" summary="Add protocol version to __all__.">
+      <option name="closed" value="true" />
+      <created>1734873985191</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1734873985191</updated>
+    </task>
+    <task id="LOCAL-00086" summary="Fix regex in timing test cases too.">
+      <option name="closed" value="true" />
+      <created>1734874285295</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1734874285295</updated>
+    </task>
+    <task id="LOCAL-00087" summary="Change test_model.py's test_timecode_format() to use to_int() on instances, not as if it were a static method.">
+      <option name="closed" value="true" />
+      <created>1734875734479</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1734875734479</updated>
+    </task>
+    <task id="LOCAL-00088" summary="Add model validator to ensure timecode's frame number is less than the timecode format's rate">
+      <option name="closed" value="true" />
+      <created>1734877249386</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1734877249386</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -795,32 +820,32 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="NonNegativeInt and StrictlyPositiveRational schema match original implementation" />
-    <MESSAGE value="Various things to get all unit tests working again" />
-    <MESSAGE value="All timing types tests pass." />
-    <MESSAGE value="All tests written so far pass." />
-    <MESSAGE value="Transform types pass tests." />
-    <MESSAGE value="Update a couple packages; continue to clean up directory structure." />
-    <MESSAGE value="Add a VersionedProtocol type." />
-    <MESSAGE value="Rename backwards.py to compatibility.py" />
-    <MESSAGE value="A missed move of backwards.py to compatibility.py" />
-    <MESSAGE value="Move GlobalPosition from clip.py to tracker_types.py" />
-    <MESSAGE value="Add NormalizedFloat type and tests for it" />
-    <MESSAGE value="Remove comments or compact JSON schema text" />
-    <MESSAGE value="Some experiments with aliasing for JSON" />
-    <MESSAGE value="Workspace changes supporting recent changes" />
-    <MESSAGE value="Copy over test_model.py from classic implementation" />
-    <MESSAGE value="Be more forgiving when assigning ints or Fractions to attributes defined as StrictlyPositiveInt (assuming int or fraction fits within representable range)." />
-    <MESSAGE value="Add OPENTRACKIO_PROTOCOL_VERSION" />
-    <MESSAGE value="Allow users of classic API to import from framework.py and model.py" />
-    <MESSAGE value="Adjust classic test_model.py to distinguish between physical dimensions and sensel/pixel resolution" />
-    <MESSAGE value="Check the result of assigning to a clip's duration against a StrictlyPositiveRational rather than just a Fraction" />
-    <MESSAGE value="Comment out tests in test_f_number() and test_t_number() that were looking (I think) to raise if a list were passed instead of a tuple" />
     <MESSAGE value="Add lens_distortion_is_projection to static lens metadata" />
     <MESSAGE value="Don't try and convert None to a rational in field validation used by a couple of rational attributes" />
     <MESSAGE value="Make the expected schema more visually compact." />
     <MESSAGE value="Convert an integer supplied as a frame rate into a rational" />
-    <option name="LAST_COMMIT_MESSAGE" value="Convert an integer supplied as a frame rate into a rational" />
+    <MESSAGE value="More work towards passing classic model_test.py without breaking Pydantic-tests unit tests" />
+    <MESSAGE value="Raise ValueError if all of F, I and Z are None for FizEncoder or RawFizEncoder" />
+    <MESSAGE value="Change test_model.py expectation: no longer assume list or Fraction assigned to a value will read back as list or Fraction; now expect how the field was defined (tuple or StrictlyPositiveRational)." />
+    <MESSAGE value="Change expectation on reading timecode format sub-frame indicator: since it's defined as an int, read it back as an int even if what was assigned to it was a True value." />
+    <MESSAGE value="Use a complex rather than a Fraction to test setting the focus distance with an invalid value will raise." />
+    <MESSAGE value="Initial README.md" />
+    <MESSAGE value="Add discussion of JSON schema to README.md" />
+    <MESSAGE value="Restrict components of version number to single digits" />
+    <MESSAGE value="Add introduction to Pydantic" />
+    <MESSAGE value="Add section on the overall goal; add content explaining where it cannot be reached." />
+    <MESSAGE value="Add missing Pydantic website URL" />
+    <MESSAGE value="Push final changes before lunch and meeting." />
+    <MESSAGE value="Fix references in code Markdown; were angular2html, now are python" />
+    <MESSAGE value="Remove some obsolete comments from pre-implementation days" />
+    <MESSAGE value="Update notes on the implementation." />
+    <MESSAGE value="More notes and analyses." />
+    <MESSAGE value="Use classic regex for PTP master, modified b/c Pydantic doesn't handle regex backreferences" />
+    <MESSAGE value="Add protocol version to __all__." />
+    <MESSAGE value="Fix regex in timing test cases too." />
+    <MESSAGE value="Change test_model.py's test_timecode_format() to use to_int() on instances, not as if it were a static method." />
+    <MESSAGE value="Add model validator to ensure timecode's frame number is less than the timecode format's rate" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add model validator to ensure timecode's frame number is less than the timecode format's rate" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -836,14 +861,24 @@
           <option name="timeStamp" value="66" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/test/python/test_model.py</url>
-          <line>1040</line>
-          <option name="timeStamp" value="76" />
+          <url>file://$PROJECT_DIR$/test/python/test_clip.py</url>
+          <line>289</line>
+          <option name="timeStamp" value="81" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test/python/test_model.py</url>
-          <line>196</line>
-          <option name="timeStamp" value="78" />
+          <line>214</line>
+          <option name="timeStamp" value="82" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/python/test_model.py</url>
+          <line>685</line>
+          <option name="timeStamp" value="88" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/python/test_model.py</url>
+          <line>1041</line>
+          <option name="timeStamp" value="90" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
           <url>file://$PROJECT_DIR$/experiments/learnings.ipynb</url>
@@ -862,9 +897,11 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/pydantic_tests$camera_types.coverage" NAME="camera_types Coverage Results" MODIFIED="1734106899074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1734536369476" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1734894340309" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/pydantic_tests$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1728857315751" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1734537094307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$compatibility.coverage" NAME="compatibility Coverage Results" MODIFIED="1734891268851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1734894267950" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_test_clip_ClipTestCases_test_lens_regular_parameters.coverage" NAME="Unittests for test_clip.ClipTestCases.test_lens_regular_parameters Coverage Results" MODIFIED="1734539427401" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>
