@@ -474,7 +474,7 @@ class TimingTestCases(unittest.TestCase):
                     "anyOf": [
                         {
                             "type": "string",
-                            "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$"
+                            "pattern": "(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
                         },
                         {
                             "type": "null"
@@ -735,7 +735,7 @@ class TimingTestCases(unittest.TestCase):
                                     "anyOf": [
                                         {
                                             "type": "string",
-                                            "pattern": "^([A-F0-9]{2}:){5}[A-F0-9]{2}$"
+                                            "pattern": "(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
                                         },
                                         {
                                             "type": "null"
