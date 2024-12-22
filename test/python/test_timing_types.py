@@ -142,9 +142,9 @@ class TimingTestCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             Timecode(0, 0, 0, -1, valid_timecode_format)
         with self.assertRaises(ValidationError):
-            Timecode(0, 0, 0, 120, valid_timecode_format)
-        tc = Timecode(0, 0, 0, 119, valid_timecode_format)
-        self.assertEqual(119, tc.frames)
+            Timecode(0, 0, 0, thirty_fps_num, valid_timecode_format)
+        tc = Timecode(0, 0, 0, thirty_fps_num - 1, valid_timecode_format)
+        self.assertEqual(thirty_fps_num - 1, tc.frames)
         with self.assertRaises(ValidationError):
             Timecode(0, 0, 0, 0, "foo")
 

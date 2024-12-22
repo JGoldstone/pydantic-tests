@@ -10,7 +10,7 @@ from enum import Enum, verify, UNIQUE, StrEnum
 from typing import Annotated, Optional
 from fractions import Fraction
 
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 
 from camdkit.compatibility import CompatibleBaseModel
 from camdkit.numeric_types import (rationalize_strictly_and_positively,
@@ -69,6 +69,11 @@ class Timecode(CompatibleBaseModel):
         super(Timecode, self).__init__(hours=hours, minutes=minutes, seconds=seconds, frames=frames,
                                        format=format)
 
+    @model_validator(mode="after")
+    def check_frames_allowed_by_format(self):
+        if self.frames >= self.format.to_int():
+            raise ValueError("The frame number must be less than the frame rate.")
+        return self
 
 class Timestamp(CompatibleBaseModel):
     seconds: NonNegative48BitInt
