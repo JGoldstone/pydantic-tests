@@ -110,15 +110,29 @@ Here is a list of such:
 - `test_t_number()`: same as `test_f_number()` above.
 - `test_focus_position()`: Pydantic is promoting a Fraction to a float even though the Field is
   defined with `strict=True`. COME BACK TO THIS
+- ` test_synchronization()`: This final test:
+  ```python
+      sync.ptp.master = "ab:CD:eF:23:45:67"
+      clip.timing_synchronization = (sync, )
+  ```
+  required the construction of an invalid master (only lower-case hex digits are permitted),
+  so the assignment couldn't be tested because the value to be assigned couldn't be created.
 
 ## Remaining issues
+
+### creating sequences (perhaps multilevel) from JSON dicts
 In classic `camdkit` for anything more complex than POD, the separation between a Parameter and
-underlying dataclass allowed one to say
+underlying dataclass allowed one to say (from `test_lens_distortion_to_dict()`)
 
 ```python
 from camdkit.framework import Distortion
 from camdkit.model import LensDistortions
-j = LensDistortions.to_json((Distortion([0.1,0.2,0.3]),))
+
+def test_lens_distortion_to_dict(self):
+    j = LensDistortions.to_json((Distortion([0.1,0.2,0.3]),))
+    self.assertListEqual(j, [{
+      "radial": [0.1,0.2,0.3],
+    }])
 ```
 In Pydantici `camdkit` this can't be as straightforward: there's no distinction between parameter
 and underlying representational class, and the `to_json()` for Distortion's `@classmethod`
@@ -133,4 +147,75 @@ be able to handle this as such. Now the _nice_ thing to do here would be to make
 class, and then just call that new instance's inherited `BaseModel.model_dump()` method, et
 voilà Robert est le frère de ton père (_i.e._ Bob's your uncle).
 
-We'll try that tomorrow.
+This comes up in the other direction as well (in `test_lens_distortions_from_dict()`):
+```python
+from camdkit.framework import Distortion
+from camdkit.model import LensDistortions
+
+def test_lens_distortions_from_dict(self):
+    r = LensDistortions.from_json(({
+      "radial": [0.1,0.2,0.3],
+    },))
+    self.assertEqual(r,(Distortion([0.1,0.2,0.3]),))
+```
+
+### assigning an empty tuple to a regular parameter should raise
+
+My guess is that the issue here is we don't want to serialize empty tuples. The question is, do we
+forbid having zero-length tuples as values and insist on having these be None if there aren't any
+values at all? There are only two parameters where this is enforced: `distortion` and `transforms`.
+
+An argument for allowing empty tuples is that one might be processing a list of them and could remove
+the processed item from the tuple as one went. But since tuples are immutable that's actually a pain
+in the ass; you have to create a new tuple that doesn't have the one you just removed. If you want to
+do this sort of thing you should be using a `dict`, probably.
+
+The test that should raise, but does not, is this from `test_distortion()`:
+```python
+from camdkit.model import Clip
+
+def test_lens_distortions(self):
+    clip = Clip()
+    ...
+    with self.assertRaises(ValueError):
+      clip.lens_distortions = []
+```
+The relevant code fragment in `framework.py` seems to be this one:
+```python
+            elif self._params[f].sampling is Sampling.REGULAR:
+              if not (isinstance(value, tuple) and all(self._params[f].validate(s) for s in value)):
+                raise ValueError
+```
+
+
+This seems like it _should_ be doable and I've just not yet found the right Pydantic syntax; see
+[this closed Pydantic issue](https://github.com/pydantic/pydantic/issues/8981) from last March.
+
+### `Clip` object has no attribute `_values`
+
+This is a round-trip failure in `test_serialize()`. The `__init__()` for `ParameterContainer` sets this
+instance variable to a `dict` with value `None` for every `Parameter` in `self._params`, and this
+variable is being compared for equality between the original clip and the round-tripped one.
+
+If we knew that comparing two `BaseModel`-based models with `self.assertEqual(m0, m1)` where every
+field in `m1` was present in `m0`, every field present in `m0` was present in `m1`, and every field
+would return `True` when compared against its counterpart with `assertEqual()` regardless of whether
+`assertIs()` returned `True` or `False`, then we could dispense with the `assertDictEqual` and just
+use `assertEqual`.
+
+This seems to be true, _cf._ [here](https://github.com/pydantic/pydantic/discussions/7057)].
+
+On the other hand currently `self.assertEqual(d, d_clip)` fails, and a glance shows that `len(dir(d))`
+is 46 whereas `len(dir(d_clip))` is 176. Some work to do there. COME BACK TO THIS
+
+### upper _vs._ lower case in PTP master regular expressiop
+
+The classic implementation accepts only lower-case hex digits. The IEEE 1588:2019 document uses
+uppercase in its documentation but doesn't address serialization to character streams. SMPTE ST 2059-2
+("SMPTE Profile for Use of IEEE-1588 Precision Time Protocol") doesn't address serialization to
+character streams either but 
+
+### everything has to be reviewed to see if it should be _protected or public
+
+### all of the __all__ lists need to be reviewed
+
