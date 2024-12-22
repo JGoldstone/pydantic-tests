@@ -10,7 +10,7 @@ from camdkit.compatibility import CompatibleBaseModel
 from camdkit.numeric_types import SingleDigitInt
 from camdkit.string_types import NonBlankUTF8String
 
-__all__ = ['OPENTRACKIO_PROTOCOL_NAME', 'VersionedProtocol']
+__all__ = ['OPENTRACKIO_PROTOCOL_NAME', 'OPENTRACKIO_PROTOCOL_VERSION', 'VersionedProtocol']
 
 OPENTRACKIO_PROTOCOL_NAME = "OpenTrackIO"
 OPENTRACKIO_PROTOCOL_VERSION = (0, 9, 2)
