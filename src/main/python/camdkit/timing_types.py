@@ -8,6 +8,7 @@
 
 from enum import Enum, verify, UNIQUE, StrEnum
 from typing import Annotated, Optional
+from fractions import Fraction
 
 from pydantic import Field, field_validator
 
@@ -46,6 +47,9 @@ class TimecodeFormat(CompatibleBaseModel):
 
     def __init__(self, frameRate: StrictlyPositiveRational, subFrame: int = 0):
         super(TimecodeFormat, self).__init__(frameRate=frameRate, subFrame=subFrame)
+
+    def to_int(self) -> int:
+        return Fraction(self.frame_rate.num, self.frame_rate.denom).__ceil__()
 
 
 class Timecode(CompatibleBaseModel):
