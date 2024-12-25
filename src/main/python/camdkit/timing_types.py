@@ -12,7 +12,9 @@ from fractions import Fraction
 
 from pydantic import Field, field_validator, model_validator
 
-from camdkit.compatibility import CompatibleBaseModel
+from camdkit.compatibility import (CompatibleBaseModel,
+                                   NON_NEGATIVE_INTEGER,
+                                   STRICTLY_POSITIVE_RATIONAL)
 from camdkit.numeric_types import (rationalize_strictly_and_positively,
                                    StrictlyPositiveRational,
                                    NonNegative8BitInt,
@@ -45,6 +47,8 @@ class TimecodeFormat(CompatibleBaseModel):
     def coerce_frame_rate_to_strictly_positive_rational(cls, v):
         return rationalize_strictly_and_positively(v)
 
+    # TODO investigate the mismatch between the keyword arg and the field name;
+    #   isn't this one of those ugly cases wher ethe field name needs to be capitalCase?
     def __init__(self, frameRate: StrictlyPositiveRational, subFrame: int = 0):
         super(TimecodeFormat, self).__init__(frameRate=frameRate, subFrame=subFrame)
 
@@ -53,12 +57,6 @@ class TimecodeFormat(CompatibleBaseModel):
 
 
 class Timecode(CompatibleBaseModel):
-    """SMPTE timecode of the sample. Timecode is a standard for labeling
-    individual frames of data in media systems and is useful for
-    inter-frame synchronization.- format.frameRate: The frame rate as a rational number. Drop frame
-    rates such as 29.97 should be represented as e.g. 30000/1001. The
-    timecode frame rate may differ from the sample frequency.
-    """
     hours: int = Field(..., ge=0, le=23, strict=True)
     minutes: int = Field(..., ge=0, le=59, strict=True)
     seconds: int = Field(..., ge=0, le=59, strict=True)
@@ -117,6 +115,84 @@ class SynchronizationPTP(CompatibleBaseModel):
 
 
 class Synchronization(CompatibleBaseModel):
+    locked: bool
+    source: SynchronizationSource
+    frequency: StrictlyPositiveRational | None = None
+    offsets: SynchronizationOffsets | None = None
+    present: bool | None = None
+    ptp: SynchronizationPTP | None = None
+
+    def __init__(self, locked: bool,
+                 source: SynchronizationSource,
+                 frequency: StrictlyPositiveRational | None,
+                 offsets: SynchronizationOffsets | None = None,
+                 present: bool | None = None,
+                 ptp: SynchronizationPTP | None = None) -> None:
+        super(Synchronization, self).__init__(locked=locked,
+                                              source=source,
+                                              frequency=frequency,
+                                              offsets=offsets,
+                                              present=present,
+                                              ptp=ptp)
+
+    # noinspection PyNestedDecorators
+    @field_validator("frequency", mode="before")
+    @classmethod
+    def coerce_frequency_to_strictly_positive_rational(cls, v):
+        return rationalize_strictly_and_positively(v)
+
+
+class Timing(CompatibleBaseModel):
+    mode: Annotated[tuple[TimingMode, ...] | None,
+      Field(json_schema_extra={"clip_property": "timing_mode",
+                               "constraints": "The parameter shall be one of the allowed values."})] = None
+    """Enumerated value indicating whether the sample transport mechanism
+    provides inherent ('external') timing, or whether the transport
+    mechanism lacks inherent timing and so the sample must contain a PTP
+    timestamp itself ('internal') to carry timing information.
+    """
+
+    recorded_timestamp: Annotated[tuple[Timestamp, ...] | None,
+      Field(alias="recordedTimestamp",
+            json_schema_extra={"clip_property": "timing_recorded_timestamp",
+                               "constraints": """The parameter shall contain valid number of seconds, nanoseconds
+elapsed since the start of the epoch.
+"""})] = None
+    """
+    PTP timestamp of the data recording instant, provided for convenience
+    during playback of e.g. pre-recorded tracking data. The timestamp
+    comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
+    integer (nanoseconds)
+    """
+
+    sample_rate: Annotated[tuple[StrictlyPositiveRational, ...] | None,
+      Field(alias="sampleRate",
+            json_schema_extra={"clip_property": "timing_sample_rate",
+                               "constraints": STRICTLY_POSITIVE_RATIONAL})] = None
+    """Sample frame rate as a rational number. Drop frame rates such as
+    29.97 should be represented as e.g. 30000/1001. In a variable rate
+    system this should is estimated from the last sample delta time.
+    """
+
+    sample_timestamp: Annotated[tuple[Timestamp, ...] | None,
+      Field(alias="sampleTimestamp",
+            json_schema_extra={"clip_property": "timing_sample_timestamp",
+                               "constraints": """The parameter shall contain valid number of seconds, nanoseconds
+elapsed since the start of the epoch.
+"""})] = None
+    """PTP timestamp of the data capture instant. Note this may differ
+    from the packet's transmission PTP timestamp. The timestamp
+    comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
+    integer (nanoseconds)
+    """
+
+    sequence_number: Annotated[tuple[NonNegativeInt, ...] | None,
+      Field(alias="sequenceNumber",
+            json_schema_extra={"clip_property": "timing_sequence_number",
+                               "constraints": NON_NEGATIVE_INTEGER})] = None
+    """Integer incrementing with each sample."""
+
+    synchronization: tuple[Synchronization, ...] | None = None
     """Object describing how the tracking device is synchronized for this
     sample.
 
@@ -146,41 +222,19 @@ class Synchronization(CompatibleBaseModel):
     - "ptp": The tracking device is locked to a PTP master
     - "ntp": The tracking device is locked to an NTP server
     """
-    locked: bool
-    source: SynchronizationSource
-    frequency: StrictlyPositiveRational | None = None
-    offsets: SynchronizationOffsets | None = None
-    present: bool | None = None
-    ptp: SynchronizationPTP | None = None
 
-    def __init__(self, locked: bool,
-                 source: SynchronizationSource,
-                 frequency: StrictlyPositiveRational | None,
-                 offsets: SynchronizationOffsets | None = None,
-                 present: bool | None = None,
-                 ptp: SynchronizationPTP | None = None) -> None:
-        super(Synchronization, self).__init__(locked=locked,
-                                              source=source,
-                                              frequency=frequency,
-                                              offsets=offsets,
-                                              present=present,
-                                              ptp=ptp)
-
-    # noinspection PyNestedDecorators
-    @field_validator("frequency", mode="before")
-    @classmethod
-    def coerce_frequency_to_strictly_positive_rational(cls, v):
-        return rationalize_strictly_and_positively(v)
-
-
-class Timing(CompatibleBaseModel):
-    mode: tuple[TimingMode, ...] | None = None
-    recorded_timestamp: Annotated[tuple[Timestamp, ...] | None, Field(alias="recordedTimestamp")] = None
-    sample_rate: Annotated[tuple[StrictlyPositiveRational, ...] | None, Field(alias="sampleRate")] = None
-    sample_timestamp: Annotated[tuple[Timestamp, ...] | None, Field(alias="sampleTimestamp")] = None
-    sequence_number: Annotated[tuple[NonNegativeInt, ...] | None, Field(alias="sequenceNumber")] = None
-    synchronization: tuple[Synchronization, ...] | None = None
-    timecode: tuple[Timecode, ...] | None = None
+    timecode: Annotated[tuple[Timecode, ...] | None,
+      Field(json_schema_extra={"clip_property": "timing_sequence_number",
+                               "constraints": """The parameter shall contain a valid format and hours, minutes,
+seconds and frames with appropriate min/max values.
+"""})] = None
+    """SMPTE timecode of the sample. Timecode is a standard for labeling
+    individual frames of data in media systems and is useful for
+    inter-frame synchronization.
+     - format.frameRate: The frame rate as a rational number. Drop frame
+    rates such as 29.97 should be represented as e.g. 30000/1001. The
+    timecode frame rate may differ from the sample frequency.
+    """
 
     # noinspection PyNestedDecorators
     @field_validator("sample_rate", mode="before")

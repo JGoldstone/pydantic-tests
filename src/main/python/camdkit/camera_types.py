@@ -7,19 +7,21 @@
 """Types for camera modeling"""
 
 import math
-import numbers
-from fractions import Fraction
 
-from typing import Annotated, Optional
+from typing import Annotated
 
-from pydantic import Field, field_validator, StringConstraints
+from pydantic import Field, field_validator, WithJsonSchema
 
-from camdkit.compatibility import CompatibleBaseModel
+from camdkit.compatibility import (CompatibleBaseModel,
+                                   NONBLANK_UTF8_MAX_1023_CHARS,
+                                   UUID_URN,
+                                   STRICTLY_POSITIVE_RATIONAL,
+                                   STRICTLY_POSITIVE_INTEGER,)
 from camdkit.numeric_types import (MAX_INT_32,
-                                   StrictlyPositiveInt,
-                                   StrictlyPositiveRational, rationalize_strictly_and_positively)
-from camdkit.string_types import NonBlankUTF8String, UUIDURN, UUID_URN_PATTERN
-
+                                   StrictlyPositiveRational,
+                                   rationalize_strictly_and_positively)
+from camdkit.units import MILLIMETER, PIXEL
+from camdkit.string_types import NonBlankUTF8String, UUIDURN
 
 # Tempting as it might seem to make PhysicalDimensions and SenselDimensions subclasses
 # of a single generic Dimension[T] class, that doesn't work play well with the Field
@@ -27,9 +29,11 @@ from camdkit.string_types import NonBlankUTF8String, UUIDURN, UUID_URN_PATTERN
 # work, but for now it's a wish, not something for a to-do list.
 
 
+# TODO raise issue: do we want to put a 'reasonable' upper bound on size? 500mm maybe?
+#   because right now math.inf is a valid size.
 class PhysicalDimensions(CompatibleBaseModel):
-    height: Annotated[float, Field(ge=0.0, lt=math.inf)]
-    width: Annotated[float, Field(ge=0.0, lt=math.inf)]
+    height: Annotated[float, Field(ge=0.0, strict=True)]
+    width: Annotated[float, Field(ge=0.0, strict=True)]
 
     def __init__(self, width: float, height: float) -> None:
         super(PhysicalDimensions, self).__init__(width=width, height=height)
@@ -43,34 +47,101 @@ class SenselDimensions(CompatibleBaseModel):
         super(SenselDimensions, self).__init__(width=width, height=height)
 
 
-type ShutterAngle = Annotated[float, Field(ge=0.0, le=360.0, strict=True)]
+# type ShutterAngle = Annotated[float, Field(ge=0.0, le=360.0, strict=True)]
 
 
 class StaticCamera(CompatibleBaseModel):
+    """
+    camera properties that do not change over time
+    """
     capture_frame_rate: Annotated[StrictlyPositiveRational | None, Field(alias="captureFrameRate")] = None
-    active_sensor_physical_dimensions: Annotated[PhysicalDimensions | None, Field(alias="activeSensorPhysicalDimensions")] = None
-    active_sensor_resolution: Annotated[SenselDimensions | None, Field(alias="activeSensorResolution")] = None
-    make: NonBlankUTF8String | None = None
-    model: NonBlankUTF8String | None = None
-    serial_number: Annotated[NonBlankUTF8String | None, Field(alias="serialNumber")] = None
-    firmware_version: Annotated[NonBlankUTF8String | None, Field(alias="firmwareVersion")] = None
-    label: NonBlankUTF8String | None = None
-    anamorphic_squeeze: Annotated[StrictlyPositiveRational | None, Field(alias="anamorphicSqueeze")] = None
-    iso: Annotated[int | None, Field(gt=0, strict=True, alias="isoSpeed")] = None
-    fdl_link: Annotated[str | None, Field(pattern=UUID_URN_PATTERN, alias="fdlLink")] = None
-    shutter_angle: Annotated[float | None, Field(ge=0.0, le=360.0, alias="shutterAngle")] = None
+    """Capture frame rate of the camera"""
+
+    active_sensor_physical_dimensions: Annotated[PhysicalDimensions | None,
+      Field(alias="activeSensorPhysicalDimensions",
+            json_schema_extra={"units": MILLIMETER,
+                               "clip_property": 'active_sensor_physical_dimensions',
+                               "constraints": "The height and width shall be each be real non-negative numbers."})] = None
+    """Height and width of the active area of the camera sensor in microns
+    """
+
+    active_sensor_resolution: Annotated[SenselDimensions | None,
+      Field(alias="activeSensorResolution",
+            json_schema_extra={'units': PIXEL,
+                               "clip_property": 'active_sensor_resolution',
+                               "constraints": """The height and width shall be each be an integer in the range
+[0..2,147,483,647].
+"""})] = None
+    """Photosite resolution of the active area of the camera sensor in
+    pixels
+    """
+
+    make: Annotated[NonBlankUTF8String | None,
+      Field(json_schema_extra={"clip_property": "camera_make",
+                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
+    """
+    Non-blank string naming camera manufacturer
+    """
+
+    model: Annotated[NonBlankUTF8String | None,
+      Field(json_schema_extra={"clip_property": "camera_model",
+                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
+    """Non-blank string identifying camera model"""
+
+    serial_number: Annotated[NonBlankUTF8String | None,
+      Field(alias="serialNumber",
+            json_schema_extra={"clip_property": "camera_serial_number",
+                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
+    """Non-blank string uniquely identifying the camera"""
+
+    firmware_version: Annotated[NonBlankUTF8String | None,
+      Field(alias="firmwareVersion",
+            json_schema_extra={"clip_property": "camera_firmware_version",
+                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
+    """Non-blank string identifying camera firmware version"""
+
+    label: Annotated[NonBlankUTF8String | None,
+      Field(json_schema_extra={"clip_property": "camera_label",
+                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
+    """Non-blank string containing user-determined camera identifier"""
+
+    anamorphic_squeeze: Annotated[StrictlyPositiveRational | None,
+      Field(alias="anamorphicSqueeze",
+            json_schema_extra={"clip_property": "anamorphic_squeeze",
+                               "constraints": STRICTLY_POSITIVE_RATIONAL})] = None
+    """Nominal ratio of height to width of the image of an axis-aligned
+    square captured by the camera sensor. It can be used to de-squeeze
+    images but is not however an exact number over the entire captured
+    area due to a lens' intrinsic analog nature.
+    """
+
+    iso: Annotated[int | None,
+      Field(gt=0, strict=True, alias="isoSpeed",
+            json_schema_extra={"clip_property": "iso",
+                               "constraints": STRICTLY_POSITIVE_INTEGER})] = None
+    """Arithmetic ISO scale as defined in ISO 12232"""
+
+    # fdl_link: Annotated[UUIDURN | None,
+    #   Field(alias="fdl_link",
+    #         json_schema_extra={"clip_property": "fdl_link",
+    #                            "constraints": "foo"})] = None
+    fdl_link: Annotated[UUIDURN | None,
+    Field(json_schema_extra={"clip_property": "fdl_link",
+                             "constraints": UUID_URN})] = None
+    """URN identifying the ASC Framing Decision List used by the camera.
+    """
+
+    shutter_angle: Annotated[float | None,
+    Field(ge=0.0, le=360.0, alias="shutterAngle",
+          json_schema_extra={"clip_property": "shutter_angle",
+                             "constraints": "The parameter shall be a real number in the range (0..360]."})] = None
+    """Shutter speed as a fraction of the capture frame rate. The shutter
+    speed (in units of 1/s) is equal to the value of the parameter divided
+    by 360 times the capture frame rate.
+    """
 
     # noinspection PyNestedDecorators
     @field_validator("capture_frame_rate", "anamorphic_squeeze", mode="before")
     @classmethod
     def coerce_camera_type_to_strictly_positive_rational(cls, v):
         return rationalize_strictly_and_positively(v)
-
-
-if __name__ == '__main__':
-    sc = StaticCamera()
-    sc.capture_frame_rate = StrictlyPositiveRational(24000, 1001)
-    print('StrictlyPositiveRational accepted')
-    sc.capture_frame_rate = Fraction(24000, 1001)
-    sc.anamorphic_squeeze = Fraction(4, 3)
-    print('Fraction accepted')

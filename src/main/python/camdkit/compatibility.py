@@ -8,11 +8,77 @@
 
 import jsonref
 
-from typing import Any, Self
+from typing import Final, Any, Self
 
 from pydantic import BaseModel, ValidationError, ConfigDict, json
 from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue
 
+__all__ = [
+    'CompatibleBaseModel',
+    'BOOLEAN',
+    'NONBLANK_UTF8_MAX_1023_CHARS', 'UUID_URN',
+    'RATIONAL', 'STRICTLY_POSITIVE_RATIONAL',
+    'NON_NEGATIVE_INTEGER', 'STRICTLY_POSITIVE_INTEGER',
+    'NON_NEGATIVE_REAL', 'REAL', 'REAL_AT_LEAST_UNITY'
+]
+
+BOOLEAN: Final[str] = """The parameter shall be a boolean."""
+
+NONBLANK_UTF8_MAX_1023_CHARS: Final[str] = \
+"""The parameter shall be a Unicode string betwee 0 and 1023
+codepoints.
+"""
+
+UUID_URN: Final[str] = \
+    """The parameter shall be a UUID URN as specified in IETF RFC 4122.
+    Only lowercase characters shall be used.
+    Example: `f81d4fae-7dec-11d0-a765-00a0c91e6bf6`
+    """
+
+RATIONAL: Final[str] = \
+    """The parameter shall be a rational number where (i) the numerator
+    is in the range [-2,147,483,648..2,147,483,647] and (ii) the
+    denominator is in the range (0..4,294,967,295].
+    """
+
+STRICTLY_POSITIVE_RATIONAL: Final[str] = \
+    """The parameter shall be a rational number whose numerator
+    is in the range [0..2,147,483,647] and denominator in the range
+    (0..4,294,967,295].
+    """
+
+NON_NEGATIVE_INTEGER: Final[str] = \
+    """The parameter shall be a integer in the range (0..4,294,967,295].
+    """
+
+STRICTLY_POSITIVE_INTEGER: Final[str] = \
+    """The parameter shall be a integer in the range (1..4,294,967,295].
+    """
+
+REAL: Final[str] = \
+    """The parameter shall be a real number."""
+
+NON_NEGATIVE_REAL: Final[str] = \
+    """The parameter shall be a non-negative real number."""
+
+REAL_AT_LEAST_UNITY: Final[str]= \
+    """The parameter shall be a real number >= 1."""
+
+PARAMETER_CONSTRAINTS = {
+    'active_sensor_physical_dimensions': """The height and width shall be each be real non-negative numbers.
+""",
+    'active_sensor_resolution': """The height and width shall be each be an integer in the range
+[0..2,147,483,647].
+""",
+    "camera_make": NONBLANK_UTF8_MAX_1023_CHARS,
+    "camera_model": NONBLANK_UTF8_MAX_1023_CHARS,
+    "camera_serial_number": NONBLANK_UTF8_MAX_1023_CHARS,
+    "camera_firmware_version": NONBLANK_UTF8_MAX_1023_CHARS,
+    "camera_label": NONBLANK_UTF8_MAX_1023_CHARS,
+    "anamorphic_squeeze": STRICTLY_POSITIVE_RATIONAL,
+    "iso": STRICTLY_POSITIVE_INTEGER,
+
+}
 def scrub_titles(d: dict[str, Any]) -> dict[str, Any]:
     for key, value in d.items():
         if isinstance(value, dict):
@@ -52,10 +118,12 @@ def compatibility_cleanups(schema: dict[str, Any]) -> None:
 
 # For compatibility with existing code
 class CompatibleBaseModel(BaseModel):
+    """Base class for all camdkit parameters."""
 
     model_config = ConfigDict(validate_assignment=True,
                               use_enum_values=True,
-                              extra="forbid")
+                              extra="forbid",
+                              use_attribute_docstrings=True)
 
     @classmethod
     def validate(cls, value:Any) -> bool:
@@ -111,54 +179,17 @@ class CompatibleBaseModel(BaseModel):
                                  f" {cls.__name__}.from_json()")
         return inner(json_or_tuple)
 
+    # @classmethod
+    # def make_json_schema(cls) -> json:
+    #     with_refs = cls.model_json_schema(schema_generator=SortlessSchemaGenerator)
+    #     without_refs = jsonref.replace_refs(with_refs, proxies=False)
+    #     if "$defs" in without_refs:
+    #         del without_refs["$defs"]
+    #     return without_refs
+
     @classmethod
     def make_json_schema(cls) -> json:
-        with_refs = cls.model_json_schema(schema_generator=SortlessSchemaGenerator)
-        without_refs = jsonref.replace_refs(with_refs, proxies=False)
-        if "$defs" in without_refs:
-            del without_refs["$defs"]
-        return without_refs
-
-
-# class RecursiveModel(BaseModel):
-#     model_config = ConfigDict(validate_assignment=True,
-#                               use_enum_values=True)
-#
-#
-#     @classmethod
-#     def from_json(cls, json_or_tuple: dict[str, Any] | tuple[Any, ...]) -> Any:
-#         def all_keys_are_strings(d):
-#             return all([type(k) == str for k in d.keys()])
-#         def inner(value):  # TODO since return type is whatever cls is, can we say that?
-#             # if it's a dict and all the keys are strings, let's guess it's JSON
-#             is_dict: bool = isinstance(value, dict)
-#             all_string_keys: bool = is_dict and all_keys_are_strings(value)
-#             if is_dict and all_string_keys:
-#                 result = cls.model_validate(value)
-#                 print(f"base case result: {result}")
-#                 return result
-#             elif isinstance(value, tuple):
-#                 tuple_result = tuple([inner(v) for v in value])
-#                 print(f"tuple case result: {tuple_result}")
-#                 return tuple_result
-#             else:
-#                 raise ValueError(f"unhandled type {type(value)} supplied to from_json() of {cls.__name__}")
-#         print(f"about to call inner({json_or_tuple})", flush=True)
-#         return inner(json_or_tuple)
-#
-# class Frob(RecursiveModel):
-#     fred: int
-#     wilma: complex
-#
-# def test_basic_frob_json_loads():
-#     data = {"fred": 6, "wilma": 7+2j }
-#     foo = Frob.from_json(data)
-#     print(f"foo is ---{foo}---")
-#     first_level_data = ({'fred': 1, 'wilma': 0+1j}, {'fred': 2, 'wilma': 0+2j})
-#     print(f"processed tuples of data: {Frob.from_json(first_level_data)}")
-#     second_level_data = (({'fred': 1, 'wilma': 0+1j}, {'fred': 2, 'wilma': 0+2j}),
-#                          ({'fred': 3, 'wilma': 0+3j}, {'fred': 4, 'wilma': 0+4j}))
-#     print(f"processed tuples of tuples of data: {Frob.from_json(second_level_data)}")
-#
-# if __name__ == '__main__':
-#     test_basic_frob_json_loads()
+        schema = cls.model_json_schema(schema_generator=SortlessSchemaGenerator)
+        if "$defs" in schema:
+            del schema["$defs"]
+        return schema

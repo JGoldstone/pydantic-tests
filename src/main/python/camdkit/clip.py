@@ -5,7 +5,6 @@
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
 """Types for modeling clips"""
-
 from typing import Annotated, Any
 
 from pydantic import Field, field_validator
@@ -28,6 +27,8 @@ from camdkit.transform_types import Transform
 
 class Static(CompatibleBaseModel):
     duration: StrictlyPositiveRational | None = None
+    """Duration of the clip"""
+
     camera: StaticCamera | None = None
     lens: StaticLens | None = None
     tracker: StaticTracker | None = None
@@ -48,12 +49,56 @@ class Clip(CompatibleBaseModel):
     # The "global_" prefix is here because, without it, we would have BaseModel attributes
     # with the same name, from the user's POV, as the property
     global_protocol: Annotated[tuple[VersionedProtocol, ...] | None, Field(alias="protocol")] = None
+    """Name of the protocol in which the sample is being employed, and
+    version of that protocol
+    """
     global_sample_id: Annotated[tuple[UUIDURN, ...] | None, Field(alias="sampleId")] = None
+    """URN serving as unique identifier of the sample in which data is
+    being transported.
+    """
     global_source_id: Annotated[tuple[UUIDURN, ...] | None, Field(alias="sourceId")] = None
+    """URN serving as unique identifier of the source from which data is
+    being transported.
+    """
     global_source_number: Annotated[tuple[NonNegativeInt, ...] | None, Field(alias="sourceNumber")] = None
+    """Number that identifies the index of the stream from a source from which
+    data is being transported. This is most important in the case where a source
+    is producing multiple streams of samples.
+    """
     global_related_sample_ids: Annotated[tuple[tuple[UUIDURN, ...], ...] | None, Field(alias="relatedSampleIds")] = None
+    """List of sampleId properties of samples related to this sample. The
+    existence of a sample with a given sampleId is not guaranteed.
+    """
     global_global_stage: Annotated[tuple[GlobalPosition, ...] | None, Field(alias="globalStage")] = None
+    """Position of stage origin in global ENU and geodetic coordinates
+    (E, N, U, lat0, lon0, h0). Note this may be dynamic if the stage is
+    inside a moving vehicle.
+    """
     global_transforms: Annotated[tuple[tuple[Transform, ...], ...] | None, Field(alias="transforms")] = None
+    """A list of transforms.
+    Transforms are composed in order with the last in the list representing
+    the X,Y,Z in meters of camera sensor relative to stage origin.
+    The Z axis points upwards and the coordinate system is right-handed.
+    Y points in the forward camera direction (when pan, tilt and roll are
+    zero).
+    For example in an LED volume Y would point towards the centre of the
+    LED wall and so X would point to camera-right.
+    Rotation expressed as euler angles in degrees of the camera sensor
+    relative to stage origin
+    Rotations are intrinsic and are measured around the axes ZXY, commonly
+    referred to as [pan, tilt, roll]
+    Notes on Euler angles:
+    Euler angles are human readable and unlike quarternions, provide the
+    ability for cycles (with angles >360 or <0 degrees).
+    Where a tracking system is providing the pose of a virtual camera,
+    gimbal lock does not present the physical challenges of a robotic
+    system.
+    Conversion to and from quarternions is trivial with an acceptable loss
+    of precision.
+    """
+
+    # def from_json(self, json_dict: dict):
+    #     self.static = Static(**json_dict["static"])
 
     def value_from_hierarchy(self, attrs: tuple[str, ...]):
         obj = self
@@ -74,6 +119,13 @@ class Clip(CompatibleBaseModel):
                 obj = getattr(obj, attr)
         setattr(obj, name, value)
 
+    # TODO write up why we have to make this a function outside the class definition
+    # @classmethod
+    # def make_documentation(cls) -> tuple[dict[str, Any], ...]:
+
+
+    # for each property as we recurse from the clip model
+    #   get the a
     # TODO: introspect all of these, or at least the static ones
 
     @property
@@ -680,3 +732,17 @@ class Clip(CompatibleBaseModel):
         self.set_through_hierarchy(
             None,
             'global_transforms', value)
+
+def documentation_from_summary():
+    pass
+
+def make_documentation():
+    summary: ParameterSummary = dict()  # clip property name is key
+    model_field_summary(Clip, None, summary)
+
+    traverse_model_fields(Clip, doc)
+
+
+if __name__ == '__main__':
+    # print(json.dumps(Clip.make_json_schema(), indent=2))
+    make_documentation()

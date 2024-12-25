@@ -13,7 +13,7 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from camdkit.lens_types import Distortion
+from camdkit.lens_types import StaticLens, Distortion
 
 class LensTypesTestCases(unittest.TestCase):
 
@@ -71,6 +71,10 @@ class LensTypesTestCases(unittest.TestCase):
         }
         schema_from_model: dict[str, Any] = Distortion.make_json_schema()
         self.assertDictEqual(expected_schema, schema_from_model)
+
+    def test_static_lens_schema(self):
+        sl = StaticLens.make_json_schema()
+        print(json.dumps(sl, indent=4))
 
 
 if __name__ == '__main__':

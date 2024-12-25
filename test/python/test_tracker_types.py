@@ -91,6 +91,11 @@ class TrackerTestCases(unittest.TestCase):
         valid_two_notes: tuple[NonBlankUTF8String, ...] = ('foo', 'bar')
         t.notes = valid_two_notes
         self.assertEqual(valid_two_notes, t.notes)
+        overlong_note: str = "x" * 1024
+        invalid_overlong_notes: tuple[NonBlankUTF8String, ...] = (overlong_note,
+                                                                  overlong_note)
+        with self.assertRaises(ValidationError):
+            t.notes = invalid_overlong_notes
 
     def test_tracker_recording(self):
         t = Tracker()
@@ -131,6 +136,11 @@ class TrackerTestCases(unittest.TestCase):
         valid_two_slate: tuple[NonBlankUTF8String, ...] = ('foo', 'bar')
         t.slate = valid_two_slate
         self.assertEqual(valid_two_slate, t.slate)
+        overlong_slate: str = "x" * 1024
+        invalid_overlong_slates: tuple[NonBlankUTF8String, ...] = (overlong_slate,
+                                                                  overlong_slate)
+        with self.assertRaises(ValidationError):
+            t.slates = invalid_overlong_slates
 
     def test_tracker_status(self):
         t = Tracker()
@@ -151,6 +161,11 @@ class TrackerTestCases(unittest.TestCase):
         valid_two_status: tuple[NonBlankUTF8String, ...] = ('foo', 'bar')
         t.status = valid_two_status
         self.assertEqual(valid_two_status, t.status)
+        overlong_status: str = "x" * 1024
+        invalid_overlong_statuses: tuple[NonBlankUTF8String, ...] = (overlong_status,
+                                                                     overlong_status)
+        with self.assertRaises(ValidationError):
+            t.statuss = invalid_overlong_statuses
 
         
 if __name__ == '__main__':

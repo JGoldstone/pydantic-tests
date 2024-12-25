@@ -252,3 +252,119 @@ character streams either but
 
 ### all of the __all__ lists need to be reviewed
 
+### Note that every CompatibleBaseModel must support default construction
+(i.e. without any args supplied to __init__()) or introspection will fail 
+
+If we had to let go of type aliases, how many of them are there?
+NonBlankUTF8String
+UUIDURN
+SingleDigitInt
+NonNegative8BitInt
+NonNegativeInt
+NonNegative48BitInt
+StrictlyPositiveInt
+NonNegativeFloat
+StrictlyPositiveFloat
+NonNegativeFloat
+StrictlyPositiveFloat
+NormalizedFloat
+UnityOrGreaterFloat
+
+### suggestion: can we get rename the unit "meter / degree"
+As it is, it looks like some sort of angular velocity thing, a mixed
+metric + imperial and distance + angle unit.
+
+More radically allow units to be a list, but that really feels wrong.
+
+Or require that the units of something be a simple string representing
+an SI base or derived unit or an imperial counterpart thereof.
+
+## work for a post-merge second pass:
+
+# resolve the serialization alias vs. `__init__` Pydantic issue
+Certain fields have "python names" that are capitalCase, because of a bad interaction between the `__init__`
+methods required to support classic `camdkit` creation of parameters solely by position, when the underlying
+`BaseModel` class really wants them to be created with keywords. If you try and get around this with
+```python
+from camdkit.compatibility import CompatibleBaseModel
+
+
+class ImplementationOnlyModel(CompatibleBaseModel):
+    solid: str | None = None
+    not_solid: str | None = None
+
+    def __init__(self, solid: str, not_solid: str):
+        super(ImplementationOnlyModel, self).__init__(solid=solid, not_solid=not_solid)
+```
+that works great, but if it's part of the API, that is, it's modeling a parameter, then
+that "not_solid" has to be serialized into JSON as capitalCase "notSolid". But if you try
+```python
+from typing import Annotated
+from pydantic import Field
+from camdkit.compatibility import CompatibleBaseModel
+
+
+class APILevelModel(CompatibleBaseModel):
+  solid: str
+  not_solid: Annotated[str | None, Field(alias="notSolid")
+
+  def __init__(self, solid: str, not_solid: str):
+    super(APILevelModel, self).__init__(solid=solid, not_solid=not_solid)
+```
+this will fail (how?). The workaround is unpleasant as it is a user-visible PEP8-failing wart on the API.
+This is that workaround:
+```python
+from typing import Annotated
+from pydantic import Field
+from camdkit.compatibility import CompatibleBaseModel
+
+
+class APILevelModel(CompatibleBaseModel):
+  solid: str
+  notSolid: Annotated[str | None, Field(alias="notSolid")] = None
+
+  def __init__(self, solid: str, notSolid: str):
+    super(APILevelModel, self).__init__(solid=solid, notSolid=notSolid)
+```
+It is possible that the use of `Field` (and thus `Annotated`) is redundant, given that the field's
+true name is now capitalCase `notSolid`.
+
+Anyway, the next step is to dive deeper into Pydantic and ask the community for help. Alternatively,
+awkwardly, we require all API users of models with snake_case fields to create those models with
+keywords, by not writing any `__init__` for that model class. That's not an option for the initial
+PR, though, because backwards compatibility is to be achieved if at all possible, and ... here, it's
+definitely possible. Ugly, but possible.
+
+# semi-automatically generate the constraints string.
+As a stopgap, to keep the field definitions in `clip.py` and `_foo__types.py` from getting unreasonably bloated,
+and to avoid the risk that the Pydantic docstring extractor could get confused (probably not but I'm not in the
+mood to push things), the really generic constraints are all isolated over in `compatibility.py` and are
+imported one by one into the various `_foo__types.py` modules.
+
+And the ones that are very parameter-specific are in the json_schema_extra data, making field definitions
+even uglier. Easy to see how they work, but wow, ugly. Hopefully not confusing Pydantic in its docstring
+extraction.
+
+But as it stands, there's a tiny bit of inconsistency in the wording and the punctuation across
+compatibility descriptions.
+
+Note that at the moment, the constraints for the REGULAR items are incorrect, except for Distortion and Undistortion.
+Only those two REGULAR parameters refer to a list of things.
+The generation would have to be recursive and could have levels of verbosity:
+- "The parameter must be a string with more than zero and fewer than 1024 characters"
+- "The parameter must be a tuple of valid Timecode instances"
+- "The parameter must be a valid PhysicalDimensions instance"
+- ""The parameter must be a PhysicalDimensions instance with
+  width greater than 0, and
+  height greater than 0
+  """
+And of course it would get really, really deep for Synchronization.
+
+# fix the constraints for regular types
+
+Many of these (_cf._ `tracker_notes`) only describe the contained type `Foo` and don't mention the `tuple[_Foo_]`
+container. Of course the real way to fix this is, as discussed above, to automatically generate the constraints.
+
+# fix various typos
+
+In the validation message for strings parameters there's a missing "n" at the end of "betwee"

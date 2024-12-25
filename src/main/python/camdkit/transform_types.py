@@ -8,8 +8,6 @@
 
 from typing import Optional
 
-from pydantic import Field
-
 from camdkit.compatibility import CompatibleBaseModel
 from camdkit.string_types import UUIDURN
 

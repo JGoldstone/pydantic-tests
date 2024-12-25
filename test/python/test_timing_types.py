@@ -288,8 +288,8 @@ class TimingTestCases(unittest.TestCase):
         }
         actual_schema = Timecode.make_json_schema()
         # TODO figure out how to normalize classic docstring massaging to match Pydantic output"
-        del expected_schema["description"]
-        del actual_schema["description"]
+        expected_schema.pop("description", None)
+        actual_schema.pop("description", None)
         self.assertEqual(expected_schema, actual_schema)
 
     def test_timestamp(self):

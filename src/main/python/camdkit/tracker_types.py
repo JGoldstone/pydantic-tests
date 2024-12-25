@@ -11,14 +11,33 @@ from typing import Annotated
 from pydantic import Field
 
 from camdkit.string_types import NonBlankUTF8String
-from camdkit.compatibility import CompatibleBaseModel
+from camdkit.compatibility import (CompatibleBaseModel,
+                                   BOOLEAN,
+                                   NONBLANK_UTF8_MAX_1023_CHARS)
 
 
 class StaticTracker(CompatibleBaseModel):
-    make: NonBlankUTF8String | None = None
-    model: NonBlankUTF8String | None = None
-    serial_number: Annotated[NonBlankUTF8String | None, Field(alias="serialNumber")] = None
-    firmware: Annotated[NonBlankUTF8String | None, Field(alias="firmwareVersion")] = None
+    make: Annotated[NonBlankUTF8String | None,
+      Field(json_schema_extra={"clip_property": "tracker_make",
+                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
+    """Non-blank string naming tracking device manufacturer"""
+
+    model: Annotated[NonBlankUTF8String | None,
+      Field(json_schema_extra={"clip_property": "tracker_model",
+                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
+    """Non-blank string identifying tracking device model"""
+
+    serial_number: Annotated[NonBlankUTF8String | None,
+      Field(alias="serialNumber",
+            json_schema_extra={"clip_property": "tracker_serial_number",
+                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
+    """Non-blank string uniquely identifying the tracking device"""
+
+    firmware: Annotated[NonBlankUTF8String | None,
+      Field(alias="firmwareVersion",
+            json_schema_extra={"clip_property": "tracker_firmware",
+                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
+    """Non-blank string identifying tracking device firmware version"""
 
     # def __init__(self, make: NonBlankUTF8String | None,
     #              modelName: NonBlankUTF8String | None,
@@ -31,10 +50,25 @@ class StaticTracker(CompatibleBaseModel):
 
 
 class Tracker(CompatibleBaseModel):
-    notes: tuple[NonBlankUTF8String, ...] | None = None
-    recording: tuple[bool, ...] | None = None
-    slate: tuple[NonBlankUTF8String, ...] | None = None
-    status: tuple[NonBlankUTF8String, ...] | None = None
+    notes: Annotated[tuple[NonBlankUTF8String, ...] | None,
+      Field(json_schema_extra={"clip_property": "tracker_firmware",
+                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] | None = None
+    """Non-blank string containing notes about tracking system"""
+
+    recording: Annotated[tuple[bool, ...] | None,
+    Field(json_schema_extra={"clip_property": "tracker_recording",
+                             "constraints": BOOLEAN})] | None = None
+    """Boolean indicating whether tracking system is recording data"""
+
+    slate: Annotated[tuple[NonBlankUTF8String, ...] | None,
+    Field(json_schema_extra={"clip_property": "tracker_slate",
+                             "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
+    """Non-blank string describing the recording slate"""
+
+    status: Annotated[tuple[NonBlankUTF8String, ...] | None,
+    Field(json_schema_extra={"clip_property": "tracker_status",
+                             "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
+    """Non-blank string describing status of tracking system"""
 
 
 class GlobalPosition(CompatibleBaseModel):

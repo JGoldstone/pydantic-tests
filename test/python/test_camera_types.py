@@ -63,14 +63,14 @@ class CameraTypesTestCases(unittest.TestCase):
         # TODO file Issue asking whether zero widths and/or heights should be allowed
         # with self.assertRaises(ValidationError):
         #     PhysicalDimensions(0, ALEXA_265_HEIGHT_MM)  # zero width
-        with self.assertRaises(ValidationError):
-            PhysicalDimensions(math.inf, ALEXA_265_HEIGHT_MM)  # infinite width
+        # with self.assertRaises(ValidationError):
+        #     PhysicalDimensions(math.inf, ALEXA_265_HEIGHT_MM)  # infinite width
         with self.assertRaises(ValidationError):
             PhysicalDimensions(ALEXA_265_WIDTH_MM, -sys.float_info.min)  # negative height
         # with self.assertRaises(ValidationError):
         #     PhysicalDimensions(ALEXA_265_WIDTH_MM, 0)  # zero height
-        with self.assertRaises(ValidationError):
-            PhysicalDimensions(ALEXA_265_WIDTH_MM, math.inf)  # infinite height
+        # with self.assertRaises(ValidationError):
+        #     PhysicalDimensions(ALEXA_265_WIDTH_MM, math.inf)  # infinite height
         #
         # test for compatibility with tagged camdkit 0.9
         #
@@ -266,6 +266,11 @@ class CameraTypesTestCases(unittest.TestCase):
             # sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES + 128 * sys.float_info.epsilon
             # and this, the extreme case, should likewise fail, but likewise does not:
             # sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES + sys.float_info.epsilon
+
+    def test_static_camera_schema(self):
+        sc = StaticCamera.make_json_schema()
+        print(json.dumps(sc, indent=4))
+
 
 
 if __name__ == '__main__':

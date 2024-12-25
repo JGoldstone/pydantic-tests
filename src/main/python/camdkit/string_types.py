@@ -6,14 +6,18 @@
 
 """Types for modeling constrained strings"""
 
-from typing import Annotated
+from typing import Final, Annotated
 
-from pydantic import Field, StringConstraints
+from pydantic import Field
 
-__all__ = ['NonBlankUTF8String', 'UUIDURN']
+__all__ = [
+  'NonBlankUTF8String',
+  'UUIDURN'
+]
 
-type NonBlankUTF8String = Annotated[str, StringConstraints(min_length=1, max_length=1023)]
+MAX_STR_LENGTH: Final[int] = 1023
+type NonBlankUTF8String = Annotated[str, Field(min_length=1, max_length=MAX_STR_LENGTH)]
 
-UUID_URN_PATTERN = r'^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+UUID_URN_PATTERN: Final[str] = r'^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
 
 type UUIDURN = Annotated[str, Field(pattern=UUID_URN_PATTERN)]
