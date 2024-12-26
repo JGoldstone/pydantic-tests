@@ -152,6 +152,15 @@ Here is a list of such:
 
 ## Remaining issues
 
+### In schema generation move the 'description' property for tuple[Foo, ...] to Foo
+In the cut-out from the complete generated classic schema that corresponds to Synchronization,
+the description is included. But in the currently-generated schema, the description is at the
+level of the `tuple` that contains Synchronization.
+
+We should move the description, if it is at a level where (1) there are only two siblings and
+they are named 'anyOf' and 'default', (2) the value of 'default' is None, (3) the type of 'anyOf'
+is `list`, (4) the value of the `anyOf` list is 'array' and ''
+
 ### creating sequences (perhaps multilevel) from JSON dicts
 In classic `camdkit` for anything more complex than POD, the separation between a Parameter and
 underlying dataclass allowed one to say (from `test_lens_distortion_to_dict()`)
@@ -281,7 +290,10 @@ an SI base or derived unit or an imperial counterpart thereof.
 
 ## work for a post-merge second pass:
 
-# resolve the serialization alias vs. `__init__` Pydantic issue
+### resolve the serialization alias vs. `__init__` Pydantic issue
+
+# ??? Could this be as simple as changing the mode argument on dump_mode from validation to serialize? ???
+
 Certain fields have "python names" that are capitalCase, because of a bad interaction between the `__init__`
 methods required to support classic `camdkit` creation of parameters solely by position, when the underlying
 `BaseModel` class really wants them to be created with keywords. If you try and get around this with
@@ -335,7 +347,7 @@ keywords, by not writing any `__init__` for that model class. That's not an opti
 PR, though, because backwards compatibility is to be achieved if at all possible, and ... here, it's
 definitely possible. Ugly, but possible.
 
-# semi-automatically generate the constraints string.
+### semi-automatically generate the constraints string.
 As a stopgap, to keep the field definitions in `clip.py` and `_foo__types.py` from getting unreasonably bloated,
 and to avoid the risk that the Pydantic docstring extractor could get confused (probably not but I'm not in the
 mood to push things), the really generic constraints are all isolated over in `compatibility.py` and are
@@ -360,11 +372,11 @@ The generation would have to be recursive and could have levels of verbosity:
   """
 And of course it would get really, really deep for Synchronization.
 
-# fix the constraints for regular types
+### fix the constraints for regular types
 
 Many of these (_cf._ `tracker_notes`) only describe the contained type `Foo` and don't mention the `tuple[_Foo_]`
 container. Of course the real way to fix this is, as discussed above, to automatically generate the constraints.
 
-# fix various typos
+### fix various typos
 
 In the validation message for strings parameters there's a missing "n" at the end of "betwee"

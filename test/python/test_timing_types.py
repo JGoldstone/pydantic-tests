@@ -12,6 +12,7 @@ import unittest
 from pydantic import ValidationError
 from rfc3339_validator import validate_rfc3339
 
+from camdkit.compatibility import CompatibleBaseModel, move_definitions_inside_arrays
 from camdkit.numeric_types import (MAX_INT_8, MAX_UINT_32, MAX_UINT_48,
                                    Rational, StrictlyPositiveRational)
 from camdkit.timing_types import (TimecodeFormat,
@@ -20,7 +21,168 @@ from camdkit.timing_types import (TimecodeFormat,
                                   SynchronizationSource,
                                   SynchronizationOffsets,
                                   SynchronizationPTP,
-                                  Synchronization)
+                                  Synchronization,
+                                  Timing)
+
+EXPECTED_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "description": "Object describing how the tracking device is synchronized for this\nsample.\n\nfrequency: The frequency of a synchronization signal.This may differ from\nthe sample frame rate for example in a genlocked tracking device. This is\nnot required if the synchronization source is PTP or NTP.\nlocked: Is the tracking device locked to the synchronization source\noffsets: Offsets in seconds between sync and sample. Critical for e.g.\nframe remapping, or when using different data sources for\nposition/rotation and lens encoding\npresent: Is the synchronization source present (a synchronization\nsource can be present but not locked if frame rates differ for\nexample)\nptp: If the synchronization source is a PTP master, then this object\ncontains:\n- \"master\": The MAC address of the PTP master\n- \"offset\": The timing offset in seconds from the sample timestamp to\nthe PTP timestamp\n- \"domain\": The PTP domain number\nsource: The source of synchronization must be defined as one of the\nfollowing:\n- \"genlock\": The tracking device has an external black/burst or\ntri-level analog sync signal that is triggering the capture of\ntracking samples\n- \"videoIn\": The tracking device has an external video signal that is\ntriggering the capture of tracking samples\n- \"ptp\": The tracking device is locked to a PTP master\n- \"ntp\": The tracking device is locked to an NTP server\n",
+    "properties": {
+        "frequency": {
+            "anyOf": [
+                {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "required": [
+                        "num",
+                        "denom"
+                    ],
+                    "properties": {
+                        "num": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                        },
+                        "denom": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 4294967295
+                        }
+                    }
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": None
+        },
+        "locked": {
+            "type": "boolean"
+        },
+        "offsets": {
+            "anyOf": [
+                {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "translation": {
+                            "anyOf": [
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "default": None
+                        },
+                        "rotation": {
+                            "anyOf": [
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "default": None
+                        },
+                        "lensEncoders": {
+                            "anyOf": [
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "default": None
+                        }
+                    }
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": None
+        },
+        "present": {
+            "anyOf": [
+                {
+                    "type": "boolean"
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": None
+        },
+        "ptp": {
+            "anyOf": [
+                {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "master": {
+                            "anyOf": [
+                                {
+                                    "type": "string",
+                                    "pattern": "(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "default": None
+                        },
+                        "offset": {
+                            "anyOf": [
+                                {
+                                    "type": "number"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "default": None
+                        },
+                        "domain": {
+                            "anyOf": [
+                                {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 127
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "default": None
+                        }
+                    }
+                },
+                {
+                    "type": "null"
+                }
+            ],
+            "default": None
+        },
+        "source": {
+            "type": "string",
+            "enum": [
+                "genlock",
+                "videoIn",
+                "ptp",
+                "ntp"
+            ]
+        }
+    },
+    "required": [
+        "locked",
+        "source"
+    ]
+}
 
 
 class TimingTestCases(unittest.TestCase):
@@ -631,167 +793,14 @@ class TimingTestCases(unittest.TestCase):
         sync_from_json = Synchronization.from_json(sync_as_json)
         self.assertEqual(valid_sync, sync_from_json)
 
-        expected_schema = {
-            "type": "object",
-            "additionalProperties":False,
-            "description": "Object describing how the tracking device is synchronized for this\nsample.\n\nfrequency: The frequency of a synchronization signal.This may differ from\nthe sample frame rate for example in a genlocked tracking device. This is\nnot required if the synchronization source is PTP or NTP.\nlocked: Is the tracking device locked to the synchronization source\noffsets: Offsets in seconds between sync and sample. Critical for e.g.\nframe remapping, or when using different data sources for\nposition/rotation and lens encoding\npresent: Is the synchronization source present (a synchronization\nsource can be present but not locked if frame rates differ for\nexample)\nptp: If the synchronization source is a PTP master, then this object\ncontains:\n- \"master\": The MAC address of the PTP master\n- \"offset\": The timing offset in seconds from the sample timestamp to\nthe PTP timestamp\n- \"domain\": The PTP domain number\nsource: The source of synchronization must be defined as one of the\nfollowing:\n- \"genlock\": The tracking device has an external black/burst or\ntri-level analog sync signal that is triggering the capture of\ntracking samples\n- \"videoIn\": The tracking device has an external video signal that is\ntriggering the capture of tracking samples\n- \"ptp\": The tracking device is locked to a PTP master\n- \"ntp\": The tracking device is locked to an NTP server\n",
-            "properties": {
-                "frequency": {
-                    "anyOf": [
-                        {
-                            "type": "object",
-                            "additionalProperties":False,
-                            "required": [
-                                "num",
-                                "denom"
-                            ],
-                            "properties": {
-                                "num": {
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "maximum": 2147483647
-                                },
-                                "denom": {
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "maximum": 4294967295
-                                }
-                            }
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default":None
-                },
-                "locked": {
-                    "type": "boolean"
-                },
-                "offsets": {
-                    "anyOf": [
-                        {
-                            "type": "object",
-                            "additionalProperties":False,
-                            "properties": {
-                                "translation": {
-                                    "anyOf": [
-                                        {
-                                            "type": "number"
-                                        },
-                                        {
-                                            "type": "null"
-                                        }
-                                    ],
-                                    "default":None
-                                },
-                                "rotation": {
-                                    "anyOf": [
-                                        {
-                                            "type": "number"
-                                        },
-                                        {
-                                            "type": "null"
-                                        }
-                                    ],
-                                    "default":None
-                                },
-                                "lensEncoders": {
-                                    "anyOf": [
-                                        {
-                                            "type": "number"
-                                        },
-                                        {
-                                            "type": "null"
-                                        }
-                                    ],
-                                    "default":None
-                                }
-                            }
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default":None
-                },
-                "present": {
-                    "anyOf": [
-                        {
-                            "type": "boolean"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default":None
-                },
-                "ptp": {
-                    "anyOf": [
-                        {
-                            "type": "object",
-                            "additionalProperties":False,
-                            "properties": {
-                                "master": {
-                                    "anyOf": [
-                                        {
-                                            "type": "string",
-                                            "pattern": "(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
-                                        },
-                                        {
-                                            "type": "null"
-                                        }
-                                    ],
-                                    "default":None
-                                },
-                                "offset": {
-                                    "anyOf": [
-                                        {
-                                            "type": "number"
-                                        },
-                                        {
-                                            "type": "null"
-                                        }
-                                    ],
-                                    "default":None
-                                },
-                                "domain": {
-                                    "anyOf": [
-                                        {
-                                            "type": "integer",
-                                            "minimum": 0,
-                                            "maximum": 127
-                                        },
-                                        {
-                                            "type": "null"
-                                        }
-                                    ],
-                                    "default":None
-                                }
-                            }
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default":None
-                },
-                "source": {
-                    "type": "string",
-                    "enum": [
-                        "genlock",
-                        "videoIn",
-                        "ptp",
-                        "ntp"
-                    ]
-                }
-            },
-            "required": [
-                "locked",
-                "source"
-            ]
-        }
-        actual_schema = Synchronization.make_json_schema()
-        self.assertEqual(expected_schema, actual_schema)
+
+    def test_schemas_match(self):
+        class SynchronizationHarness(CompatibleBaseModel):
+            param: Timing
+
+        actual_schema = SynchronizationHarness.make_json_schema()
+        expected_schema = EXPECTED_SCHEMA
+        self.assertEqual(expected_schema, actual_schema["properties"]["param"])
 
 if __name__ == '__main__':
     unittest.main()

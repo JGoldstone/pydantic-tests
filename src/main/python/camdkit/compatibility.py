@@ -8,7 +8,7 @@
 
 import jsonref
 
-from typing import Final, Any, Self
+from typing import Final, Any, Self, Callable
 
 from pydantic import BaseModel, ValidationError, ConfigDict, json
 from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue
@@ -79,12 +79,20 @@ PARAMETER_CONSTRAINTS = {
     "iso": STRICTLY_POSITIVE_INTEGER,
 
 }
-def scrub_titles(d: dict[str, Any]) -> dict[str, Any]:
+
+# Attributes of parameters that should be culled from any exported schema
+ALWAYS_EXCLUDED = ("title",)
+EXCLUDED_CAMDKIT_INTERNALS = ("clip_property", "constraints")
+
+
+def scrub_excluded(d: dict[str, Any], unwanted: tuple[str, ...]) -> dict[str, Any]:
     for key, value in d.items():
         if isinstance(value, dict):
-            scrub_titles(value)
-    if 'title' in d:
-        d.pop('title')
+            scrub_excluded(value, unwanted)
+    for key in unwanted:
+        d.pop(key, None)
+    # if 'title' in d:
+    #     d.pop('title')
     return d
 
 def append_newlines_to_descriptions(d: dict[str, Any]) -> dict[str, Any]:
@@ -96,20 +104,121 @@ def append_newlines_to_descriptions(d: dict[str, Any]) -> dict[str, Any]:
             d["description"] = d["description"] + "\n"
     return d
 
-class SortlessSchemaGenerator(GenerateJsonSchema):
+def copy_description_property_down(prop_name, prop_schema) -> dict[str, Any]:
+    result: dict[str, Any] = {'copied': False}
+    levels_transited: list[str] = list()
+    if "description" in prop_schema:
+        # print(f"attempting to move 'description' downwards from {prop_name}")
+        target_schema = prop_schema
+        while schema_is_optional(target_schema) or schema_is_array(target_schema):
+            if schema_is_optional(target_schema):
+                target_schema = target_schema['anyOf'][0]
+                levels_transited.append("optional")
+            if schema_is_array(target_schema):
+                target_schema = target_schema['items']
+                levels_transited.append("array")
+        if target_schema is not prop_schema:
+            target_schema['description'] = prop_schema['description']
+            result['copied'] = True
+        # if levels_transited:
+        #     print(f"moved description property through {levels_transited}")
+    return result
+
+def remove_copied_description_property(prop_name,
+                                       prop_schema,
+                                       prior_result: dict[str, Any]) -> None:
+    if "description" in prop_schema and "copied" in prior_result and prior_result["copied"]:
+        # print(f"attempting to delete original description property from '{prop_name}'")
+        del prop_schema["description"]
+
+def schema_is_optional(schema: dict[str, Any]) -> bool:
+    return (type(schema) is dict
+            # and 2 <= len(schema) <= 3
+            and all([name in schema for name in ('anyOf', 'default')])
+            and isinstance(schema['anyOf'], list)
+            and len(schema['anyOf']) == 2
+            and isinstance(schema['anyOf'][0], dict)
+            and 'type' in schema['anyOf'][0]
+            and schema['anyOf'][0]['type'] in ('object', 'array', 'string',
+                                                   'number', 'boolean', 'integer'))
+
+def optional_parameter_schema(pop_schema: dict[str, Any]):
+    return pop_schema['anyOf'][0] if schema_is_optional(pop_schema) else None
+
+def schema_is_array(schema: dict[str, Any]) -> bool:
+    return (type(schema) is dict
+            and all([name in schema for name in ('type', 'items')])
+            and schema['type'] == 'array')
+
+def array_parameter_schema(pap_schema: dict[str, Any]) -> dict[str, Any] | None:
+    return pap_schema['items'] if schema_is_array(pap_schema) else None
+
+def walk_schema(parent_name: str | None,
+                schema: dict[str, Any],
+                indent: int = 0,
+                opt_param_pre_walk_fn: Callable = lambda *args: None,
+                opt_param_post_walk_fn: Callable = lambda *args: None,
+                array_param_pre_walk_fn: Callable = lambda *args: None,
+                array_param_post_walk_fn: Callable = lambda *args: None) -> None:
+    if isinstance(schema, dict) and "type" in schema and schema["type"] == "object":
+        if "properties" in schema and type(schema["properties"]) is dict:
+            for prop_name, prop_value in schema["properties"].items():
+                # optional parameters interpose a layer of indirection we want to jump over
+                # be careful to not modify schema["properties"] while we are iterating over it
+                if opt_param_schema := optional_parameter_schema(prop_value):
+                    pre_opt_walk_result: dict[str, Any] = opt_param_pre_walk_fn(prop_name, prop_value)
+                    walk_schema(prop_name,
+                                opt_param_schema,
+                                indent = indent + 2,
+                                opt_param_pre_walk_fn=opt_param_pre_walk_fn,
+                                opt_param_post_walk_fn=opt_param_post_walk_fn,
+                                array_param_pre_walk_fn=array_param_pre_walk_fn,
+                                array_param_post_walk_fn=array_param_post_walk_fn)
+                    opt_param_post_walk_fn(prop_name, prop_value, pre_opt_walk_result)
+                if array_param_schema := array_parameter_schema(prop_value):
+                    pre_array_walk_result = array_param_pre_walk_fn(prop_name, array_param_schema)
+                    walk_schema(prop_name,
+                                opt_param_schema,
+                                indent=indent + 2,
+                                opt_param_pre_walk_fn=opt_param_pre_walk_fn,
+                                opt_param_post_walk_fn=opt_param_post_walk_fn,
+                                array_param_pre_walk_fn=array_param_pre_walk_fn,
+                                array_param_post_walk_fn=array_param_post_walk_fn)
+                    array_param_post_walk_fn(prop_name, array_param_schema, pre_array_walk_result)
+
+def move_definitions_inside_arrays(schema: dict[str, Any]) -> None:
+    walk_schema(parent_name=None, schema=schema, indent=0,
+                opt_param_pre_walk_fn=copy_description_property_down,
+                opt_param_post_walk_fn=remove_copied_description_property,
+                array_param_pre_walk_fn=copy_description_property_down,
+                array_param_post_walk_fn=remove_copied_description_property)
+
+
+class CompatibleSchemaGenerator(GenerateJsonSchema):
+
+    def sort(
+            self, value: JsonSchemaValue, parent_key: str | None = None
+    ) -> JsonSchemaValue:
+        """No-op, we don't want to sort schema values at all."""
+        return value
+
+    def cleanup(self, schema: dict[str, Any]) -> None:
+        pass
 
     def generate(self, schema, mode='validation'):
         json_schema = super().generate(schema, mode=mode)
         json_schema = jsonref.replace_refs(json_schema, proxies=False)
-        scrub_titles(json_schema)
+        self.cleanup(json_schema)
         append_newlines_to_descriptions(json_schema)
         return json_schema
 
-    def sort(
-        self, value: JsonSchemaValue, parent_key: str | None = None
-    ) -> JsonSchemaValue:
-        """No-op, we don't want to sort schema values at all."""
-        return value
+class InternalCompatibleSchemaGenerator(CompatibleSchemaGenerator):
+    def cleanup(self, schema: dict[str, Any]) -> None:
+        scrub_excluded(schema, ALWAYS_EXCLUDED)
+
+class ExternalCompatibleSchemaGenerator(CompatibleSchemaGenerator):
+    def cleanup(self, schema: dict[str, Any]) -> None:
+        scrub_excluded(schema, ALWAYS_EXCLUDED + EXCLUDED_CAMDKIT_INTERNALS)
 
 def compatibility_cleanups(schema: dict[str, Any]) -> None:
     if 'description' in schema:
@@ -133,15 +242,6 @@ class CompatibleBaseModel(BaseModel):
         except ValidationError:
             return False
 
-    # @staticmethod
-    # def to_json(value: Any) -> json:
-    #     return value.model_dump(by_alias=True,
-    #                             exclude_none=True,
-    #                             exclude={"canonical_name",
-    #                                      "sampling",
-    #                                      "units",
-    #                                      "section"})
-
     @classmethod
     def to_json(cls, model_or_tuple: Self | tuple):
         def inner(one_or_many: Self | tuple):
@@ -159,10 +259,6 @@ class CompatibleBaseModel(BaseModel):
             raise ValueError(f"unhandled object handed to {cls.__name__}.to_json()")
         return inner(model_or_tuple)
 
-    # @classmethod
-    # def from_json(cls, json_data: json) -> Any:
-    #     return cls.model_validate(json_data)
-
     @classmethod
     def from_json(cls, json_or_tuple: dict[str, Any] | tuple[Any, ...]) -> Any:
         """Return a validated object from a JSON dict, or tuple of validated objects
@@ -179,17 +275,14 @@ class CompatibleBaseModel(BaseModel):
                                  f" {cls.__name__}.from_json()")
         return inner(json_or_tuple)
 
-    # @classmethod
-    # def make_json_schema(cls) -> json:
-    #     with_refs = cls.model_json_schema(schema_generator=SortlessSchemaGenerator)
-    #     without_refs = jsonref.replace_refs(with_refs, proxies=False)
-    #     if "$defs" in without_refs:
-    #         del without_refs["$defs"]
-    #     return without_refs
-
     @classmethod
-    def make_json_schema(cls) -> json:
-        schema = cls.model_json_schema(schema_generator=SortlessSchemaGenerator)
-        if "$defs" in schema:
-            del schema["$defs"]
+    def make_json_schema(cls, exclude_camdkit_internals: bool = True) -> json:
+        # generator = (ExternalCompatibleSchemaGenerator
+        #              if exclude_camdkit_internals
+        #              else InternalCompatibleSchemaGenerator)
+        schema = cls.model_json_schema(schema_generator=(ExternalCompatibleSchemaGenerator
+                                                         if exclude_camdkit_internals
+                                                         else InternalCompatibleSchemaGenerator))
+        move_definitions_inside_arrays(schema)
+        schema.pop("$defs", None)
         return schema

@@ -18,6 +18,7 @@ from camdkit.compatibility import (CompatibleBaseModel,
                                    STRICTLY_POSITIVE_RATIONAL,
                                    STRICTLY_POSITIVE_INTEGER,)
 from camdkit.numeric_types import (MAX_INT_32,
+                                   StrictlyPositiveInt,
                                    StrictlyPositiveRational,
                                    rationalize_strictly_and_positively)
 from camdkit.units import MILLIMETER, PIXEL
@@ -47,7 +48,7 @@ class SenselDimensions(CompatibleBaseModel):
         super(SenselDimensions, self).__init__(width=width, height=height)
 
 
-# type ShutterAngle = Annotated[float, Field(ge=0.0, le=360.0, strict=True)]
+type ShutterAngle = Annotated[float, Field(ge=0.0, le=360.0, strict=True)]
 
 
 class StaticCamera(CompatibleBaseModel):
@@ -115,8 +116,8 @@ class StaticCamera(CompatibleBaseModel):
     area due to a lens' intrinsic analog nature.
     """
 
-    iso: Annotated[int | None,
-      Field(gt=0, strict=True, alias="isoSpeed",
+    iso: Annotated[StrictlyPositiveInt | None,
+      Field(alias="isoSpeed",
             json_schema_extra={"clip_property": "iso",
                                "constraints": STRICTLY_POSITIVE_INTEGER})] = None
     """Arithmetic ISO scale as defined in ISO 12232"""
@@ -131,8 +132,8 @@ class StaticCamera(CompatibleBaseModel):
     """URN identifying the ASC Framing Decision List used by the camera.
     """
 
-    shutter_angle: Annotated[float | None,
-    Field(ge=0.0, le=360.0, alias="shutterAngle",
+    shutter_angle: Annotated[ShutterAngle | None,
+    Field(alias="shutterAngle",
           json_schema_extra={"clip_property": "shutter_angle",
                              "constraints": "The parameter shall be a real number in the range (0..360]."})] = None
     """Shutter speed as a fraction of the capture frame rate. The shutter

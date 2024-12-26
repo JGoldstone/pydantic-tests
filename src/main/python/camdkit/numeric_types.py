@@ -6,12 +6,9 @@
 
 """Constrained versions of built-in numeric types"""
 
-import sys
 import numbers
-from fractions import Fraction
 from typing import Any, Final, Annotated
-from annotated_types import Predicate
-from pydantic import Field, StringConstraints
+from pydantic import Field
 
 from camdkit.compatibility import CompatibleBaseModel
 
@@ -80,15 +77,3 @@ def rationalize_strictly_and_positively(x: Any) -> StrictlyPositiveRational:
                 return StrictlyPositiveRational(int(x["num"]), int(x["denom"]))
             raise ValueError(f"could not convert input of type {type(x)} to a StrictlyPositiveRational")
     return x
-
-# looked promising at first, and might work in clever IDE, but Pydantic can't serialize the type
-# constraint when generating JSON schema -- not to mention that JSON's support for Fraction is
-# half-baked: json.dumps() turns a Fraction into a string "n/d", but json.loads() has no provision
-# for turning that "n/d" into "Fraction(n, d)")
-#
-# StrictlyPositiveRational = Annotated[Fraction, Predicate(lambda f:  0 < f.numerator <= MAX_INT_32
-#                                                                 and 0 < f.denominator <= MAX_UINT_32)]
-
-
-
-

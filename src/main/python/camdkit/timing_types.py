@@ -23,7 +23,7 @@ from camdkit.numeric_types import (rationalize_strictly_and_positively,
 
 # This was in the classic implementation, but Pydantic doesn't currently
 # allow backreferences in regular expressions. Brute force it.
-# PTP_MASTER_PATTERN = "[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$"
+# PTP_MASTER_PATTERN = "[0-9a-opt_param_fn]{2}([-:]?)[0-9a-opt_param_fn]{2}(\\1[0-9a-opt_param_fn]{2}){4}$"
 #
 # highly recommended: regex101.com in Python mode
 PTP_MASTER_PATTERN = r"(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
@@ -192,7 +192,9 @@ elapsed since the start of the epoch.
                                "constraints": NON_NEGATIVE_INTEGER})] = None
     """Integer incrementing with each sample."""
 
-    synchronization: tuple[Synchronization, ...] | None = None
+    synchronization: Annotated[tuple[Synchronization, ...] | None,
+      Field(json_schema_extra={"clip_property": "timing_synchronization",
+                               "constraints": "The parameter shall contain the required valid fields."})] = None
     """Object describing how the tracking device is synchronized for this
     sample.
 

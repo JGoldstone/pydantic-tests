@@ -5,11 +5,13 @@
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
 """Types for modeling clips"""
+import doctest
 from typing import Annotated, Any
 
 from pydantic import Field, field_validator
 
 from camdkit.compatibility import CompatibleBaseModel
+from camdkit.units import SECOND
 from camdkit.numeric_types import (NonNegativeInt,
                                    UnityOrGreaterFloat,
                                    StrictlyPositiveRational,
@@ -24,9 +26,18 @@ from camdkit.timing_types import Timing, TimingMode, Timestamp, Synchronization,
 from camdkit.versioning_types import VersionedProtocol
 from camdkit.transform_types import Transform
 
+__all__ = ['Clip']
 
+CLIP_SCHEMA_PRELUDE = {
+    "$id": "https://opentrackio.org/schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema"
+}
+
+
+# TODO: introspect all of these, or at least the static ones
 class Static(CompatibleBaseModel):
-    duration: StrictlyPositiveRational | None = None
+    duration: Annotated[StrictlyPositiveRational | None,
+      Field(json_schema_extra={'units': SECOND})] = None
     """Duration of the clip"""
 
     camera: StaticCamera | None = None
@@ -97,6 +108,12 @@ class Clip(CompatibleBaseModel):
     of precision.
     """
 
+    @classmethod
+    def make_json_schema(cls, exclude_camdkit_internals: bool = True) -> dict[str, Any]:
+        result = CLIP_SCHEMA_PRELUDE | super(Clip, cls).make_json_schema(exclude_camdkit_internals)
+        return result
+
+
     # def from_json(self, json_dict: dict):
     #     self.static = Static(**json_dict["static"])
 
@@ -118,15 +135,6 @@ class Clip(CompatibleBaseModel):
                     setattr(obj, attr, attr_type())
                 obj = getattr(obj, attr)
         setattr(obj, name, value)
-
-    # TODO write up why we have to make this a function outside the class definition
-    # @classmethod
-    # def make_documentation(cls) -> tuple[dict[str, Any], ...]:
-
-
-    # for each property as we recurse from the clip model
-    #   get the a
-    # TODO: introspect all of these, or at least the static ones
 
     @property
     def duration(self) -> StrictlyPositiveRational | None:
@@ -732,17 +740,3 @@ class Clip(CompatibleBaseModel):
         self.set_through_hierarchy(
             None,
             'global_transforms', value)
-
-def documentation_from_summary():
-    pass
-
-def make_documentation():
-    summary: ParameterSummary = dict()  # clip property name is key
-    model_field_summary(Clip, None, summary)
-
-    traverse_model_fields(Clip, doc)
-
-
-if __name__ == '__main__':
-    # print(json.dumps(Clip.make_json_schema(), indent=2))
-    make_documentation()
