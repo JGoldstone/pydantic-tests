@@ -64,22 +64,6 @@ NON_NEGATIVE_REAL: Final[str] = \
 REAL_AT_LEAST_UNITY: Final[str]= \
     """The parameter shall be a real number >= 1."""
 
-PARAMETER_CONSTRAINTS = {
-    'active_sensor_physical_dimensions': """The height and width shall be each be real non-negative numbers.
-""",
-    'active_sensor_resolution': """The height and width shall be each be an integer in the range
-[0..2,147,483,647].
-""",
-    "camera_make": NONBLANK_UTF8_MAX_1023_CHARS,
-    "camera_model": NONBLANK_UTF8_MAX_1023_CHARS,
-    "camera_serial_number": NONBLANK_UTF8_MAX_1023_CHARS,
-    "camera_firmware_version": NONBLANK_UTF8_MAX_1023_CHARS,
-    "camera_label": NONBLANK_UTF8_MAX_1023_CHARS,
-    "anamorphic_squeeze": STRICTLY_POSITIVE_RATIONAL,
-    "iso": STRICTLY_POSITIVE_INTEGER,
-
-}
-
 # Attributes of parameters that should be culled from any exported schema
 ALWAYS_EXCLUDED = ("title",)
 EXCLUDED_CAMDKIT_INTERNALS = ("clip_property", "constraints")
