@@ -64,7 +64,7 @@ NON_NEGATIVE_REAL: Final[str] = \
 REAL_AT_LEAST_UNITY: Final[str]= \
     """The parameter shall be a real number >= 1."""
 
-# Attributes of parameters that should be culled from any exported schema
+# Attributes of parameters that should be culled from any exported property_schema
 ALWAYS_EXCLUDED = ("title",)
 EXCLUDED_CAMDKIT_INTERNALS = ("clip_property", "constraints")
 
@@ -94,11 +94,11 @@ def copy_description_property_down(prop_name, prop_schema) -> dict[str, Any]:
     if "description" in prop_schema:
         # print(f"attempting to move 'description' downwards from {prop_name}")
         target_schema = prop_schema
-        while schema_is_optional(target_schema) or schema_is_array(target_schema):
-            if schema_is_optional(target_schema):
+        while property_schema_is_optional(target_schema) or property_schema_is_array(target_schema):
+            if property_schema_is_optional(target_schema):
                 target_schema = target_schema['anyOf'][0]
                 levels_transited.append("optional")
-            if schema_is_array(target_schema):
+            if property_schema_is_array(target_schema):
                 target_schema = target_schema['items']
                 levels_transited.append("array")
         if target_schema is not prop_schema:
@@ -115,27 +115,28 @@ def remove_copied_description_property(prop_name,
         # print(f"attempting to delete original description property from '{prop_name}'")
         del prop_schema["description"]
 
-def schema_is_optional(schema: dict[str, Any]) -> bool:
-    return (type(schema) is dict
-            # and 2 <= len(schema) <= 3
-            and all([name in schema for name in ('anyOf', 'default')])
-            and isinstance(schema['anyOf'], list)
-            and len(schema['anyOf']) == 2
-            and isinstance(schema['anyOf'][0], dict)
-            and 'type' in schema['anyOf'][0]
-            and schema['anyOf'][0]['type'] in ('object', 'array', 'string',
+def property_schema_is_optional(property_schema: dict[str, Any]) -> bool:
+    """Detect Pydantic-generated chunk of schema corresponding to an optional property."""
+    return (type(property_schema) is dict
+            # and 2 <= len(property_schema) <= 3
+            and all([name in property_schema for name in ('anyOf', 'default')])
+            and isinstance(property_schema['anyOf'], list)
+            and len(property_schema['anyOf']) == 2
+            and isinstance(property_schema['anyOf'][0], dict)
+            and 'type' in property_schema['anyOf'][0]
+            and property_schema['anyOf'][0]['type'] in ('object', 'array', 'string',
                                                    'number', 'boolean', 'integer'))
 
-def optional_parameter_schema(pop_schema: dict[str, Any]):
-    return pop_schema['anyOf'][0] if schema_is_optional(pop_schema) else None
+def optional_property_schema(pop_schema: dict[str, Any]):
+    return pop_schema['anyOf'][0] if property_schema_is_optional(pop_schema) else None
 
-def schema_is_array(schema: dict[str, Any]) -> bool:
+def property_schema_is_array(schema: dict[str, Any]) -> bool:
     return (type(schema) is dict
             and all([name in schema for name in ('type', 'items')])
             and schema['type'] == 'array')
 
-def array_parameter_schema(pap_schema: dict[str, Any]) -> dict[str, Any] | None:
-    return pap_schema['items'] if schema_is_array(pap_schema) else None
+def array_property_schema(pap_schema: dict[str, Any]) -> dict[str, Any] | None:
+    return pap_schema['items'] if property_schema_is_array(pap_schema) else None
 
 def walk_schema(parent_name: str | None,
                 schema: dict[str, Any],
@@ -149,7 +150,7 @@ def walk_schema(parent_name: str | None,
             for prop_name, prop_value in schema["properties"].items():
                 # optional parameters interpose a layer of indirection we want to jump over
                 # be careful to not modify schema["properties"] while we are iterating over it
-                if opt_param_schema := optional_parameter_schema(prop_value):
+                if opt_param_schema := optional_property_schema(prop_value):
                     pre_opt_walk_result: dict[str, Any] = opt_param_pre_walk_fn(prop_name, prop_value)
                     walk_schema(prop_name,
                                 opt_param_schema,
@@ -159,7 +160,7 @@ def walk_schema(parent_name: str | None,
                                 array_param_pre_walk_fn=array_param_pre_walk_fn,
                                 array_param_post_walk_fn=array_param_post_walk_fn)
                     opt_param_post_walk_fn(prop_name, prop_value, pre_opt_walk_result)
-                if array_param_schema := array_parameter_schema(prop_value):
+                if array_param_schema := array_property_schema(prop_value):
                     pre_array_walk_result = array_param_pre_walk_fn(prop_name, array_param_schema)
                     walk_schema(prop_name,
                                 opt_param_schema,
