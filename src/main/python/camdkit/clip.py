@@ -40,9 +40,9 @@ class Static(CompatibleBaseModel):
       Field(json_schema_extra={'units': SECOND})] = None
     """Duration of the clip"""
 
-    camera: StaticCamera | None = None
-    lens: StaticLens | None = None
-    tracker: StaticTracker | None = None
+    camera: StaticCamera = StaticCamera()
+    lens: StaticLens = StaticLens()
+    tracker: StaticTracker = StaticTracker()
 
     # noinspection PyNestedDecorators
     @field_validator("duration", mode="before")
@@ -51,11 +51,11 @@ class Static(CompatibleBaseModel):
         return rationalize_strictly_and_positively(v)
 
 class Clip(CompatibleBaseModel):
-    static: Static | None = None
+    static: Static = Static()
 
-    tracker: Tracker | None = None
-    timing: Timing | None = None
-    lens: Lens | None = None
+    tracker: Tracker = Tracker()
+    timing: Timing = Timing()
+    lens: Lens = Lens()
 
     # The "global_" prefix is here because, without it, we would have BaseModel attributes
     # with the same name, from the user's POV, as the property
