@@ -267,9 +267,13 @@ class CameraTypesTestCases(unittest.TestCase):
             # and this, the extreme case, should likewise fail, but likewise does not:
             # sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES + sys.float_info.epsilon
 
-    # def test_static_camera_schema(self):
-    #     sc = StaticCamera.make_json_schema()
-    #     print(json.dumps(sc, indent=4))
+    def test_static_camera_schema(self):
+        expected_schema: dict[str, Any] = {}
+        with open("../resources/model/static_camera.json") as f:
+            expected_schema = json.load(f)
+        sc = StaticCamera.make_json_schema()
+        self.assertDictEqual(expected_schema, sc.schema)
+        print(json.dumps(sc, indent=4))
 
 
 
