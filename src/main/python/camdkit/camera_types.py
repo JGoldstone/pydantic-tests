@@ -6,11 +6,9 @@
 
 """Types for camera modeling"""
 
-import math
-
 from typing import Annotated
 
-from pydantic import Field, field_validator, WithJsonSchema
+from pydantic import Field, field_validator
 
 from camdkit.compatibility import (CompatibleBaseModel,
                                    NONBLANK_UTF8_MAX_1023_CHARS,
@@ -30,8 +28,6 @@ from camdkit.string_types import NonBlankUTF8String, UUIDURN
 # work, but for now it's a wish, not something for a to-do list.
 
 
-# TODO raise issue: do we want to put a 'reasonable' upper bound on size? 500mm maybe?
-#   because right now math.inf is a valid size.
 class PhysicalDimensions(CompatibleBaseModel):
     height: Annotated[float, Field(ge=0.0, strict=True)]
     width: Annotated[float, Field(ge=0.0, strict=True)]
@@ -52,9 +48,6 @@ type ShutterAngle = Annotated[float, Field(ge=0.0, le=360.0, strict=True)]
 
 
 class StaticCamera(CompatibleBaseModel):
-    """
-    camera properties that do not change over time
-    """
     capture_frame_rate: Annotated[StrictlyPositiveRational | None, Field(alias="captureFrameRate")] = None
     """Capture frame rate of the camera"""
 
