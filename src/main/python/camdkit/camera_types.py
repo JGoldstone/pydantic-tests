@@ -127,7 +127,8 @@ class StaticCamera(CompatibleBaseModel):
     #         json_schema_extra={"clip_property": "fdl_link",
     #                            "constraints": "foo"})] = None
     fdl_link: Annotated[UUIDURN | None,
-    Field(json_schema_extra={"clip_property": "fdl_link",
+    Field(alias="fdlLink",
+          json_schema_extra={"clip_property": "fdl_link",
                              "constraints": UUID_URN})] = None
     """URN identifying the ASC Framing Decision List used by the camera.
     """
