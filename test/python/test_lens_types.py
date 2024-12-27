@@ -73,7 +73,7 @@ class LensTypesTestCases(unittest.TestCase):
         self.assertDictEqual(expected_schema, schema_from_model)
 
     def test_static_lens_schema(self):
-        with open("/tmp/static_lens.json") as f:
+        with open("../resources/model/static_lens.json") as f:
             expected: dict[str, Any] = json.load(f)
             actual = StaticLens.make_json_schema()
             self.assertDictEqual(expected, actual)

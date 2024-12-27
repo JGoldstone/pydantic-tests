@@ -271,8 +271,8 @@ class CameraTypesTestCases(unittest.TestCase):
         expected_schema: dict[str, Any] = {}
         with open("../resources/model/static_camera.json") as f:
             expected_schema = json.load(f)
-        sc = StaticCamera.make_json_schema()
-        self.assertDictEqual(expected_schema, sc.schema)
+        actual_schema = StaticCamera.make_json_schema()
+        self.assertDictEqual(expected_schema, actual_schema)
         print(json.dumps(sc, indent=4))
 
 

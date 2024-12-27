@@ -2,6 +2,8 @@
 
 The basic responsibilities of a `Parameter` were fourfold:
 ```python
+from typing import Any
+
 class Parameter:
   """Metadata parameter base class"""
 
@@ -10,22 +12,122 @@ class Parameter:
     raise NotImplementedError
 
   @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
+  def to_json(value: Any) -> Any:
     raise NotImplementedError
 
   @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
+  def from_json(value: Any) -> Any:
     raise NotImplementedError
 
   @staticmethod
   def make_json_schema() -> dict:
     raise NotImplementedError
 ```
-## The Big Four, and how are we doing with them?
+
+## Taking these as requirements, one by one:
 ```python
+from typing import Any
+
 @staticmethod
-validate(value: Any) -> bool
+def validate(value: Any) -> bool
+    ...
 ```
+
+```python
+from typing import Any
+
+@staticmethod
+def to_json(value: Any) -> Any:
+    ...
+```
+
+```python
+from typing import Any
+
+@staticmethod
+def make_json_schema() -> dict:
+  ...
+```
+The Pydantic-generated schema matches what classic `camdkit` does; it does not match what
+classic `camdkit`'s generated schema _**says**_ it does, because that generated schema is
+inaccurate. Consider this unit test of `camera_make`:
+
+```python
+import json
+import unittest
+from camdkit.model import *
+
+
+class SchemaAccuracyTestCases(unittest.TestCase):
+  def test_camera_make_non_handling(self):
+    schema = Clip.make_json_schema()
+    static_camera_properties = schema["properties"]["static"]["properties"]["camera"]
+    camera_schema = static_camera_properties  # ["make"]
+    for parameter in ("activeSensorPhysicalDimensions", "activeSensorResolution",
+                      "captureFrameRate", "anamorphicSqueeze",
+                      "label", "model", "serialNumber", "firmwareVersion",
+                      "fdlLink", "isoSpeed", "shutterAngle"):
+      del camera_schema["properties"][parameter]
+    print(f"\nand the (trimmed-down) camera schema is:\n\n{json.dumps(camera_schema, indent=2)}")
+    clip = Clip()
+    self.assertIsNone(clip.camera_make)  # initial value is None, which the schema doesn't allow
+    clip.camera_make = "apple"
+    self.assertEqual("apple", clip.camera_make)  # reads back OK
+    clip.camera_make = None
+    self.assertIsNone(clip.camera_make)  # can be reset to None, which the schema doesn't allow
+    # these are handed correctly
+    for invalid_non_none_value in (0, 1.0, 0 + 2j, ("thomson",), {"vendor": "aaton"}, {"dalsa"}):
+      with self.assertRaises(ValueError):
+        clip.camera_make = invalid_non_none_value
+
+
+if __name__ == '__main__':
+  unittest.main()
+
+```
+and look at its output:
+```python
+/Users/jgoldstone/.local/share/virtualenvs/ris-osvp-metadata-camdkit-v3gml2-u/bin/python /Applications/PyCharm.app/Contents/plugins/python-ce/helpers/pycharm/_jb_unittest_runner.py --path /usr/local/repos/git/jgoldstone/ris-osvp-metadata-camdkit/src/test/python/parser/test_schema_accuracy.py 
+Testing started at 07:23 ...
+Launching unittests with arguments python -m unittest /usr/local/repos/git/jgoldstone/ris-osvp-metadata-camdkit/src/test/python/parser/test_schema_accuracy.py in /usr/local/repos/git/jgoldstone/ris-osvp-metadata-camdkit/src/test/python
+
+
+
+Ran 1 test in 0.001s
+
+OK
+
+and the (trimmed-down) camera schema is:
+
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "make": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1023,
+      "description": "Non-blank string naming camera manufacturer"
+    }
+  }
+}
+
+Process finished with exit code 0
+
+```
+
+According to the schema, it should not be possible to have the `camera_make` parameter of an
+instance of `Clip` be anything other than a string, but:
+- the initial value of the parameter is `None`
+- when the parameter _does_ have a valid string value, one can assign `None` to it
+
+So simply put, the currently generated schema is wrong, and the more complex one that
+Pydantic generates is the one that _accurately_ describes the classic `camdkit` behavior that
+the Pydantic code needs to emulate:
+
+
+...put image here that shows PyCharm _knows_ that None is an acceptable value...
+
 
 Largely this is well implemented. The case from unit testing that it can't handle is this:
 

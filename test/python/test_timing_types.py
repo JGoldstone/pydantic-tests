@@ -12,7 +12,7 @@ import unittest
 from pydantic import ValidationError
 from rfc3339_validator import validate_rfc3339
 
-from camdkit.compatibility import CompatibleBaseModel, move_definitions_inside_arrays
+from camdkit.compatibility import CompatibleBaseModel
 from camdkit.numeric_types import (MAX_INT_8, MAX_UINT_32, MAX_UINT_48,
                                    Rational, StrictlyPositiveRational)
 from camdkit.timing_types import (TimecodeFormat,
