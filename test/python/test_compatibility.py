@@ -234,7 +234,7 @@ class CompatibilityTestCases(unittest.TestCase):
         property_schema: dict[str, Any] = full_schema["properties"]["anamorphicSqueeze"]
         self.assertTrue(property_schema_is_optional(property_schema))
 
-    def test_wrapping_classic_camdkit_properties(self):
+    def test_wrapping_classic_camdkit_property(self):
         with open("../resources/model/static_camera.json", "r") as file:
             classic_schema = json.load(file)
             remove_properties_besides(classic_schema, "anamorphicSqueeze")
@@ -249,6 +249,14 @@ class CompatibilityTestCases(unittest.TestCase):
             pydantic_anam = pydantic_schema["properties"]["anamorphicSqueeze"]
             self.assertDictEqual(pydantic_anam, rewrapped_anam)
             self.assertDictEqual(pydantic_schema, rewrapped_schema)
+
+    def test_wrapping_classic_camdkit_properties(self):
+        with open("../resources/model/static_camera.json", "r") as file:
+            classic_schema = json.load(file)
+            rewrapped_schema = wrap_classic_camdkit_schema_as_optional(classic_schema)
+            pydantic_schema = StaticCamera.make_json_schema()
+            self.assertDictEqual(rewrapped_schema, pydantic_schema)
+
 
     # def test_converting_pydantic_optional_schema_to_classic_schema(self):
     #     full_pydantic_schema: dict[str, Any] = deepcopy(STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE)

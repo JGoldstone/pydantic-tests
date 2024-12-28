@@ -5,6 +5,7 @@
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
 """Provisions for compatibility with OpenTrackIO 0.9 release"""
+from abc import abstractmethod
 
 import jsonref
 
@@ -23,8 +24,6 @@ __all__ = [
     'property_schema_is_optional',
     'property_schema_is_array'
 ]
-
-from pydantic_core.core_schema import JsonSchema
 
 BOOLEAN: Final[str] = """The parameter shall be a boolean."""
 
@@ -73,7 +72,7 @@ ALWAYS_EXCLUDED = ("title",)
 EXCLUDED_CAMDKIT_INTERNALS = ("clip_property", "constraints")
 
 
-def scrub_excluded(d: dict[str, Any], unwanted: tuple[str, ...]) -> dict[str, Any]:
+def scrub_excluded(d: JsonSchemaValue, unwanted: tuple[str, ...]) -> JsonSchemaValue:
     for key, value in d.items():
         if isinstance(value, dict):
             scrub_excluded(value, unwanted)
@@ -81,13 +80,23 @@ def scrub_excluded(d: dict[str, Any], unwanted: tuple[str, ...]) -> dict[str, An
         d.pop(key, None)
     return d
 
-def append_newlines_to_descriptions(d: dict[str, Any]) -> dict[str, Any]:
+
+def normalize_description_newlines(d: JsonSchemaValue) -> JsonSchemaValue:
+    """Canonicalize docstrings into PEP8 and PEP 257 compliance"""
     for key, value in d.items():
         if isinstance(value, dict):
-            append_newlines_to_descriptions(value)
-        # TODO: the endswith() thing is a horrible hack. Fix this cleanly.
-        if "description" in d and not d["description"].endswith("\n"):
-            d["description"] = d["description"] + "\n"
+            normalize_description_newlines(value)
+        if "description" in d:
+            # PEP8 just says "PEP 257 describes good docstring conventions" and
+            # PEP 257 has 13 paragraphs and four examples to try and explain what
+            # it means (just for multiline docstrings and indentation thereof).
+            # This is not the full canonicalization algorithm given in the second
+            # example, but it should be enough.
+            no_newlines_at_either_end: str = d["description"].strip()
+            compliant = (no_newlines_at_either_end + "\n"
+                         if '\n' in no_newlines_at_either_end
+                         else no_newlines_at_either_end)
+            d["description"] = compliant
     return d
 
 
@@ -95,15 +104,16 @@ def wrap_classic_camdkit_properties_as_optional(classic_schema: JsonSchemaValue)
     new_properties: JsonSchemaValue = {}
     properties = classic_schema["properties"]
     for prop_name, prop_value in properties.items():
-        # new_property: JsonSchemaValue = {"type": "object",
-        #                                  "additionalProperties": False}
         new_property: JsonSchemaValue = {}
-        any_of_contents = [ {k: v for k, v in prop_value.items() if k != "description" } ,
+        any_of_contents = [ {k: v for k, v in prop_value.items()
+                             if k not in ("description", "units") } ,
                             { "type": "null" } ]
         new_property["anyOf"] = any_of_contents
         new_property["default"] = None
         if "description" in prop_value:
             new_property["description"] = prop_value["description"]
+        if "units" in prop_value:
+            new_property["units"] = prop_value["units"]
         new_properties[prop_name] = new_property
     return new_properties
 
@@ -111,44 +121,10 @@ def wrap_classic_camdkit_properties_as_optional(classic_schema: JsonSchemaValue)
 def wrap_classic_camdkit_schema_as_optional(classic_schema: JsonSchemaValue) -> JsonSchemaValue:
     rewrapped_schema: JsonSchemaValue = {k: v for k, v in classic_schema.items() if k != "properties"}
     rewrapped_schema["properties"] = wrap_classic_camdkit_properties_as_optional(classic_schema)
+    normalize_description_newlines(rewrapped_schema)
     return rewrapped_schema
 
-
-# def copy_description_property_down(prop_name, prop_schema) -> dict[str, Any]:
-#     result: dict[str, Any] = {'copied': False}
-#     levels_transited: list[str] = []
-#     if "description" in prop_schema:
-#         # print(f"attempting to move 'description' downwards from {prop_name}")
-#         target_schema = prop_schema
-#         while property_schema_is_optional(target_schema) or property_schema_is_array(target_schema):
-#             if property_schema_is_optional(target_schema):
-#                 target_schema = target_schema['anyOf'][0]
-#                 levels_transited.append("optional")
-#             if property_schema_is_array(target_schema):
-#                 target_schema = target_schema['items']
-#                 levels_transited.append("array")
-#         if target_schema is not prop_schema:
-#             # target_schema['description'] = prop_schema['description']
-#             result['copied'] = True
-#         # if levels_transited:
-#         #     print(f"moved description property through {levels_transited}")
-#     return result
-
-# def remove_copied_description_property(prop_name,
-#                                        prop_schema,
-#                                        prior_result: dict[str, Any]) -> None:
-#     if "description" in prop_schema and "copied" in prior_result and prior_result["copied"]:
-#         # print(f"attempting to delete original description property from '{prop_name}'")
-#         del prop_schema["description"]
-
-# def convert_pydantic_optional_schema_to_classic_schema(_: str, prop_schema: dict[str, Any]) -> None:
-#     inner_schema = [d for d in prop_schema["anyOf"] if d != {"type": "null"}][0]
-#     prop_schema |= inner_schema
-#     prop_schema.pop("anyOf")
-#     prop_schema.pop("default")
-#     print('done')
-
-def property_schema_is_optional(property_schema: dict[str, Any]) -> bool:
+def property_schema_is_optional(property_schema: JsonSchemaValue) -> bool:
     """Detect Pydantic-generated chunk of schema corresponding to an optional property."""
     return (type(property_schema) is dict
             # and 2 <= len(property_schema) <= 3
@@ -162,62 +138,16 @@ def property_schema_is_optional(property_schema: dict[str, Any]) -> bool:
                  or '$ref' in property_schema['anyOf'][0])
             )
 
-def optional_property_schema(pop_schema: dict[str, Any]):
+def optional_property_schema(pop_schema: JsonSchemaValue):
     return pop_schema['anyOf'][0] if property_schema_is_optional(pop_schema) else None
 
-def property_schema_is_array(schema: dict[str, Any]) -> bool:
+def property_schema_is_array(schema: JsonSchemaValue) -> bool:
     return (type(schema) is dict
             and all([name in schema for name in ('type', 'items')])
             and schema['type'] == 'array')
 
-def array_property_schema(pap_schema: dict[str, Any]) -> dict[str, Any] | None:
+def array_property_schema(pap_schema: JsonSchemaValue) -> JsonSchemaValue | None:
     return pap_schema['items'] if property_schema_is_array(pap_schema) else None
-
-# def walk_schema(parent_name: str | None,
-#                 schema: dict[str, Any],
-#                 indent: int = 0,
-#                 opt_param_pre_walk_fn: Callable = lambda *args: None,
-#                 opt_param_post_walk_fn: Callable = lambda *args: None,
-#                 array_param_pre_walk_fn: Callable = lambda *args: None,
-#                 array_param_post_walk_fn: Callable = lambda *args: None) -> None:
-#     if isinstance(schema, dict) and "type" in schema and schema["type"] == "object":
-#         if "properties" in schema and type(schema["properties"]) is dict:
-#             for prop_name, prop_value in schema["properties"].items():
-#                 # optional parameters interpose a layer of indirection we want to jump over
-#                 # be careful to not modify schema["properties"] while we are iterating over it
-#                 if opt_param_schema := optional_property_schema(prop_value):
-#                     # pre_opt_walk_result: dict[str, Any] = opt_param_pre_walk_fn(prop_name, prop_value)
-#                     pre_opt_walk_result = {}
-#                     walk_schema(prop_name,
-#                                 opt_param_schema,
-#                                 indent = indent + 2,
-#                                 opt_param_pre_walk_fn=opt_param_pre_walk_fn,
-#                                 opt_param_post_walk_fn=opt_param_post_walk_fn,
-#                                 array_param_pre_walk_fn=array_param_pre_walk_fn,
-#                                 array_param_post_walk_fn=array_param_post_walk_fn)
-#                     opt_param_post_walk_fn(prop_name, prop_value, pre_opt_walk_result)
-#                 if array_param_schema := array_property_schema(prop_value):
-#                     pre_array_walk_result = array_param_pre_walk_fn(prop_name, array_param_schema)
-#                     walk_schema(prop_name,
-#                                 opt_param_schema,
-#                                 indent=indent + 2,
-#                                 opt_param_pre_walk_fn=opt_param_pre_walk_fn,
-#                                 opt_param_post_walk_fn=opt_param_post_walk_fn,
-#                                 array_param_pre_walk_fn=array_param_pre_walk_fn,
-#                                 array_param_post_walk_fn=array_param_post_walk_fn)
-#                     array_param_post_walk_fn(prop_name, array_param_schema, pre_array_walk_result)
-#
-# def move_definitions_inside_arrays(schema: dict[str, Any]) -> None:
-#     walk_schema(parent_name=None, schema=schema, indent=2,
-#                 opt_param_pre_walk_fn=copy_description_property_down,
-#                 opt_param_post_walk_fn=remove_copied_description_property,
-#                 array_param_pre_walk_fn=copy_description_property_down,
-#                 array_param_post_walk_fn=remove_copied_description_property)
-#
-# def remove_pydantic_anyof_structure(schema: dict[str, Any]) -> None:
-#     walk_schema(parent_name=None, schema=schema, indent=2,
-#                 opt_param_pre_walk_fn=convert_pydantic_optional_schema_to_classic_schema)
-
 
 
 class CompatibleSchemaGenerator(GenerateJsonSchema):
@@ -228,28 +158,25 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
         """No-op, we don't want to sort schema values at all."""
         return value
 
-    def cleanup(self, schema: dict[str, Any]) -> None:
-        pass
+    @abstractmethod
+    def cleanup(self, schema: JsonSchemaValue) -> None:
+        raise NotImplementedError()
 
-    def generate(self, schema, mode='validation'):
+    def generate(self, schema: JsonSchemaValue, mode='validation'):
         json_schema = super().generate(schema, mode=mode)
         json_schema = jsonref.replace_refs(json_schema, proxies=False, merge_props=True)
         self.cleanup(json_schema)
-        append_newlines_to_descriptions(json_schema)
+        normalize_description_newlines(json_schema)
         return json_schema
 
 class InternalCompatibleSchemaGenerator(CompatibleSchemaGenerator):
-    def cleanup(self, schema: dict[str, Any]) -> None:
+    def cleanup(self, schema: JsonSchemaValue) -> None:
         scrub_excluded(schema, ALWAYS_EXCLUDED)
 
 class ExternalCompatibleSchemaGenerator(CompatibleSchemaGenerator):
-    def cleanup(self, schema: dict[str, Any]) -> None:
+    def cleanup(self, schema: JsonSchemaValue) -> None:
         scrub_excluded(schema, ALWAYS_EXCLUDED + EXCLUDED_CAMDKIT_INTERNALS)
 
-def compatibility_cleanups(schema: dict[str, Any]) -> None:
-    if 'description' in schema:
-        # Pydantic strips away the final newline, but classic camdkit does not.
-        schema["description"] = schema["description"] + "\n"
 
 # For compatibility with existing code
 class CompatibleBaseModel(BaseModel):
@@ -286,7 +213,7 @@ class CompatibleBaseModel(BaseModel):
         return inner(model_or_tuple)
 
     @classmethod
-    def from_json(cls, json_or_tuple: dict[str, Any] | tuple[Any, ...]) -> Any:
+    def from_json(cls, json_or_tuple: JsonSchemaValue | tuple[Any, ...]) -> Any:
         """Return a validated object from a JSON dict, or tuple of validated objects
         from a tuple of JSON dicts, or a tuple of tuples of validated objects from
         a tuple of tuples of JSON dicts, or ... it's basically JSON all the way down
