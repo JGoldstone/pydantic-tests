@@ -8,18 +8,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Supply no-arg constructor values for Clip's tracker, timing, lens, and static (and all static's component) parameters">
-      <change afterPath="$PROJECT_DIR$/test/python/test_compatibility.py" afterDir="false" />
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Incomplete push towards matching schema">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camdkit_implementation_notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/camdkit_implementation_notes.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/camera_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/camera_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/python/test_camera_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_camera_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/python/test_lens_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_lens_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/python/test_string_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_string_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/python/test_timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_timing_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_compatibility.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_compatibility.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,12 +45,16 @@
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/lib/python3.13/site-packages/pydantic/_internal/_known_annotated_metadata.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/lib/python3.13/site-packages/pydantic/_internal/_schema_generation_shared.py" root0="SKIP_INSPECTION" />
     <setting file="file://$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/lib/python3.13/site-packages/pydantic/json_schema.py" root0="SKIP_INSPECTION" />
     <setting file="file://$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/lib/python3.13/site-packages/pydantic/main.py" root0="SKIP_INSPECTION" />
     <setting file="file://$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/lib/python3.13/site-packages/pydantic/types.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/lib/python3.13/site-packages/pydantic_core/core_schema.py" root0="SKIP_INSPECTION" />
     <setting file="file://$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/lib/python3.13/site-packages/traitlets/traitlets.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../pyenv/pyenv/versions/3.13.0/lib/python3.13/typing.py" root0="SKIP_INSPECTION" />
     <setting file="file://$PROJECT_DIR$/../../pyenv/pyenv/versions/3.13.0/lib/python3.13/unittest/case.py" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/../../pyenv/pyenv/versions/3.13.0/lib/python3.13/unittest/main.py" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -117,6 +113,7 @@
     "Python tests.Python tests for test_compatibility.CompatibilityTestCases.test_detecting_optional_schema_by_type.executor": "Debug",
     "Python tests.Python tests for test_compatibility.CompatibilityTestCases.test_detecting_optional_schema_property_by_type.executor": "Run",
     "Python tests.Python tests for test_compatibility.CompatibilityTestCases.test_gen_schema.executor": "Run",
+    "Python tests.Python tests for test_compatibility.CompatibilityTestCases.test_wrapping_classic_camdkit_properties.executor": "Debug",
     "Python tests.Python tests for test_framework.MyTestCase.test_non_blank_utf8_string.executor": "Run",
     "Python tests.Python tests for test_framework.MyTestCase.test_rational_ranges.executor": "Run",
     "Python tests.Python tests for test_framework.MyTestCase.test_strictly_positive_rational_ranges.executor": "Run",
@@ -245,7 +242,7 @@
       <recent name="$PROJECT_DIR$/src/main/python/camdkit" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test_lens_types.LensTypesTestCases.test_static_lens_schema">
+  <component name="RunManager" selected="Python tests.Python tests for test_compatibility.CompatibilityTestCases.test_wrapping_classic_camdkit_properties">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -301,6 +298,22 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests for test_compatibility.CompatibilityTestCases.test_wrapping_classic_camdkit_properties" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="pydantic tests" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/python" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_compatibility.CompatibilityTestCases.test_wrapping_classic_camdkit_properties&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <configuration name="Python tests for test_lens_types.LensTypesTestCases.test_static_lens_schema" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -314,22 +327,6 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;test_lens_types.LensTypesTestCases.test_static_lens_schema&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="pydantic tests" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/python" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_string_types.StringsTestCases.test_non_blank_utf8_string&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
@@ -370,19 +367,19 @@
     <list>
       <item itemvalue="Python.main" />
       <item itemvalue="Python tests.Unittests in python" />
+      <item itemvalue="Python tests.Python tests for test_compatibility.CompatibilityTestCases.test_wrapping_classic_camdkit_properties" />
       <item itemvalue="Python tests.Python tests for test_compatibility.CompatibilityTestCases.test_annotated_opt_same_as_pure_opt" />
       <item itemvalue="Python tests.Python tests for test_compatibility.CompatibilityTestCases.test_gen_schema" />
-      <item itemvalue="Python tests.Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string" />
       <item itemvalue="Python tests.Python tests in test_compatibility.py" />
       <item itemvalue="Python tests.Python tests for test_lens_types.LensTypesTestCases.test_static_lens_schema" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for test_compatibility.CompatibilityTestCases.test_wrapping_classic_camdkit_properties" />
         <item itemvalue="Python tests.Python tests for test_lens_types.LensTypesTestCases.test_static_lens_schema" />
         <item itemvalue="Python tests.Python tests in test_compatibility.py" />
         <item itemvalue="Python tests.Python tests for test_compatibility.CompatibilityTestCases.test_annotated_opt_same_as_pure_opt" />
         <item itemvalue="Python tests.Python tests for test_compatibility.CompatibilityTestCases.test_gen_schema" />
-        <item itemvalue="Python tests.Python tests for test_string_types.StringsTestCases.test_non_blank_utf8_string" />
       </list>
     </recent_temporary>
   </component>
@@ -426,23 +423,8 @@
       <workItem from="1734029473500" duration="51831000" />
       <workItem from="1734133161202" duration="93607000" />
       <workItem from="1734368060036" duration="266885000" />
-      <workItem from="1735181862176" duration="57581000" />
-    </task>
-    <task id="LOCAL-00049" summary="Rename backwards.py to compatibility.py">
-      <option name="closed" value="true" />
-      <created>1734392242285</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1734392242285</updated>
-    </task>
-    <task id="LOCAL-00050" summary="A missed move of backwards.py to compatibility.py">
-      <option name="closed" value="true" />
-      <created>1734392325735</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1734392325736</updated>
+      <workItem from="1735181862176" duration="62049000" />
+      <workItem from="1735338854146" duration="7894000" />
     </task>
     <task id="LOCAL-00051" summary="Move GlobalPosition from clip.py to tracker_types.py">
       <option name="closed" value="true" />
@@ -820,7 +802,23 @@
       <option name="project" value="LOCAL" />
       <updated>1735306337767</updated>
     </task>
-    <option name="localTasksCounter" value="98" />
+    <task id="LOCAL-00098" summary="Remove class docstring for StaticCamera; clear out unused import and a dead TODO">
+      <option name="closed" value="true" />
+      <created>1735332630963</created>
+      <option name="number" value="00098" />
+      <option name="presentableId" value="LOCAL-00098" />
+      <option name="project" value="LOCAL" />
+      <updated>1735332630963</updated>
+    </task>
+    <task id="LOCAL-00099" summary="Incomplete push towards matching schema">
+      <option name="closed" value="true" />
+      <created>1735332675324</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1735332675324</updated>
+    </task>
+    <option name="localTasksCounter" value="100" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -838,8 +836,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Initial README.md" />
-    <MESSAGE value="Add discussion of JSON schema to README.md" />
     <MESSAGE value="Restrict components of version number to single digits" />
     <MESSAGE value="Add introduction to Pydantic" />
     <MESSAGE value="Add section on the overall goal; add content explaining where it cannot be reached." />
@@ -863,7 +859,9 @@
     <MESSAGE value="Add saved JSON points of comparison from classic implementation in a test resource directory." />
     <MESSAGE value="Add missing fdlLink alias for fdl_link parameter" />
     <MESSAGE value="Supply no-arg constructor values for Clip's tracker, timing, lens, and static (and all static's component) parameters" />
-    <option name="LAST_COMMIT_MESSAGE" value="Supply no-arg constructor values for Clip's tracker, timing, lens, and static (and all static's component) parameters" />
+    <MESSAGE value="Remove class docstring for StaticCamera; clear out unused import and a dead TODO" />
+    <MESSAGE value="Incomplete push towards matching schema" />
+    <option name="LAST_COMMIT_MESSAGE" value="Incomplete push towards matching schema" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -883,6 +881,11 @@
           <line>78</line>
           <option name="timeStamp" value="178" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/python/test_compatibility.py</url>
+          <line>249</line>
+          <option name="timeStamp" value="189" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -899,7 +902,7 @@
     <SUITE FILE_PATH="coverage/pydantic_tests$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1728857315751" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/pydantic_tests$compatibility.coverage" NAME="compatibility Coverage Results" MODIFIED="1734891268851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1735331639035" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1735352379148" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/python" />
     <SUITE FILE_PATH="coverage/pydantic_tests$clip.coverage" NAME="clip Coverage Results" MODIFIED="1735174811083" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
     <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_test_clip_ClipTestCases_test_lens_regular_parameters.coverage" NAME="Unittests for test_clip.ClipTestCases.test_lens_regular_parameters Coverage Results" MODIFIED="1734539427401" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>

@@ -13,10 +13,19 @@ from typing import Annotated, Any
 from copy import deepcopy
 
 from pydantic import BaseModel
+from pydantic.json_schema import JsonSchemaValue
 
+from camdkit.camera_types import StaticCamera
 from camdkit.compatibility import (property_schema_is_optional,
                                    property_schema_is_array,
-                                   CompatibleBaseModel)
+                                   wrap_classic_camdkit_properties_as_optional,
+                                   CompatibleBaseModel, wrap_classic_camdkit_schema_as_optional)
+
+
+class PureOpt(BaseModel):
+    a: int
+    b: int | None = None
+    c: str
 
 EXPECTED_PURE_OPT_SCHEMA = {
     # n.b. dict order changed from BaseModel.model_json_schema() output to be sure that
@@ -32,6 +41,12 @@ EXPECTED_PURE_OPT_SCHEMA = {
     "title": "PureOpt"
 }
 
+
+class CompatiblePureOpt(CompatibleBaseModel):
+    a: int
+    b: int | None = None
+    c: str
+
 EXPECTED_COMPATIBLE_PURE_OPT_SCHEMA = {
     "type": "object",
     "additionalProperties": False,
@@ -43,6 +58,16 @@ EXPECTED_COMPATIBLE_PURE_OPT_SCHEMA = {
     },
     "required": [ "a", "c" ]
 }
+
+
+class AnnotatedOpt(BaseModel):
+    class FauxField:
+        def __init__(self, *_) -> None:
+            pass
+
+    a: int
+    b: Annotated[int | None, FauxField("foo")] = None
+    c: str
 
 EXPECTED_ANNOTATED_OPT_SCHEMA = {
     "type": "object",
@@ -56,6 +81,12 @@ EXPECTED_ANNOTATED_OPT_SCHEMA = {
     "title": "AnnotatedOpt"
 }
 
+
+class PureArray(BaseModel):
+    a: int
+    b: tuple[int, ...]
+    c: str
+
 EXPECTED_PURE_ARRAY_SCHEMA = {
     "properties": {
         "a": { "title": "A", "type": "integer" },
@@ -68,6 +99,13 @@ EXPECTED_PURE_ARRAY_SCHEMA = {
     "title": "PureArray",
     "type": "object"
 }
+
+
+# regular POD parameters, e.g. lens entrance pupil offset
+class OptArray(BaseModel):
+    a: int
+    b: tuple[int, ...] | None
+    c: str
 
 EXPECTED_OPT_ARRAY_SCHEMA = {
     "properties": {
@@ -83,7 +121,7 @@ EXPECTED_OPT_ARRAY_SCHEMA = {
     "type": "object"
 }
 
-CLASSIC_CAMERA_ANAMORPHIC_SQUEEZE_SCHEMA = {
+CLASSIC_STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE = {
     "type": "object",
     "additionalProperties": False,
     "properties": {
@@ -99,61 +137,33 @@ CLASSIC_CAMERA_ANAMORPHIC_SQUEEZE_SCHEMA = {
     }
 }
 
-
-PYDANTIC_CAMERA_ANAMORPHIC_SQUEEZE_SCHEMA = {
+STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE = {
     "type": "object",
     "additionalProperties": False,
     "properties": {
         "anamorphicSqueeze": {
             "anyOf": [
-                {
-                    "type": "object",
-                    "properties": {
-                        "num": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
-                        "denom": { "type": "integer", "minimum": 1, "maximum": 4294967295 } },
-                    "required": [ "num", "denom" ],
-                    "additionalProperties": False,
-                    "description": "Nominal ratio of height to width of the image of an axis-aligned\nsquare captured by the camera sensor. It can be used to de-squeeze\nimages but is not however an exact number over the entire captured\narea due to a lens' intrinsic analog nature.\n"
-                },
+                { "type": "object",
+                  "properties": {
+                      "num": { "type": "integer", "maximum": 2147483647, "minimum": 1 },
+                      "denom": { "type": "integer", "maximum": 4294967295, "minimum": 1 }
+                  },
+                  "required": [ "num", "denom" ],
+                  "additionalProperties": False },
                 { "type": "null" }
             ],
-            "default": None
+            "default": None,
+            "description": "Nominal ratio of height to width of the image of an axis-aligned\nsquare captured by the camera sensor. It can be used to de-squeeze\nimages but is not however an exact number over the entire captured\narea due to a lens' intrinsic analog nature.\n"
         }
-    },
-    "description": "camera properties that do not change over time\n"
+    }
 }
 
 
-class PureOpt(BaseModel):
-    a: int
-    b: int | None = None
-    c: str
-
-
-class CompatiblePureOpt(CompatibleBaseModel):
-    a: int
-    b: int | None = None
-    c: str
-
-
-class AnnotatedOpt(BaseModel):
-    class FauxField:
-        def __init__(self, *_) -> None:
-            pass
-    a: int
-    b: Annotated[int | None,  FauxField("foo")] = None
-    c: str
-
-class PureArray(BaseModel):
-    a: int
-    b: tuple[int, ...]
-    c: str
-
-# regular POD parameters, e.g. lens entrance pupil offset
-class OptArray(BaseModel):
-    a: int
-    b: tuple[int, ...] | None
-    c: str
+def remove_properties_besides(schema: JsonSchemaValue, keeper: str) -> JsonSchemaValue:
+    property_names = [k for k in schema["properties"].keys() if k != keeper]
+    for property_name in property_names:
+        schema["properties"].pop(property_name)
+    return schema
 
 
 class CompatibilityTestCases(unittest.TestCase):
@@ -204,20 +214,6 @@ class CompatibilityTestCases(unittest.TestCase):
         any_of_first_item_unsupported_type["properties"]["b"]["anyOf"][0]["type"] = complex
         self.assertFalse(property_schema_is_optional(any_of_first_item_unsupported_type))
 
-    def test_detecting_optional_anamorphic_squeeze(self):
-        full_schema: dict[str, Any] = deepcopy(PYDANTIC_CAMERA_ANAMORPHIC_SQUEEZE_SCHEMA)
-        property_schema: dict[str, Any] = full_schema["properties"]["anamorphicSqueeze"]
-        self.assertTrue(property_schema_is_optional(property_schema))
-
-    # def test_converting_pydantic_optional_schema_to_classic_schema(self):
-    #     full_pydantic_schema: dict[str, Any] = deepcopy(PYDANTIC_CAMERA_ANAMORPHIC_SQUEEZE_SCHEMA)
-    #     pydantic_property_schema: dict[str, Any] = full_pydantic_schema["properties"]["anamorphicSqueeze"]
-    #     full_classic_schema: dict[str, Any] = deepcopy(CLASSIC_CAMERA_ANAMORPHIC_SQUEEZE_SCHEMA)
-    #     classic_property_schema: dict[str, Any] = full_classic_schema["properties"]["anamorphicSqueeze"]
-    #     self.assertNotEqual(classic_property_schema, pydantic_property_schema)
-    #     convert_pydantic_optional_schema_to_classic_schema(pydantic_property_schema)
-    #     self.assertEqual(classic_property_schema, pydantic_property_schema)
-
     def test_detecting_array_schema_property(self):
         """detect Pydantic-generated property schema for <var>: tuple[<type>, ...]"""
         pure_array_schema = PureArray.model_json_schema()
@@ -232,6 +228,36 @@ class CompatibilityTestCases(unittest.TestCase):
         type_is_not_array: dict[str, Any] = deepcopy(EXPECTED_PURE_ARRAY_SCHEMA)
         type_is_not_array["properties"]["b"]["type"] = "string"
         self.assertFalse(property_schema_is_array(no_type))
+
+    def test_detecting_optional_anamorphic_squeeze(self):
+        full_schema: dict[str, Any] = deepcopy(STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE)
+        property_schema: dict[str, Any] = full_schema["properties"]["anamorphicSqueeze"]
+        self.assertTrue(property_schema_is_optional(property_schema))
+
+    def test_wrapping_classic_camdkit_properties(self):
+        with open("../resources/model/static_camera.json", "r") as file:
+            classic_schema = json.load(file)
+            remove_properties_besides(classic_schema, "anamorphicSqueeze")
+            self.assertDictEqual(CLASSIC_STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE, classic_schema)
+            # rewrapped_schema: JsonSchemaValue = { k: v for k, v in classic_schema.items() if k != "properties" }
+            # rewrapped_schema["properties"] = wrap_classic_camdkit_properties_as_optional(classic_schema)
+            rewrapped_schema = wrap_classic_camdkit_schema_as_optional(classic_schema)
+            pydantic_schema = StaticCamera.make_json_schema()
+            remove_properties_besides(pydantic_schema, keeper="anamorphicSqueeze")
+            self.assertDictEqual(STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE, pydantic_schema)
+            rewrapped_anam = rewrapped_schema["properties"]["anamorphicSqueeze"]
+            pydantic_anam = pydantic_schema["properties"]["anamorphicSqueeze"]
+            self.assertDictEqual(pydantic_anam, rewrapped_anam)
+            self.assertDictEqual(pydantic_schema, rewrapped_schema)
+
+    # def test_converting_pydantic_optional_schema_to_classic_schema(self):
+    #     full_pydantic_schema: dict[str, Any] = deepcopy(STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE)
+    #     pydantic_property_schema: dict[str, Any] = full_pydantic_schema["properties"]["anamorphicSqueeze"]
+    #     full_classic_schema: dict[str, Any] = deepcopy(CLASSIC_STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE)
+    #     classic_property_schema: dict[str, Any] = full_classic_schema["properties"]["anamorphicSqueeze"]
+    #     self.assertNotEqual(classic_property_schema, pydantic_property_schema)
+    #     convert_pydantic_optional_schema_to_classic_schema(pydantic_property_schema)
+    #     self.assertEqual(classic_property_schema, pydantic_property_schema)
 
 if __name__ == '__main__':
     unittest.main()

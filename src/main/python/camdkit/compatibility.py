@@ -24,6 +24,8 @@ __all__ = [
     'property_schema_is_array'
 ]
 
+from pydantic_core.core_schema import JsonSchema
+
 BOOLEAN: Final[str] = """The parameter shall be a boolean."""
 
 NONBLANK_UTF8_MAX_1023_CHARS: Final[str] = \
@@ -87,6 +89,30 @@ def append_newlines_to_descriptions(d: dict[str, Any]) -> dict[str, Any]:
         if "description" in d and not d["description"].endswith("\n"):
             d["description"] = d["description"] + "\n"
     return d
+
+
+def wrap_classic_camdkit_properties_as_optional(classic_schema: JsonSchemaValue) -> JsonSchemaValue:
+    new_properties: JsonSchemaValue = {}
+    properties = classic_schema["properties"]
+    for prop_name, prop_value in properties.items():
+        # new_property: JsonSchemaValue = {"type": "object",
+        #                                  "additionalProperties": False}
+        new_property: JsonSchemaValue = {}
+        any_of_contents = [ {k: v for k, v in prop_value.items() if k != "description" } ,
+                            { "type": "null" } ]
+        new_property["anyOf"] = any_of_contents
+        new_property["default"] = None
+        if "description" in prop_value:
+            new_property["description"] = prop_value["description"]
+        new_properties[prop_name] = new_property
+    return new_properties
+
+
+def wrap_classic_camdkit_schema_as_optional(classic_schema: JsonSchemaValue) -> JsonSchemaValue:
+    rewrapped_schema: JsonSchemaValue = {k: v for k, v in classic_schema.items() if k != "properties"}
+    rewrapped_schema["properties"] = wrap_classic_camdkit_properties_as_optional(classic_schema)
+    return rewrapped_schema
+
 
 # def copy_description_property_down(prop_name, prop_schema) -> dict[str, Any]:
 #     result: dict[str, Any] = {'copied': False}
