@@ -19,7 +19,7 @@ from camdkit.numeric_types import (MAX_INT_32,
                                    StrictlyPositiveInt,
                                    StrictlyPositiveRational,
                                    rationalize_strictly_and_positively)
-from camdkit.units import MILLIMETER, PIXEL
+from camdkit.units import MILLIMETER, PIXEL, HERTZ, DEGREE
 from camdkit.string_types import NonBlankUTF8String, UUIDURN
 
 # Tempting as it might seem to make PhysicalDimensions and SenselDimensions subclasses
@@ -48,7 +48,9 @@ type ShutterAngle = Annotated[float, Field(ge=0.0, le=360.0, strict=True)]
 
 
 class StaticCamera(CompatibleBaseModel):
-    capture_frame_rate: Annotated[StrictlyPositiveRational | None, Field(alias="captureFrameRate")] = None
+    capture_frame_rate: Annotated[StrictlyPositiveRational | None,
+    Field(alias="captureFrameRate",
+          json_schema_extra={"units": HERTZ})] = None
     """Capture frame rate of the camera"""
 
     active_sensor_physical_dimensions: Annotated[PhysicalDimensions | None,
@@ -128,7 +130,8 @@ class StaticCamera(CompatibleBaseModel):
 
     shutter_angle: Annotated[ShutterAngle | None,
     Field(alias="shutterAngle",
-          json_schema_extra={"clip_property": "shutter_angle",
+          json_schema_extra={"units": DEGREE,
+                             "clip_property": "shutter_angle",
                              "constraints": "The parameter shall be a real number in the range (0..360]."})] = None
     """Shutter speed as a fraction of the capture frame rate. The shutter
     speed (in units of 1/s) is equal to the value of the parameter divided
