@@ -15,7 +15,9 @@ from typing import Any
 from fractions import Fraction
 
 from pydantic import ValidationError
+from pydantic.json_schema import JsonSchemaValue
 
+from camdkit.compatibility import load_classic_camdkit_schema
 from camdkit.numeric_types import StrictlyPositiveRational, MAX_INT_32
 from camdkit.camera_types import (PhysicalDimensions, SenselDimensions,
                                   StaticCamera)
@@ -267,14 +269,10 @@ class CameraTypesTestCases(unittest.TestCase):
             # and this, the extreme case, should likewise fail, but likewise does not:
             # sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES + sys.float_info.epsilon
 
-    def test_static_camera_schema(self):
-        expected_schema: dict[str, Any] = {}
-        with open("../resources/model/static_camera.json") as f:
-            expected_schema = json.load(f)
-        actual_schema = StaticCamera.make_json_schema()
-        self.assertDictEqual(expected_schema, actual_schema)
-        print(json.dumps(sc, indent=4))
-
+    def test_static_camera_schemas_match(self):
+        expected: JsonSchemaValue = load_classic_camdkit_schema("../resources/model/static_camera.json")
+        actual = StaticCamera.make_json_schema()
+        self.assertDictEqual(expected, actual)
 
 
 if __name__ == '__main__':

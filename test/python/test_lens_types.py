@@ -7,13 +7,15 @@
 """Tests for lens types"""
 
 import unittest
-import json
 
 from typing import Any
 
 from pydantic import ValidationError
+from pydantic.json_schema import JsonSchemaValue
 
 from camdkit.lens_types import StaticLens, Distortion
+from camdkit.compatibility import load_classic_camdkit_schema
+
 
 class LensTypesTestCases(unittest.TestCase):
 
@@ -72,11 +74,10 @@ class LensTypesTestCases(unittest.TestCase):
         schema_from_model: dict[str, Any] = Distortion.make_json_schema()
         self.assertDictEqual(expected_schema, schema_from_model)
 
-    def test_static_lens_schema(self):
-        with open("../resources/model/static_lens.json") as f:
-            expected: dict[str, Any] = json.load(f)
-            actual = StaticLens.make_json_schema()
-            self.assertDictEqual(expected, actual)
+    def test_static_lens_schemas_match(self):
+        expected: JsonSchemaValue = load_classic_camdkit_schema("../resources/model/static_lens.json")
+        actual = StaticLens.make_json_schema()
+        self.assertDictEqual(expected, actual)
 
 
 if __name__ == '__main__':

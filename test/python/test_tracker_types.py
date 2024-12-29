@@ -1,7 +1,9 @@
 import unittest
 
 from pydantic import ValidationError
+from pydantic.json_schema import JsonSchemaValue
 
+from camdkit.compatibility import load_classic_camdkit_schema
 from camdkit.string_types import NonBlankUTF8String
 from camdkit.tracker_types import StaticTracker, Tracker
 
@@ -165,8 +167,13 @@ class TrackerTestCases(unittest.TestCase):
         invalid_overlong_statuses: tuple[NonBlankUTF8String, ...] = (overlong_status,
                                                                      overlong_status)
         with self.assertRaises(ValidationError):
-            t.statuss = invalid_overlong_statuses
+            t.status = invalid_overlong_statuses
 
-        
+    def test_static_tracker_schemas_match(self):
+        expected: JsonSchemaValue = load_classic_camdkit_schema("../resources/model/static_tracker.json")
+        actual = StaticTracker.make_json_schema()
+        self.assertDictEqual(expected, actual)
+
+
 if __name__ == '__main__':
     unittest.main()

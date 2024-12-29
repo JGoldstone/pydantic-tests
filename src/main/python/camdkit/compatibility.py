@@ -107,6 +107,13 @@ def canonicalize_descriptions(d: JsonSchemaValue) -> JsonSchemaValue:
     return d
 
 
+def load_classic_camdkit_schema(path: Path) -> JsonSchemaValue:
+    with open(path, "r", encoding="utf-8") as file:
+        schema = json.load(file)
+        canonicalize_descriptions(schema)
+        return schema
+
+
 def wrap_classic_camdkit_properties_as_optional(classic_schema: JsonSchemaValue) -> JsonSchemaValue:
     new_properties: JsonSchemaValue = {}
     properties = classic_schema["properties"]
