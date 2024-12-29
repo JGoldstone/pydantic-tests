@@ -19,6 +19,7 @@ from camdkit.compatibility import (CompatibleBaseModel,
 from camdkit.numeric_types import (NonNegativeFloat, StrictlyPositiveFloat, NormalizedFloat,
                                    NonNegativeInt, UnityOrGreaterFloat)
 from camdkit.string_types import NonBlankUTF8String
+from camdkit.units import MILLIMETER
 
 
 class StaticLens(CompatibleBaseModel):
@@ -74,7 +75,8 @@ class StaticLens(CompatibleBaseModel):
 
     nominal_focal_length: Annotated[NonNegativeFloat | None,
       Field(alias="nominalFocalLength",
-            json_schema_extra={"clip_property": "lens_nominal_focal_length",
+            json_schema_extra={"units": MILLIMETER,
+                               "clip_property": "lens_nominal_focal_length",
                                "constraints": {"clip_property": "lens_firmware_version",
                                                "constraints": NONBLANK_UTF8_MAX_1023_CHARS}})] = None
     """Nominal focal length of the lens. The number printed on the side
