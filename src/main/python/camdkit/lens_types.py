@@ -42,7 +42,7 @@ class StaticLens(CompatibleBaseModel):
     """
 
     distortion_is_projection: Annotated[bool | None,
-      Field(alias="distortionProjection",
+      Field(alias="distortionIsProjection",
             json_schema_extra={"clip_property": "lens_distortion_is_projection",
                                "constraints": BOOLEAN})] = None
     """Indicator that the OpenLensIO distortion model is the Projection
