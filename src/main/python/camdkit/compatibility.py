@@ -171,8 +171,7 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
 
     def model_field_schema(self, schema: ModelField) -> JsonSchemaValue:
         json_schema = super().model_field_schema(schema)
-        if (isinstance(json_schema, dict)
-                and all([k in json_schema for k in ("anyOf", "default")])
+        if (all([k in json_schema for k in ("anyOf", "default")])
                 and json_schema["default"] is None
                 and isinstance(json_schema["anyOf"], list)
                 and len(json_schema["anyOf"]) == 2
