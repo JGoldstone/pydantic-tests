@@ -170,13 +170,44 @@ def array_property_schema(pap_schema: JsonSchemaValue) -> JsonSchemaValue | None
 class CompatibleSchemaGenerator(GenerateJsonSchema):
 
     def model_field_schema(self, schema: ModelField) -> JsonSchemaValue:
+
+        def is_clip_property_schema(schema: ModelField) -> bool:
+            return ('metadata' in schema
+                    and 'pydantic_js_extra' in schema['metadata']
+                    and 'clip_property' in schema['metadata']['pydantic_js_extra'])
+
+        def find_layer(schema: ModelField, layer_type: str) -> ModelField | None:
+            layer: ModelField = schema
+            while True:
+                if "type" in layer and layer["type"] == layer_type:
+                    return layer
+                if "schema" in layer:
+                    layer = layer["schema"]
+                else:
+                    return None
+
+        def remove_layer(schema: ModelField, layer_to_be_removed: ModelField) -> None:
+            current_layer = schema
+            while True:
+                if current_layer == layer_to_be_removed:
+                    print(f"removing layer of type {current_layer["type"]}")
+                    layer_below = current_layer["schema"]
+                    current_keys = list(current_layer.keys())
+                    for k in current_keys:
+                        current_layer.pop(k)
+                    for k, v in layer_below.items():
+                        current_layer[k] = v
+                    return
+                if not "schema" in current_layer:
+                    raise KeyError(f"layer {layer_to_be_removed} not found")
+                current_layer = current_layer["schema"]
+
+        if is_clip_property_schema(schema):
+            if default_layer := find_layer(schema, 'default'):
+                if nullable_layer := find_layer(schema, 'nullable'):
+                    remove_layer(schema, default_layer)
+                    remove_layer(schema, nullable_layer)
         json_schema = super().model_field_schema(schema)
-        if (all([k in json_schema for k in ("anyOf", "default")])
-                and json_schema["default"] is None
-                and isinstance(json_schema["anyOf"], list)
-                and len(json_schema["anyOf"]) == 2
-                and json_schema["anyOf"][1] == {"type": "null"}):
-            json_schema = json_schema["anyOf"][0]
         return json_schema
 
     def sort(

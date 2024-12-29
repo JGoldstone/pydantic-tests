@@ -271,7 +271,7 @@ class CameraTypesTestCases(unittest.TestCase):
 
     def test_static_camera_schemas_match(self):
         expected: JsonSchemaValue = load_classic_camdkit_schema("../resources/model/static_camera.json")
-        actual = StaticCamera.make_json_schema()
+        actual = StaticCamera.make_json_schema(mode='serialization')
         self.assertDictEqual(expected, actual)
 
 
