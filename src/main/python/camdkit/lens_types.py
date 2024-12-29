@@ -19,7 +19,7 @@ from camdkit.compatibility import (CompatibleBaseModel,
 from camdkit.numeric_types import (NonNegativeFloat, StrictlyPositiveFloat, NormalizedFloat,
                                    NonNegativeInt, UnityOrGreaterFloat)
 from camdkit.string_types import NonBlankUTF8String
-from camdkit.units import MILLIMETER
+from camdkit.units import MILLIMETER, METER
 
 
 class StaticLens(CompatibleBaseModel):
@@ -207,7 +207,8 @@ object the radial and tangential coefficients shall each be real numbers.
 
     distortion_offset: Annotated[tuple[DistortionOffset, ...] | None,
       Field(alias="distortionOffset",
-            json_schema_extra={"clip_property": "lens_distortion_offset",
+            json_schema_extra={"units": MILLIMETER,
+                               "clip_property": "lens_distortion_offset",
                                "constraints": "X and Y centre shift shall each be real numbers."})] = None
     """Offset in x and y of the centre of distortion of the virtual camera
     """
@@ -232,7 +233,8 @@ The parameter shall contain at least one normalised values (0..1) for the FIZ en
 
     entrance_pupil_offset: Annotated[tuple[float, ...] | None,
       Field(alias="entrancePupilOffset",
-            json_schema_extra={"clip_property": "lens_entrance_pupil_offset",
+            json_schema_extra={"units": METER,
+                               "clip_property": "lens_entrance_pupil_offset",
                                "constraints": REAL})] = None
     """Offset of the entrance pupil relative to the nominal imaging plane
     (positive if the entrance pupil is located on the side of the nominal
@@ -260,19 +262,22 @@ The parameter shall contain at least one normalised values (0..1) for the FIZ en
     # TODO: file issue to get this renamed to lens_pinhole_focal_length in the clip and pinholeFocalLength in the JSON
     focal_length: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
       Field(alias="focalLength",
-            json_schema_extra={"clip_property": "lens_focal_length",
+            json_schema_extra={"units": MILLIMETER,
+                               "clip_property": "lens_focal_length",
                                "constraints": NON_NEGATIVE_REAL})] = None
     """Focal length of the lens."""
 
     focus_distance: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
       Field(alias="focusDistance",
-            json_schema_extra={"clip_property": "lens_focus_distance",
+            json_schema_extra={"units": METER,
+                               "clip_property": "lens_focus_distance",
                                "constraints": NON_NEGATIVE_REAL})] = None
     """Focus distance/position of the lens"""
 
     projection_offset: Annotated[tuple[ProjectionOffset, ...],
       Field(alias="projectionOffset",
-            json_schema_extra={"clip_property": "lens_projection_offset",
+            json_schema_extra={"units": MILLIMETER,
+                               "clip_property": "lens_projection_offset",
                                "constraints": "X and Y projection offset shall each be real numbers."})] = None
     """Offset in x and y of the centre of perspective projection of the
     virtual camera
