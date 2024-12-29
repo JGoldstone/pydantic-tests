@@ -5,14 +5,20 @@
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
 """Provisions for compatibility with OpenTrackIO 0.9 release"""
-from abc import abstractmethod
 
+import json
 import jsonref
 
+from abc import abstractmethod
+from pathlib import Path
 from typing import Final, Any, Self
 
-from pydantic import BaseModel, ValidationError, ConfigDict, json
-from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue
+from pydantic import BaseModel, ValidationError, ConfigDict
+from pydantic.json_schema import (GenerateJsonSchema,
+                                  JsonSchemaValue,
+                                  JsonSchemaMode)
+
+from pydantic_core.core_schema import ModelField, TupleSchema
 
 __all__ = [
     'CompatibleBaseModel',
@@ -24,6 +30,7 @@ __all__ = [
     'property_schema_is_optional',
     'property_schema_is_array'
 ]
+
 
 BOOLEAN: Final[str] = """The parameter shall be a boolean."""
 
@@ -81,11 +88,11 @@ def scrub_excluded(d: JsonSchemaValue, unwanted: tuple[str, ...]) -> JsonSchemaV
     return d
 
 
-def normalize_description_newlines(d: JsonSchemaValue) -> JsonSchemaValue:
-    """Canonicalize docstrings into PEP8 and PEP 257 compliance"""
+def canonicalize_descriptions(d: JsonSchemaValue) -> JsonSchemaValue:
+    """Canonicalize docstrings into PEP8- and PEP 257-compliant form"""
     for key, value in d.items():
         if isinstance(value, dict):
-            normalize_description_newlines(value)
+            canonicalize_descriptions(value)
         if "description" in d:
             # PEP8 just says "PEP 257 describes good docstring conventions" and
             # PEP 257 has 13 paragraphs and four examples to try and explain what
@@ -121,8 +128,9 @@ def wrap_classic_camdkit_properties_as_optional(classic_schema: JsonSchemaValue)
 def wrap_classic_camdkit_schema_as_optional(classic_schema: JsonSchemaValue) -> JsonSchemaValue:
     rewrapped_schema: JsonSchemaValue = {k: v for k, v in classic_schema.items() if k != "properties"}
     rewrapped_schema["properties"] = wrap_classic_camdkit_properties_as_optional(classic_schema)
-    normalize_description_newlines(rewrapped_schema)
+    canonicalize_descriptions(rewrapped_schema)
     return rewrapped_schema
+
 
 def property_schema_is_optional(property_schema: JsonSchemaValue) -> bool:
     """Detect Pydantic-generated chunk of schema corresponding to an optional property."""
@@ -141,16 +149,29 @@ def property_schema_is_optional(property_schema: JsonSchemaValue) -> bool:
 def optional_property_schema(pop_schema: JsonSchemaValue):
     return pop_schema['anyOf'][0] if property_schema_is_optional(pop_schema) else None
 
+
 def property_schema_is_array(schema: JsonSchemaValue) -> bool:
     return (type(schema) is dict
             and all([name in schema for name in ('type', 'items')])
             and schema['type'] == 'array')
+
 
 def array_property_schema(pap_schema: JsonSchemaValue) -> JsonSchemaValue | None:
     return pap_schema['items'] if property_schema_is_array(pap_schema) else None
 
 
 class CompatibleSchemaGenerator(GenerateJsonSchema):
+
+    def model_field_schema(self, schema: ModelField) -> JsonSchemaValue:
+        json_schema = super().model_field_schema(schema)
+        if (isinstance(json_schema, dict)
+                and all([k in json_schema for k in ("anyOf", "default")])
+                and json_schema["default"] is None
+                and isinstance(json_schema["anyOf"], list)
+                and len(json_schema["anyOf"]) == 2
+                and json_schema["anyOf"][1] == {"type": "null"}):
+            json_schema = json_schema["anyOf"][0]
+        return json_schema
 
     def sort(
             self, value: JsonSchemaValue, parent_key: str | None = None
@@ -166,7 +187,7 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
         json_schema = super().generate(schema, mode=mode)
         json_schema = jsonref.replace_refs(json_schema, proxies=False, merge_props=True)
         self.cleanup(json_schema)
-        normalize_description_newlines(json_schema)
+        canonicalize_descriptions(json_schema)
         return json_schema
 
 class InternalCompatibleSchemaGenerator(CompatibleSchemaGenerator):
@@ -229,9 +250,11 @@ class CompatibleBaseModel(BaseModel):
         return inner(json_or_tuple)
 
     @classmethod
-    def make_json_schema(cls, exclude_camdkit_internals: bool = True) -> json:
+    def make_json_schema(cls, mode: JsonSchemaMode = 'validation',
+                         exclude_camdkit_internals: bool = True) -> JsonSchemaValue:
         schema = cls.model_json_schema(schema_generator=(ExternalCompatibleSchemaGenerator
                                                          if exclude_camdkit_internals
-                                                         else InternalCompatibleSchemaGenerator))
+                                                         else InternalCompatibleSchemaGenerator),
+                                       mode = mode)
         schema.pop("$defs", None)
         return schema
