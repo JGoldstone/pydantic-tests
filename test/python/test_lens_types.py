@@ -7,14 +7,24 @@
 """Tests for lens types"""
 
 import unittest
+import json
+
+from pathlib import Path
 
 from typing import Any
 
 from pydantic import ValidationError
 from pydantic.json_schema import JsonSchemaValue
 
-from camdkit.lens_types import StaticLens, Distortion
-from camdkit.compatibility import load_classic_camdkit_schema
+from camdkit.compatibility import canonicalize_descriptions
+from camdkit.lens_types import StaticLens, Distortion, Lens
+
+
+def load_classic_camdkit_schema(path: Path) -> JsonSchemaValue:
+    with open(path, "r", encoding="utf-8") as file:
+        schema = json.load(file)
+        canonicalize_descriptions(schema)
+        return schema
 
 
 class LensTypesTestCases(unittest.TestCase):
@@ -53,30 +63,29 @@ class LensTypesTestCases(unittest.TestCase):
         self.assertDictEqual(expected_json, json_from_instance)
         instance_from_json: Distortion = Distortion.from_json(json_from_instance)
         self.assertEqual(valid, instance_from_json)
-        expected_schema: dict[str, Any] = {
-            "type": "object",
-            "properties": {
-                "radial": { "type": "array", "items": { "type": "number" } },
-                "tangential": {
-                    "anyOf": [ { "type": "array", "items": { "type": "number" } },
-                               { "type": "null" } ],
-                    "default": None
-                },
-                "model": {
-                    "anyOf": [ { "type": "string", "minLength": 1, "maxLength": 1023 },
-                               { "type": "null" } ],
-                    "default": None
-                }
-            },
-            "required": [ "radial" ],
-            "additionalProperties": False
-        }
-        schema_from_model: dict[str, Any] = Distortion.make_json_schema()
-        self.assertDictEqual(expected_schema, schema_from_model)
+
+        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/lens.json"))
+        self.assertIn("properties", full_expected_schema)
+        self.assertIn("distortion", full_expected_schema["properties"])
+        expected_schema = full_expected_schema["properties"]["distortion"]
+        actual_schema: dict[str, Any] = Distortion.make_json_schema()
+        self.assertDictEqual(expected_schema, actual_schema)
 
     def test_static_lens_schemas_match(self):
-        expected: JsonSchemaValue = load_classic_camdkit_schema("../resources/model/static_lens.json")
+        expected: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/static_lens.json"))
         actual = StaticLens.make_json_schema()
+        self.assertDictEqual(expected, actual)
+
+    def test_regular_lens_schemas_match(self):
+        expected: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/lens.json"))
+        actual = Lens.make_json_schema()
+        ep = expected["properties"]
+        ap = actual["properties"]
+        for k in ep.keys():
+            if ep[k] != ap[k]:
+                print(f"broken: {k}")
+        efle = ep["exposureFalloff"]
+        efla = ap["exposureFalloff"]
         self.assertDictEqual(expected, actual)
 
 

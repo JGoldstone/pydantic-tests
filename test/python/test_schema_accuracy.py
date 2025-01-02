@@ -1,5 +1,10 @@
 import json
 import unittest
+from pathlib import Path
+
+from pydantic.json_schema import JsonSchemaValue
+
+from camdkit.compatibility import canonicalize_descriptions
 from camdkit.model import *
 
 
@@ -28,3 +33,4 @@ class SchemaAccuracyTestCases(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+

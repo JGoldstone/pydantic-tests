@@ -258,6 +258,14 @@ class CompatibilityTestCases(unittest.TestCase):
             self.assertDictEqual(rewrapped_schema, pydantic_schema)
 
 
+    def test_schema_for_serialization(self):
+        sers = StaticCamera.make_json_schema()
+        print('stop here')
+
+
+
+
+
     # def test_converting_pydantic_optional_schema_to_classic_schema(self):
     #     full_pydantic_schema: dict[str, Any] = deepcopy(STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE)
     #     pydantic_property_schema: dict[str, Any] = full_pydantic_schema["properties"]["anamorphicSqueeze"]

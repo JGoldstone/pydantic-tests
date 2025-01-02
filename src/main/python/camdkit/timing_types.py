@@ -20,6 +20,7 @@ from camdkit.numeric_types import (rationalize_strictly_and_positively,
                                    NonNegative8BitInt,
                                    NonNegativeInt,
                                    NonNegative48BitInt)
+from camdkit.units import SECOND
 
 # This was in the classic implementation, but Pydantic doesn't currently
 # allow backreferences in regular expressions. Brute force it.
@@ -151,6 +152,9 @@ class Timing(CompatibleBaseModel):
     mechanism lacks inherent timing and so the sample must contain a PTP
     timestamp itself ('internal') to carry timing information.
     """
+
+    class Config:
+        json_schema_extra = {"units": SECOND}
 
     recorded_timestamp: Annotated[tuple[Timestamp, ...] | None,
       Field(alias="recordedTimestamp",

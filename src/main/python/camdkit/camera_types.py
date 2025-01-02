@@ -29,16 +29,27 @@ from camdkit.string_types import NonBlankUTF8String, UUIDURN
 
 
 class PhysicalDimensions(CompatibleBaseModel):
+    """Height and width of the active area of the camera sensor in microns
+    """
     height: Annotated[float, Field(ge=0.0, strict=True)]
     width: Annotated[float, Field(ge=0.0, strict=True)]
+
+    class Config:
+        json_schema_extra = {"units": MILLIMETER}
 
     def __init__(self, width: float, height: float) -> None:
         super(PhysicalDimensions, self).__init__(width=width, height=height)
 
 
 class SenselDimensions(CompatibleBaseModel):
+    """Photosite resolution of the active area of the camera sensor in
+    pixels
+    """
     height: Annotated[int, Field(ge=0, le=MAX_INT_32)]
     width: Annotated[int, Field(ge=0, le=MAX_INT_32)]
+
+    class Config:
+        json_schema_extra = {"units": PIXEL}
 
     def __init__(self, width: int, height: int) -> None:
         super(SenselDimensions, self).__init__(width=width, height=height)
@@ -56,22 +67,15 @@ class StaticCamera(CompatibleBaseModel):
 
     active_sensor_physical_dimensions: Annotated[PhysicalDimensions | None,
       Field(alias="activeSensorPhysicalDimensions",
-            json_schema_extra={"units": MILLIMETER,
-                               "clip_property": 'active_sensor_physical_dimensions',
+            json_schema_extra={"clip_property": 'active_sensor_physical_dimensions',
                                "constraints": "The height and width shall be each be real non-negative numbers."})] = None
-    """Height and width of the active area of the camera sensor in microns
-    """
 
     active_sensor_resolution: Annotated[SenselDimensions | None,
       Field(alias="activeSensorResolution",
-            json_schema_extra={'units': PIXEL,
-                               "clip_property": 'active_sensor_resolution',
+            json_schema_extra={"clip_property": 'active_sensor_resolution',
                                "constraints": """The height and width shall be each be an integer in the range
 [0..2,147,483,647].
 """})] = None
-    """Photosite resolution of the active area of the camera sensor in
-    pixels
-    """
 
     make: Annotated[NonBlankUTF8String | None,
       Field(json_schema_extra={"clip_property": "camera_make",

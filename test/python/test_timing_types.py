@@ -8,14 +8,17 @@
 
 import json
 import unittest
+from pathlib import Path
 
-from pydantic import ValidationError
-from rfc3339_validator import validate_rfc3339
+from typing import Optional
+from pydantic import BaseModel, ValidationError
+from pydantic.json_schema import JsonSchemaValue
 
-from camdkit.compatibility import CompatibleBaseModel
+from camdkit.compatibility import CompatibleBaseModel, canonicalize_descriptions
 from camdkit.numeric_types import (MAX_INT_8, MAX_UINT_32, MAX_UINT_48,
                                    Rational, StrictlyPositiveRational)
-from camdkit.timing_types import (TimecodeFormat,
+from camdkit.timing_types import (TimingMode,
+                                  TimecodeFormat,
                                   Timecode,
                                   Timestamp,
                                   SynchronizationSource,
@@ -24,165 +27,12 @@ from camdkit.timing_types import (TimecodeFormat,
                                   Synchronization,
                                   Timing)
 
-EXPECTED_SCHEMA = {
-    "type": "object",
-    "additionalProperties": False,
-    "description": "Object describing how the tracking device is synchronized for this\nsample.\n\nfrequency: The frequency of a synchronization signal.This may differ from\nthe sample frame rate for example in a genlocked tracking device. This is\nnot required if the synchronization source is PTP or NTP.\nlocked: Is the tracking device locked to the synchronization source\noffsets: Offsets in seconds between sync and sample. Critical for e.g.\nframe remapping, or when using different data sources for\nposition/rotation and lens encoding\npresent: Is the synchronization source present (a synchronization\nsource can be present but not locked if frame rates differ for\nexample)\nptp: If the synchronization source is a PTP master, then this object\ncontains:\n- \"master\": The MAC address of the PTP master\n- \"offset\": The timing offset in seconds from the sample timestamp to\nthe PTP timestamp\n- \"domain\": The PTP domain number\nsource: The source of synchronization must be defined as one of the\nfollowing:\n- \"genlock\": The tracking device has an external black/burst or\ntri-level analog sync signal that is triggering the capture of\ntracking samples\n- \"videoIn\": The tracking device has an external video signal that is\ntriggering the capture of tracking samples\n- \"ptp\": The tracking device is locked to a PTP master\n- \"ntp\": The tracking device is locked to an NTP server\n",
-    "properties": {
-        "frequency": {
-            "anyOf": [
-                {
-                    "type": "object",
-                    "additionalProperties": False,
-                    "required": [
-                        "num",
-                        "denom"
-                    ],
-                    "properties": {
-                        "num": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 2147483647
-                        },
-                        "denom": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 4294967295
-                        }
-                    }
-                },
-                {
-                    "type": "null"
-                }
-            ],
-            "default": None
-        },
-        "locked": {
-            "type": "boolean"
-        },
-        "offsets": {
-            "anyOf": [
-                {
-                    "type": "object",
-                    "additionalProperties": False,
-                    "properties": {
-                        "translation": {
-                            "anyOf": [
-                                {
-                                    "type": "number"
-                                },
-                                {
-                                    "type": "null"
-                                }
-                            ],
-                            "default": None
-                        },
-                        "rotation": {
-                            "anyOf": [
-                                {
-                                    "type": "number"
-                                },
-                                {
-                                    "type": "null"
-                                }
-                            ],
-                            "default": None
-                        },
-                        "lensEncoders": {
-                            "anyOf": [
-                                {
-                                    "type": "number"
-                                },
-                                {
-                                    "type": "null"
-                                }
-                            ],
-                            "default": None
-                        }
-                    }
-                },
-                {
-                    "type": "null"
-                }
-            ],
-            "default": None
-        },
-        "present": {
-            "anyOf": [
-                {
-                    "type": "boolean"
-                },
-                {
-                    "type": "null"
-                }
-            ],
-            "default": None
-        },
-        "ptp": {
-            "anyOf": [
-                {
-                    "type": "object",
-                    "additionalProperties": False,
-                    "properties": {
-                        "master": {
-                            "anyOf": [
-                                {
-                                    "type": "string",
-                                    "pattern": "(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
-                                },
-                                {
-                                    "type": "null"
-                                }
-                            ],
-                            "default": None
-                        },
-                        "offset": {
-                            "anyOf": [
-                                {
-                                    "type": "number"
-                                },
-                                {
-                                    "type": "null"
-                                }
-                            ],
-                            "default": None
-                        },
-                        "domain": {
-                            "anyOf": [
-                                {
-                                    "type": "integer",
-                                    "minimum": 0,
-                                    "maximum": 127
-                                },
-                                {
-                                    "type": "null"
-                                }
-                            ],
-                            "default": None
-                        }
-                    }
-                },
-                {
-                    "type": "null"
-                }
-            ],
-            "default": None
-        },
-        "source": {
-            "type": "string",
-            "enum": [
-                "genlock",
-                "videoIn",
-                "ptp",
-                "ntp"
-            ]
-        }
-    },
-    "required": [
-        "locked",
-        "source"
-    ]
-}
+
+def load_classic_camdkit_schema(path: Path) -> JsonSchemaValue:
+    with open(path, "r", encoding="utf-8") as file:
+        schema = json.load(file)
+        canonicalize_descriptions(schema)
+        return schema
 
 
 class TimingTestCases(unittest.TestCase):
@@ -222,42 +72,13 @@ class TimingTestCases(unittest.TestCase):
         timecode_format_from_json = TimecodeFormat.from_json(timecode_format_as_json)
         self.assertEqual(tf, timecode_format_from_json)
 
-        expected_schema = {
-            "type": "object",
-            "description": "The timecode format is defined as a rational frame rate and - where a\nsignal with sub-frames is described, such as an interlaced signal - an\nindex of which sub-frame is referred to by the timecode.\n",
-            "required": [
-                "frameRate"
-            ],
-            "additionalProperties": False,
-            "properties": {
-                "frameRate": {
-                    "type": "object",
-                    "additionalProperties": False,
-                    "required": [
-                        "num",
-                        "denom"
-                    ],
-                    "properties": {
-                        "num": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 2147483647
-                        },
-                        "denom": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "maximum": 4294967295
-                        }
-                    }
-                },
-                "subFrame": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 4294967295
-                }
-            }
-        }
-        actual_schema = tf.make_json_schema()
+        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/timing.json"))
+        self.assertIn("properties", full_expected_schema)
+        self.assertIn("timecode", full_expected_schema["properties"])
+        self.assertIn("properties", full_expected_schema["properties"]["timecode"])
+        self.assertIn("format", full_expected_schema["properties"]["timecode"]["properties"])
+        expected_schema = full_expected_schema["properties"]["timecode"]["properties"]["format"]
+        actual_schema = TimecodeFormat.make_json_schema()
         self.assertEqual(expected_schema, actual_schema)
 
     def test_timecode(self):
@@ -379,79 +200,11 @@ class TimingTestCases(unittest.TestCase):
         timecode_from_json = Timecode.from_json(timecode_as_json)
         self.assertEqual(tc, timecode_from_json)
 
-        expected_schema = {
-            "type": "object",
-            "additionalProperties": False,
-            "required": [
-                "hours",
-                "minutes",
-                "seconds",
-                "frames",
-                "format"
-            ],
-            "properties": {
-                "hours": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 23
-                },
-                "minutes": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 59
-                },
-                "seconds": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 59
-                },
-                "frames": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 119
-                },
-                "format": {
-                    "type": "object",
-                    "description": "The timecode format is defined as a rational frame rate and - where a\nsignal with sub-frames is described, such as an interlaced signal - an\nindex of which sub-frame is referred to by the timecode.\n",
-                    "required": [
-                        "frameRate"
-                    ],
-                    "additionalProperties": False,
-                    "properties": {
-                        "frameRate": {
-                            "type": "object",
-                            "additionalProperties": False,
-                            "required": [
-                                "num",
-                                "denom"
-                            ],
-                            "properties": {
-                                "num": {
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "maximum": 2147483647
-                                },
-                                "denom": {
-                                    "type": "integer",
-                                    "minimum": 1,
-                                    "maximum": 4294967295
-                                }
-                            }
-                        },
-                        "subFrame": {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 4294967295
-                        }
-                    }
-                }
-            },
-            "description": "SMPTE timecode of the sample. Timecode is a standard for labeling\nindividual frames of data in media systems and is useful for\ninter-frame synchronization.- format.frameRate: The frame rate as a rational number. Drop frame\nrates such as 29.97 should be represented as e.g. 30000/1001. The\ntimecode frame rate may differ from the sample frequency.\n"
-        }
+        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/timing.json"))
+        self.assertIn("properties", full_expected_schema)
+        self.assertIn("timecode", full_expected_schema["properties"])
+        expected_schema = full_expected_schema["properties"]["timecode"]
         actual_schema = Timecode.make_json_schema()
-        # TODO figure out how to normalize classic docstring massaging to match Pydantic output"
-        expected_schema.pop("description", None)
-        actual_schema.pop("description", None)
         self.assertEqual(expected_schema, actual_schema)
 
     def test_timestamp(self):
@@ -492,24 +245,11 @@ class TimingTestCases(unittest.TestCase):
         timestamp_from_json = Timestamp.from_json(timestamp_as_json)
         self.assertEqual(valid_timestamp, timestamp_from_json)
 
-        expected_schema = {
-            "type": "object",
-            "additionalProperties": False,
-            "properties": {
-                "seconds": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": MAX_UINT_48
-                },
-                "nanoseconds": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": MAX_UINT_32
-                }
-            },
-            "required": ["seconds", "nanoseconds"]
-        }
-        actual_schema = Timestamp.make_json_schema()
+        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/timing.json"))
+        self.assertIn("properties", full_expected_schema)
+        self.assertIn("sampleTimestamp", full_expected_schema["properties"])
+        expected_schema = full_expected_schema["properties"]["sampleTimestamp"]
+        actual_schema = Timing.make_json_schema()["properties"]["sampleTimestamp"]
         self.assertEqual(expected_schema, actual_schema)
 
     def test_synchronization_source_validation(self) -> None:
@@ -564,26 +304,13 @@ class TimingTestCases(unittest.TestCase):
         offsets_from_json = SynchronizationOffsets.from_json(offsets_as_json)
         self.assertEqual(valid_offsets, offsets_from_json)
 
-        expected_schema = {
-            "type": "object",
-            "additionalProperties": False,
-            "properties": {
-                "translation": {
-                    "anyOf": [ { "type": "number" }, { "type": "null" } ],
-                    "default": None
-                },
-                "rotation": {
-                    "anyOf": [ { "type": "number" }, {  "type": "null" } ],
-                    "default": None
-                },
-                "lensEncoders": {
-                    "anyOf": [ {  "type": "number" }, {  "type": "null" } ],
-                    "default": None
-                }
-            }
-        }
+        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/timing.json"))
+        self.assertIn("properties", full_expected_schema)
+        self.assertIn("synchronization", full_expected_schema["properties"])
+        self.assertIn("properties", full_expected_schema["properties"]["synchronization"])
+        self.assertIn("offsets", full_expected_schema["properties"]["synchronization"]["properties"])
+        expected_schema = full_expected_schema["properties"]["synchronization"]["properties"]["offsets"]
         actual_schema = SynchronizationOffsets.make_json_schema()
-        # del actual_schema["description"]  # because classic camdkit doesn't include it
         self.assertDictEqual(expected_schema, actual_schema)
 
     def test_synchronization_ptp(self):
@@ -628,50 +355,13 @@ class TimingTestCases(unittest.TestCase):
         ptp_from_json = SynchronizationPTP.from_json(ptp_as_json)
         self.assertEqual(valid_ptp, ptp_from_json)
 
-        expected_schema = {
-            "type": "object",
-            "additionalProperties": False,
-            "properties": {
-                "master": {
-                    "anyOf": [
-                        {
-                            "type": "string",
-                            "pattern": "(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": None
-                },
-                "offset": {
-                    "anyOf": [
-                        {
-                            "type": "number"
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": None
-                },
-                "domain": {
-                    "anyOf": [
-                        {
-                            "type": "integer",
-                            "minimum": 0,
-                            "maximum": 127
-                        },
-                        {
-                            "type": "null"
-                        }
-                    ],
-                    "default": None
-                }
-            }
-        }
+        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/timing.json"))
+        self.assertIn("properties", full_expected_schema)
+        self.assertIn("synchronization", full_expected_schema["properties"])
+        self.assertIn("properties", full_expected_schema["properties"]["synchronization"])
+        self.assertIn("ptp", full_expected_schema["properties"]["synchronization"]["properties"])
+        expected_schema = full_expected_schema["properties"]["synchronization"]["properties"]["ptp"]
         actual_schema = SynchronizationPTP.make_json_schema()
-        # del actual_schema["description"]  # because classic camdkit doesn't include it
         self.assertDictEqual(expected_schema, actual_schema)
 
     def test_synchronization(self):
@@ -794,13 +484,18 @@ class TimingTestCases(unittest.TestCase):
         self.assertEqual(valid_sync, sync_from_json)
 
 
-    def test_schemas_match(self):
-        class SynchronizationHarness(CompatibleBaseModel):
-            param: Timing
+    # def test_schemas_match(self):
+        # class SynchronizationHarness(CompatibleBaseModel):
+        #     param: Timing
+        #
+        # actual_schema = SynchronizationHarness.make_json_schema()
+        # expected_schema = classic_schema()
+        # self.assertEqual(expected_schema, actual_schema["properties"]["param"])
 
-        actual_schema = SynchronizationHarness.make_json_schema()
-        expected_schema = EXPECTED_SCHEMA
-        self.assertEqual(expected_schema, actual_schema["properties"]["param"])
+    def test_timing_schemas_match(self):
+        expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/timing.json"))
+        actual_schema: JsonSchemaValue = Timing.make_json_schema()
+        self.assertDictEqual(expected_schema, actual_schema)
 
 if __name__ == '__main__':
     unittest.main()

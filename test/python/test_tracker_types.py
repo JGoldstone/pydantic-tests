@@ -1,11 +1,21 @@
 import unittest
+import json
+
+from pathlib import Path
 
 from pydantic import ValidationError
 from pydantic.json_schema import JsonSchemaValue
 
-from camdkit.compatibility import load_classic_camdkit_schema
+from camdkit.compatibility import canonicalize_descriptions
 from camdkit.string_types import NonBlankUTF8String
 from camdkit.tracker_types import StaticTracker, Tracker
+
+
+def load_classic_camdkit_schema(path: Path) -> JsonSchemaValue:
+    with open(path, "r", encoding="utf-8") as file:
+        schema = json.load(file)
+        canonicalize_descriptions(schema)
+        return schema
 
 
 class TrackerTestCases(unittest.TestCase):

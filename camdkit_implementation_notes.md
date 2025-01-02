@@ -381,7 +381,7 @@ StrictlyPositiveFloat
 NormalizedFloat
 UnityOrGreaterFloat
 
-### suggestion: can we get rename the unit "meter / degree"
+### suggestion: can we rename the unit "meter / degree"
 As it is, it looks like some sort of angular velocity thing, a mixed
 metric + imperial and distance + angle unit.
 
@@ -479,6 +479,19 @@ And of course it would get really, really deep for Synchronization.
 Many of these (_cf._ `tracker_notes`) only describe the contained type `Foo` and don't mention the `tuple[_Foo_]`
 container. Of course the real way to fix this is, as discussed above, to automatically generate the constraints.
 
-### fix various typos
+### fix various typos and omissions
 
 In the validation message for strings parameters there's a missing "n" at the end of "betwee"
+
+In the docstring for lens_custom it's "additonal" where it should be "additional"
+
+The presence or absence of "additionalProperties": False in generated JSON schemas seems...irregular 
+
+### questionable
+
+Why does lens distortion uniquely require at least one element in a clip?
+
+Why is the f-number of the lens constrained to be greater than OR EQUAL TO zero, rather than greater than 0?
+Same question for tStop focusDistance focalLength
+
+WHy does lens_custom have a units:None when other things without units do not?

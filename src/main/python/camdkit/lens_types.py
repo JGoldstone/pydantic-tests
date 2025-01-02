@@ -163,19 +163,21 @@ class ExposureFalloff(CompatibleBaseModel):
 
 class Lens(CompatibleBaseModel):
     # TODO: watch GitHub issue #127 to see if we can get rid of the 'custom' field
-    custom: Annotated[tuple[tuple[Any, ...], ...] | None,
+    custom: Annotated[tuple[tuple[float, ...], ...] | None,
       Field(json_schema_extra={"clip_property": "lens_custom",
                                "constraints": """The parameter shall be a tuple of items of the class itemClass.
     The tuple can be empty
     """})] = None
-    """This list provides optional additional custom coefficients that can 
+    """This list provides optional additonal custom coefficients that can 
     extend the existing lens model. The meaning of and how these characteristics
     are to be applied to a virtual camera would require negotiation between a
     particular producer and consumer.
     """
 
+    # TODO as distortion is 'special' with min_length, ask about that. Typo?
     distortion: Annotated[tuple[tuple[Distortion, ...], ...] | None,
-      Field(json_schema_extra={"clip_property": "lens_distortions",
+      Field(min_length = 1,
+            json_schema_extra={"clip_property": "lens_distortions",
                                "constraints": """The list shall contain at least one Distortion object, and in each
 object the radial and tangential coefficients shall each be real numbers.
 """})] = None
@@ -251,7 +253,8 @@ The parameter shall contain at least one normalised values (0..1) for the FIZ en
     a lens
     """
 
-    f_number: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
+    # TODO file on why camdkit has this as NonNegativeFloat instead of StrictlyPositiveFloat
+    f_number: Annotated[tuple[NonNegativeFloat, ...] | None,
       Field(alias="fStop",
             json_schema_extra={"clip_property": "lens_f_number",
                                "constraints": NON_NEGATIVE_REAL})] = None
@@ -260,14 +263,16 @@ The parameter shall contain at least one normalised values (0..1) for the FIZ en
     """
 
     # TODO: file issue to get this renamed to lens_pinhole_focal_length in the clip and pinholeFocalLength in the JSON
-    focal_length: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
+    # TODO file on why camdkit has this as NonNegativeFloat instead of StrictlyPositiveFloat
+    focal_length: Annotated[tuple[NonNegativeFloat, ...] | None,
       Field(alias="focalLength",
             json_schema_extra={"units": MILLIMETER,
                                "clip_property": "lens_focal_length",
                                "constraints": NON_NEGATIVE_REAL})] = None
     """Focal length of the lens."""
 
-    focus_distance: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
+    # TODO file on why camdkit has this as NonNegativeFloat instead of StrictlyPositiveFloat
+    focus_distance: Annotated[tuple[NonNegativeFloat, ...] | None,
       Field(alias="focusDistance",
             json_schema_extra={"units": METER,
                                "clip_property": "lens_focus_distance",
@@ -295,7 +300,8 @@ The parameter shall contain at least one integer value for the FIZ encoders.
       homing / ranging has taken place.
     """
 
-    t_number: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
+    # TODO file on why camdkit has this as NonNegativeFloat instead of StrictlyPositiveFloat
+    t_number: Annotated[tuple[NonNegativeFloat, ...] | None,
       Field(alias="tStop",
             json_schema_extra={"clip_property": "lens_t_number",
                                "constraints": NON_NEGATIVE_REAL})] = None
@@ -303,15 +309,15 @@ The parameter shall contain at least one integer value for the FIZ encoders.
     divided by the square root of the transmittance of the lens.
     """
 
-    undistortion: Annotated[tuple[tuple[Distortion, ...], ...],
-                  Field(json_schema_extra={"clip_property": "lens_undistortions",
-                                           "constraints": """The list shall contain at least one Distortion object, and in each
-object the radial and tangential coefficients shall each be real numbers.
-"""})] | None = None
-    """A list of Distortion objects that each define the coefficients for
-    calculating the distortion characteristics of a lens comprising radial
-    distortion coefficients of the spherical distortion (k1-N) and the
-    tangential distortion (p1-N). An optional key 'model' can be used that
-    describes the distortion model. The default is Brown-Conrady D-U (that
-    maps Distorted to Undistorted coordinates).
-    """
+#     undistortion: Annotated[tuple[tuple[Distortion, ...], ...],
+#                   Field(json_schema_extra={"clip_property": "lens_undistortions",
+#                                            "constraints": """The list shall contain at least one Distortion object, and in each
+# object the radial and tangential coefficients shall each be real numbers.
+# """})] | None = None
+#     """A list of Distortion objects that each define the coefficients for
+#     calculating the distortion characteristics of a lens comprising radial
+#     distortion coefficients of the spherical distortion (k1-N) and the
+#     tangential distortion (p1-N). An optional key 'model' can be used that
+#     describes the distortion model. The default is Brown-Conrady D-U (that
+#     maps Distorted to Undistorted coordinates).
+#     """

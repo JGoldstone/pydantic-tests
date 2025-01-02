@@ -11,13 +11,14 @@ import math
 import unittest
 import json
 
+from pathlib import Path
 from typing import Any
 from fractions import Fraction
 
 from pydantic import ValidationError
 from pydantic.json_schema import JsonSchemaValue
 
-from camdkit.compatibility import load_classic_camdkit_schema
+from camdkit.compatibility import canonicalize_descriptions
 from camdkit.numeric_types import StrictlyPositiveRational, MAX_INT_32
 from camdkit.camera_types import (PhysicalDimensions, SenselDimensions,
                                   StaticCamera)
@@ -41,6 +42,13 @@ THIRTY_DEGREES = 30.0
 SIXTY_DEGREES = 60.0
 ONE_HUNDRED_EIGHTY_DEGREES = 180.0
 THREE_HUNDRED_SIXTY_DEGREES = 360.0
+
+
+def load_classic_camdkit_schema(path: Path) -> JsonSchemaValue:
+    with open(path, "r", encoding="utf-8") as file:
+        schema = json.load(file)
+        canonicalize_descriptions(schema)
+        return schema
 
 
 class CameraTypesTestCases(unittest.TestCase):
@@ -87,26 +95,13 @@ class CameraTypesTestCases(unittest.TestCase):
         # verify correct construction from json
         instance_from_json: PhysicalDimensions = PhysicalDimensions.from_json(json_from_instance)
         self.assertEqual(d, instance_from_json)
-        expected_schema = {
-            "type": "object",
-            "additionalProperties": False,
-            "required": [
-                "height",
-                "width"
-            ],
-            "properties": {
-                "height": {
-                    "type": "number",
-                    "minimum": 0.0,
-                },
-                "width": {
-                    "type": "number",
-                    "minimum": 0.0,
-                }
-            }
-        }
-        schema = PhysicalDimensions.make_json_schema()
-        self.assertDictEqual(expected_schema, schema)
+
+        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/static_camera.json"))
+        self.assertIn("properties", full_expected_schema)
+        self.assertIn("activeSensorPhysicalDimensions", full_expected_schema["properties"])
+        expected_schema = full_expected_schema["properties"]["activeSensorPhysicalDimensions"]
+        actual_schema = PhysicalDimensions.make_json_schema()
+        self.assertDictEqual(expected_schema, actual_schema)
 
     def test_sensel_dimensions(self):
         with self.assertRaises(TypeError):
@@ -159,10 +154,12 @@ class CameraTypesTestCases(unittest.TestCase):
                     "minimum": 0,
                     "maximum": 2147483647
                 }
-            }
+            },
+            "description": "Photosite resolution of the active area of the camera sensor in\npixels\n",
+            "units": "pixel"
         }
-        schema = SenselDimensions.make_json_schema()
-        self.assertDictEqual(expected_schema, schema)
+        actual_schema = SenselDimensions.make_json_schema()
+        self.assertDictEqual(expected_schema, actual_schema)
 
     def test_static_camera(self):
         sc = StaticCamera()
@@ -270,8 +267,8 @@ class CameraTypesTestCases(unittest.TestCase):
             # sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES + sys.float_info.epsilon
 
     def test_static_camera_schemas_match(self):
-        expected: JsonSchemaValue = load_classic_camdkit_schema("../resources/model/static_camera.json")
-        actual = StaticCamera.make_json_schema(mode='serialization')
+        expected: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/static_camera.json"))
+        actual = StaticCamera.make_json_schema()
         self.assertDictEqual(expected, actual)
 
 
