@@ -68,7 +68,10 @@ class LensTypesTestCases(unittest.TestCase):
         self.assertIn("properties", full_expected_schema)
         self.assertIn("distortion", full_expected_schema["properties"])
         expected_schema = full_expected_schema["properties"]["distortion"]
-        actual_schema: dict[str, Any] = Distortion.make_json_schema()
+        full_actual_schema: dict[str, Any] = Lens.make_json_schema()
+        self.assertIn("properties", full_actual_schema)
+        self.assertIn("distortion", full_actual_schema["properties"])
+        actual_schema = full_actual_schema["properties"]["distortion"]
         self.assertDictEqual(expected_schema, actual_schema)
 
     def test_static_lens_schemas_match(self):

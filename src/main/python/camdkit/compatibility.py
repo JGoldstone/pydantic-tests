@@ -170,35 +170,38 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
                 return mf_schema['metadata']['pydantic_js_extra']['clip_property']
             return None
 
-        def trapdoor_for_layer_type(layer_type: str):
-            table = {'default': 'schema',
-                     'nullable': 'schema',
-                     'tuple': 'items_schema',
-                     'model': 'schema',
-                     # 'model': 'schema',
-                     'function-before': 'schema',
-                     'model-field': 'schema',
-                     'model-fields': 'fields'}
+        def trapdoor_for_layer_type(layer_type: str) -> tuple[str | None, bool]:
+            # First returned value is name of trapdoor; second is whether we need to index (at 0) into it
+            table = {'default': ('schema', False),
+                     'nullable': ('schema', False),
+                     'tuple': ('items_schema', True),
+                     'model': ('schema', False),
+                     'function-before': ('schema', False),
+                     'function-after': ('schema', False),
+                     'model-field': ('schema', False),
+                     'model-fields': ('fields', False)}
             try:
                 return table[layer_type]
             except KeyError as e:
-                return None
+                return None, False
 
         def find_layer(layer_schema: dict[str, Any],
                        sought_layer_type: str) -> dict[str, Any] | None:
             """From the given layer, descend through a series of trapdoors
-            (which wiill have different names, depending on the layer)
+            (which will have different names, depending on the layer)
             until we reach a layer of the sought type, and return it"""
-            current_layer: dict[str, Any] = layer_schema
+            current_layer: dict[str, Any] | list = layer_schema
             while True:
                 if "type" in current_layer:
                     current_layer_type = current_layer["type"]
                     if current_layer_type == sought_layer_type:
                         return current_layer
-                    trapdoor = trapdoor_for_layer_type(current_layer_type)
+                    trapdoor, must_index = trapdoor_for_layer_type(current_layer_type)
                     if trapdoor:
                         if trapdoor in current_layer:
                             current_layer = current_layer[trapdoor]
+                            if must_index:
+                                current_layer = current_layer[0]
                         else:
                             raise RuntimeError(f"schema layer of type {current_layer_type}"
                                                f" missing expected trapdoor {trapdoor}")
@@ -209,27 +212,22 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
 
         def remove_layer(layer_schema: dict[str, Any],
                          layer_to_be_removed) -> None:
-            current_layer: dict[str, Any] = layer_schema
-            while True:
+            current_layer: dict[str, Any] | list = layer_schema
+            while isinstance(current_layer, dict):
                 current_layer_type = current_layer["type"]
-                trapdoor = trapdoor_for_layer_type(current_layer_type)
+                trapdoor, must_index = trapdoor_for_layer_type(current_layer_type)
                 if trapdoor:
                     if trapdoor in current_layer:
                         if current_layer == layer_to_be_removed:
                             print(f"removing layer of type {current_layer_type}")
                             layer_below = current_layer[trapdoor]
+                            if must_index:
+                                layer_below = layer_below[0]
                             current_keys = list(current_layer.keys())
                             for k in current_keys:
                                 current_layer.pop(k)
-                            if current_layer_type == "tuple":
-                                # with tuples, what we hoist up through the trapdoor to repopulate
-                                # the current layer isn't in the layer below; it's in the first
-                                # entry in a list in the layer below.
-                                for k, v in layer_below[0].items():
-                                    current_layer[k] = v
-                            else:
-                                for k, v in layer_below.items():
-                                    current_layer[k] = v
+                            for k, v in layer_below.items():
+                                current_layer[k] = v
                             return
                     else:
                         raise RuntimeError(f"schema layer of type {current_layer_type}"
@@ -240,9 +238,8 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
                                        f" because we don't know how to hoist up the layer"
                                        f" underneath it")
 
-        if clip_property := clip_property_from_schema(schema):
-            # if schema['metadata']['pydantic_js_extra']['clip_property'] == 'lens_raw_encoders':
-            #     print('pause here')
+        if True:  # clip_property := clip_property_from_schema(schema):
+            removed_tuple_layer: bool = False
             while True:
                 removed_layer: bool = False
                 if default_layer := find_layer(schema, 'default'):
@@ -252,57 +249,17 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
                     remove_layer(schema, nullable_layer)
                     removed_layer = True
                 if tuple_layer := find_layer(schema, 'tuple'):
-                    remove_layer(schema, tuple_layer)
-                    removed_layer = True
+                    if  clip_property_from_schema(schema) and not removed_tuple_layer:
+                        remove_layer(schema, tuple_layer)
+                        removed_layer = True
+                        removed_tuple_layer = True
                 # if model_fields_layer := find_layer(schema, 'model-fields'):
                 #     remove_layer(schema, model_fields_layer)
                 if not removed_layer:
                     break
 
-
         json_schema = super().model_field_schema(schema)
         return json_schema
-
-    # def model_field_schema(self, schema: ModelField) -> JsonSchemaValue:
-    #
-    #     def is_clip_property_schema(schema: ModelField) -> bool:
-    #         return ('metadata' in schema
-    #                 and 'pydantic_js_extra' in schema['metadata']
-    #                 and 'clip_property' in schema['metadata']['pydantic_js_extra'])
-    #
-    #     def find_layer(schema: ModelField, layer_type: str) -> ModelField | None:
-    #         layer: ModelField = schema
-    #         while True:
-    #             if "type" in layer and layer["type"] == layer_type:
-    #                 return layer
-    #             if "schema" in layer:
-    #                 layer = layer["schema"]
-    #             else:
-    #                 return None
-    #
-    #     def remove_layer(schema: ModelField, layer_to_be_removed: ModelField) -> None:
-    #         current_layer = schema
-    #         while True:
-    #             if current_layer == layer_to_be_removed:
-    #                 print(f"removing layer of type {current_layer["type"]}")
-    #                 layer_below = current_layer["schema"]
-    #                 current_keys = list(current_layer.keys())
-    #                 for k in current_keys:
-    #                     current_layer.pop(k)
-    #                 for k, v in layer_below.items():
-    #                     current_layer[k] = v
-    #                 return
-    #             if not "schema" in current_layer:
-    #                 raise KeyError(f"layer {layer_to_be_removed} not found")
-    #             current_layer = current_layer["schema"]
-    #
-    #     if is_clip_property_schema(schema):
-    #         if default_layer := find_layer(schema, 'default'):
-    #             if nullable_layer := find_layer(schema, 'nullable'):
-    #                 remove_layer(schema, default_layer)
-    #                 remove_layer(schema, nullable_layer)
-    #     json_schema = super().model_field_schema(schema)
-    #     return json_schema
 
     def sort(
             self, value: JsonSchemaValue, parent_key: str | None = None

@@ -91,8 +91,8 @@ class Distortion(CompatibleBaseModel):
     #    Change type to typing.Sequence? collections.abc.Sequence or collections.abc.MutableSequence?
     # radial: Annotated[tuple[float, ...], Field(strict=True)]
     # tangential: Annotated[tuple[float, ...] | None, Field(strict=True)] = None
-    radial: tuple[float, ...]
-    tangential: tuple[float, ...] | None = None
+    radial: Annotated[tuple[float, ...], Field(min_length=1)]
+    tangential: Annotated[tuple[float, ...] | None, Field(min_length=1)] = None
     model: NonBlankUTF8String | None = None
 
     @model_validator(mode="after")

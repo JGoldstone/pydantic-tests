@@ -43,21 +43,23 @@
         ],
         "properties": {
           "model": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1023
           },
           "radial": {
             "type": "array",
             "items": {
               "type": "number"
             },
-            "minLength": 1
+            "minItems": 1
           },
           "tangential": {
             "type": "array",
             "items": {
               "type": "number"
             },
-            "minLength": 1
+            "minItems": 1
           }
         }
       },

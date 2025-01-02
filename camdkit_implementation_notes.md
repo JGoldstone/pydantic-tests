@@ -487,6 +487,8 @@ In the docstring for lens_custom it's "additonal" where it should be "additional
 
 The presence or absence of "additionalProperties": False in generated JSON schemas seems...irregular 
 
+The model name in Distortion can be of infinite length
+
 ### questionable
 
 Why does lens distortion uniquely require at least one element in a clip?
