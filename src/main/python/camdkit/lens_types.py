@@ -168,7 +168,7 @@ class Lens(CompatibleBaseModel):
                                "constraints": """The parameter shall be a tuple of items of the class itemClass.
     The tuple can be empty
     """})] = None
-    """This list provides optional additonal custom coefficients that can 
+    """This list provides optional additional custom coefficients that can 
     extend the existing lens model. The meaning of and how these characteristics
     are to be applied to a virtual camera would require negotiation between a
     particular producer and consumer.
@@ -220,17 +220,16 @@ object the radial and tangential coefficients shall each be real numbers.
                                "constraints": """
 The parameter shall contain at least one normalised values (0..1) for the FIZ encoders.
 """})] = None
-    """
-    Normalised real numbers (0-1) for focus, iris and zoom.
+    """Normalised real numbers (0-1) for focus, iris and zoom.
     Encoders are represented in this way (as opposed to raw integer
-      values) to ensure values remain independent of encoder resolution,
-      minimum and maximum (at an acceptable loss of precision).
+    values) to ensure values remain independent of encoder resolution,
+    minimum and maximum (at an acceptable loss of precision).
     These values are only relevant in lenses with end-stops that
-      demarcate the 0 and 1 range.
+    demarcate the 0 and 1 range.
     Value should be provided in the following directions (if known):
-      Focus:   0=infinite     1=closest
-      Iris:    0=open         1=closed
-      Zoom:    0=wide angle   1=telephoto
+    Focus:   0=infinite     1=closest
+    Iris:    0=open         1=closed
+    Zoom:    0=wide angle   1=telephoto
     """
 
     entrance_pupil_offset: Annotated[tuple[float, ...] | None,
@@ -294,10 +293,9 @@ The parameter shall contain at least one normalised values (0..1) for the FIZ en
                                "constraints": """
 The parameter shall contain at least one integer value for the FIZ encoders.
 """})] = None
-    """
-    Raw encoder values for focus, iris and zoom.
+    """Raw encoder values for focus, iris and zoom.
     These values are dependent on encoder resolution and before any
-      homing / ranging has taken place.
+    homing / ranging has taken place.
     """
 
     # TODO file on why camdkit has this as NonNegativeFloat instead of StrictlyPositiveFloat

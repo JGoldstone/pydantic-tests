@@ -32,7 +32,7 @@ __all__ = [
 BOOLEAN: Final[str] = """The parameter shall be a boolean."""
 
 NONBLANK_UTF8_MAX_1023_CHARS: Final[str] = \
-"""The parameter shall be a Unicode string betwee 0 and 1023
+"""The parameter shall be a Unicode string between 0 and 1023
 codepoints.
 """
 

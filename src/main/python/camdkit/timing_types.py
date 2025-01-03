@@ -61,7 +61,7 @@ class Timecode(CompatibleBaseModel):
     """SMPTE timecode of the sample. Timecode is a standard for labeling
     individual frames of data in media systems and is useful for
     inter-frame synchronization.
-     - format.frameRate: The frame rate as a rational number. Drop frame
+    - format.frameRate: The frame rate as a rational number. Drop frame
     rates such as 29.97 should be represented as e.g. 30000/1001. The
     timecode frame rate may differ from the sample frequency.
     """
@@ -169,8 +169,7 @@ class Timing(CompatibleBaseModel):
                                "constraints": """The parameter shall contain valid number of seconds, nanoseconds
 elapsed since the start of the epoch.
 """})] = None
-    """
-    PTP timestamp of the data recording instant, provided for convenience
+    """PTP timestamp of the data recording instant, provided for convenience
     during playback of e.g. pre-recorded tracking data. The timestamp
     comprises a 48-bit unsigned integer (seconds), a 32-bit unsigned
     integer (nanoseconds)
