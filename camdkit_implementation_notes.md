@@ -489,6 +489,11 @@ The presence or absence of "additionalProperties": False in generated JSON schem
 
 The model name in Distortion can be of infinite length
 
+The numerator for the rational framerate built into the Timecode object should have a numerator that's within
+values for positive signed ints; same for frequency in synchronization
+
+The docstring for recordedTimestamp needs to lose its leading \n
+
 ### questionable
 
 Why does lens distortion uniquely require at least one element in a clip?
@@ -497,3 +502,8 @@ Why is the f-number of the lens constrained to be greater than OR EQUAL TO zero,
 Same question for tStop focusDistance focalLength
 
 WHy does lens_custom have a units:None when other things without units do not?
+
+Am I correct in thinking that when we simplified Transform objects we loosened the requirement
+that the id be a UUIDURN ? I've relaxed that restriction in the Pydantic implementation to 
+match what I see manually generated in the classic version, but is it wise to do allow
+anything in there?

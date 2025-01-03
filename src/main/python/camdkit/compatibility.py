@@ -25,8 +25,6 @@ __all__ = [
     'RATIONAL', 'STRICTLY_POSITIVE_RATIONAL',
     'NON_NEGATIVE_INTEGER', 'STRICTLY_POSITIVE_INTEGER',
     'NON_NEGATIVE_REAL', 'REAL', 'REAL_AT_LEAST_UNITY',
-    'property_schema_is_optional',
-    'property_schema_is_array',
     'canonicalize_descriptions'
 ]
 
@@ -104,59 +102,6 @@ def canonicalize_descriptions(d: JsonSchemaValue) -> JsonSchemaValue:
                          else no_newlines_at_either_end)
             d["description"] = compliant
     return d
-
-
-def wrap_classic_camdkit_properties_as_optional(classic_schema: JsonSchemaValue) -> JsonSchemaValue:
-    new_properties: JsonSchemaValue = {}
-    properties = classic_schema["properties"]
-    for prop_name, prop_value in properties.items():
-        new_property: JsonSchemaValue = {}
-        any_of_contents = [ {k: v for k, v in prop_value.items()
-                             if k not in ("description", "units") } ,
-                            { "type": "null" } ]
-        new_property["anyOf"] = any_of_contents
-        new_property["default"] = None
-        if "description" in prop_value:
-            new_property["description"] = prop_value["description"]
-        if "units" in prop_value:
-            new_property["units"] = prop_value["units"]
-        new_properties[prop_name] = new_property
-    return new_properties
-
-
-def wrap_classic_camdkit_schema_as_optional(classic_schema: JsonSchemaValue) -> JsonSchemaValue:
-    rewrapped_schema: JsonSchemaValue = {k: v for k, v in classic_schema.items() if k != "properties"}
-    rewrapped_schema["properties"] = wrap_classic_camdkit_properties_as_optional(classic_schema)
-    canonicalize_descriptions(rewrapped_schema)
-    return rewrapped_schema
-
-
-def property_schema_is_optional(property_schema: JsonSchemaValue) -> bool:
-    """Detect Pydantic-generated chunk of schema corresponding to an optional property."""
-    return (type(property_schema) is dict
-            # and 2 <= len(property_schema) <= 3
-            and all([name in property_schema for name in ('anyOf', 'default')])
-            and isinstance(property_schema['anyOf'], list)
-            and len(property_schema['anyOf']) == 2
-            and isinstance(property_schema['anyOf'][0], dict)
-            and (('type' in property_schema['anyOf'][0]
-                  and property_schema['anyOf'][0]['type'] in ('object', 'array', 'string',
-                                                              'number', 'boolean', 'integer'))
-                 or '$ref' in property_schema['anyOf'][0])
-            )
-
-def optional_property_schema(pop_schema: JsonSchemaValue):
-    return pop_schema['anyOf'][0] if property_schema_is_optional(pop_schema) else None
-
-
-def property_schema_is_array(schema: JsonSchemaValue) -> bool:
-    return (type(schema) is dict
-            and all([name in schema for name in ('type', 'items')])
-            and schema['type'] == 'array')
-
-
-def array_property_schema(pap_schema: JsonSchemaValue) -> JsonSchemaValue | None:
-    return pap_schema['items'] if property_schema_is_array(pap_schema) else None
 
 
 class CompatibleSchemaGenerator(GenerateJsonSchema):

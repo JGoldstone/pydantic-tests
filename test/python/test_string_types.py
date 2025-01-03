@@ -41,10 +41,7 @@ class StringsTestCases(unittest.TestCase):
         smallest_too_long_non_blank_utf8_string: NonBlankUTF8String = "x" * 1024
         with self.assertRaises(ValidationError):
             x.value = smallest_too_long_non_blank_utf8_string
-        expected_schema = {
-            'anyOf': [{'type': 'string', 'minLength': 1, 'maxLength': 1023},
-                      {'type': 'null'}],
-            'default': None}
+        expected_schema = {'type': 'string', 'minLength': 1, 'maxLength': 1023}
         entire_schema = NonBlankUTF8StringTestbed.make_json_schema()
         value_schema = entire_schema["properties"]["value"]
         self.assertDictEqual(expected_schema, value_schema)

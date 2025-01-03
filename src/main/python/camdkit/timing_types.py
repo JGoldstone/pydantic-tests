@@ -58,6 +58,13 @@ class TimecodeFormat(CompatibleBaseModel):
 
 
 class Timecode(CompatibleBaseModel):
+    """SMPTE timecode of the sample. Timecode is a standard for labeling
+    individual frames of data in media systems and is useful for
+    inter-frame synchronization.
+     - format.frameRate: The frame rate as a rational number. Drop frame
+    rates such as 29.97 should be represented as e.g. 30000/1001. The
+    timecode frame rate may differ from the sample frequency.
+    """
     hours: int = Field(..., ge=0, le=23, strict=True)
     minutes: int = Field(..., ge=0, le=59, strict=True)
     seconds: int = Field(..., ge=0, le=59, strict=True)
@@ -80,6 +87,9 @@ class Timestamp(CompatibleBaseModel):
 
     def __init__(self, seconds: NonNegativeInt, nanoseconds: NonNegativeInt):
         super(Timestamp, self).__init__(seconds=seconds, nanoseconds=nanoseconds)
+
+    class Config:
+        json_schema_extra = {"units": SECOND}
 
 
 @verify(UNIQUE)
@@ -152,9 +162,6 @@ class Timing(CompatibleBaseModel):
     mechanism lacks inherent timing and so the sample must contain a PTP
     timestamp itself ('internal') to carry timing information.
     """
-
-    class Config:
-        json_schema_extra = {"units": SECOND}
 
     recorded_timestamp: Annotated[tuple[Timestamp, ...] | None,
       Field(alias="recordedTimestamp",
@@ -234,13 +241,6 @@ elapsed since the start of the epoch.
                                "constraints": """The parameter shall contain a valid format and hours, minutes,
 seconds and frames with appropriate min/max values.
 """})] = None
-    """SMPTE timecode of the sample. Timecode is a standard for labeling
-    individual frames of data in media systems and is useful for
-    inter-frame synchronization.
-     - format.frameRate: The frame rate as a rational number. Drop frame
-    rates such as 29.97 should be represented as e.g. 30000/1001. The
-    timecode frame rate may differ from the sample frequency.
-    """
 
     # noinspection PyNestedDecorators
     @field_validator("sample_rate", mode="before")

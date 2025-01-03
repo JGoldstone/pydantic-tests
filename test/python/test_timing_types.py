@@ -362,7 +362,7 @@ class TimingTestCases(unittest.TestCase):
         self.assertIn("ptp", full_expected_schema["properties"]["synchronization"]["properties"])
         expected_schema = full_expected_schema["properties"]["synchronization"]["properties"]["ptp"]
         actual_schema = SynchronizationPTP.make_json_schema()
-        self.assertDictEqual(expected_schema, actual_schema)
+        self.assertEqual(expected_schema, actual_schema)
 
     def test_synchronization(self):
         valid_locked: bool = True
@@ -483,19 +483,11 @@ class TimingTestCases(unittest.TestCase):
         sync_from_json = Synchronization.from_json(sync_as_json)
         self.assertEqual(valid_sync, sync_from_json)
 
-
-    # def test_schemas_match(self):
-        # class SynchronizationHarness(CompatibleBaseModel):
-        #     param: Timing
-        #
-        # actual_schema = SynchronizationHarness.make_json_schema()
-        # expected_schema = classic_schema()
-        # self.assertEqual(expected_schema, actual_schema["properties"]["param"])
-
     def test_timing_schemas_match(self):
         expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/timing.json"))
         actual_schema: JsonSchemaValue = Timing.make_json_schema()
-        self.assertDictEqual(expected_schema, actual_schema)
+        self.assertEqual(expected_schema, actual_schema)
+
 
 if __name__ == '__main__':
     unittest.main()

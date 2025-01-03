@@ -8,14 +8,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Add some extracted JSON from classic camdkit against which to test">
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="More progress towards schema equality">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/camdkit_implementation_notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/camdkit_implementation_notes.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/lens_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/transform_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/transform_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/python/test_compatibility.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_compatibility.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/test/python/test_lens_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_lens_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/resources/model/lens.json" beforeDir="false" afterPath="$PROJECT_DIR$/test/resources/model/lens.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_schema_accuracy.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_string_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_string_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_timing_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_tracker_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_tracker_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/python/test_transform_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/python/test_transform_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/resources/model/timing.json" beforeDir="false" afterPath="$PROJECT_DIR$/test/resources/model/timing.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,8 +88,14 @@
     "Python tests.Python tests for python.test_camera_types.CameraTypesTestCases.test_static_camera_schemas_match.executor": "Run",
     "Python tests.Python tests for python.test_compatibility.CompatibilityTestCases.test_schema_for_serialization.executor": "Run",
     "Python tests.Python tests for python.test_lens_types.LensTypesTestCases.test_distortion.executor": "Debug",
+    "Python tests.Python tests for python.test_lens_types.LensTypesTestCases.test_regular_lens_schemas_match.executor": "Debug",
+    "Python tests.Python tests for python.test_string_types.StringsTestCases.test_non_blank_utf8_string.executor": "Run",
     "Python tests.Python tests for python.test_timing_types.TimingTestCases.test_synchronization_offsets_validation.executor": "Debug",
     "Python tests.Python tests for python.test_timing_types.TimingTestCases.test_synchronization_ptp.executor": "Debug",
+    "Python tests.Python tests for python.test_tracker_types.TrackerTestCases.test_static_tracker_schemas_match.executor": "Run",
+    "Python tests.Python tests for python.test_transform_types.TestTransformCases.test_rotator3.executor": "Run",
+    "Python tests.Python tests for python.test_transform_types.TestTransformCases.test_transform.executor": "Debug",
+    "Python tests.Python tests for python.test_transform_types.TestTransformCases.test_vector3.executor": "Run",
     "Python tests.Python tests for test_base_types.FrameworkTestCases.test_foo.executor": "Run",
     "Python tests.Python tests for test_base_types.FrameworkTestCases.test_non_blank_utf8_string.executor": "Run",
     "Python tests.Python tests for test_base_types.FrameworkTestCases.test_non_negative_float.executor": "Run",
@@ -231,6 +244,10 @@
     "Python tests.Python tests in test_tracker_types.py.executor": "Run",
     "Python tests.Python tests in test_transform_types.py.executor": "Run",
     "Python tests.Python tests in test_versioning_types.py.executor": "Run",
+    "Python tests.Unittests for python.test_timing_types.TimingTestCases.test_synchronization_ptp.executor": "Run",
+    "Python tests.Unittests for python.test_timing_types.TimingTestCases.test_timecode.executor": "Run",
+    "Python tests.Unittests for python.test_timing_types.TimingTestCases.test_timestamp.executor": "Run",
+    "Python tests.Unittests for python.test_timing_types.TimingTestCases.test_timing_schemas_match.executor": "Debug",
     "Python tests.Unittests for test_clip.ClipTestCases.test_lens_regular_parameters.executor": "Run",
     "Python tests.Unittests in python.executor": "Run",
     "Python.camera_types.executor": "Run",
@@ -287,7 +304,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for python.test_camera_types.CameraTypesTestCases.test_static_camera_schemas_match" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests for python.test_lens_types.LensTypesTestCases.test_regular_lens_schemas_match" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -299,72 +316,80 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;python.test_camera_types.CameraTypesTestCases.test_static_camera_schemas_match&quot;" />
+      <option name="_new_target" value="&quot;python.test_lens_types.LensTypesTestCases.test_regular_lens_schemas_match&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for python.test_compatibility.CompatibilityTestCases.test_schema_for_serialization" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for python.test_timing_types.TimingTestCases.test_synchronization_ptp" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/bin/python" />
+      <option name="SDK_NAME" value="Poetry (pydantic-tests)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_pattern" value="&quot;test_*.py&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;python.test_compatibility.CompatibilityTestCases.test_schema_for_serialization&quot;" />
+      <option name="_new_target" value="&quot;python.test_timing_types.TimingTestCases.test_synchronization_ptp&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for python.test_lens_types.LensTypesTestCases.test_distortion" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for python.test_timing_types.TimingTestCases.test_timecode" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/bin/python" />
+      <option name="SDK_NAME" value="Poetry (pydantic-tests)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_pattern" value="&quot;test_*.py&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;python.test_lens_types.LensTypesTestCases.test_distortion&quot;" />
+      <option name="_new_target" value="&quot;python.test_timing_types.TimingTestCases.test_timecode&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests in test_camera_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for python.test_timing_types.TimingTestCases.test_timestamp" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/bin/python" />
+      <option name="SDK_NAME" value="Poetry (pydantic-tests)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_pattern" value="&quot;test_*.py&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_camera_types.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <option name="_new_target" value="&quot;python.test_timing_types.TimingTestCases.test_timestamp&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests in test_lens_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Unittests for python.test_timing_types.TimingTestCases.test_timing_schemas_match" type="tests" factoryName="Unittests" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="$USER_HOME$/Library/Caches/pypoetry/virtualenvs/pydantic_tests-WbBgnGQD-py3.13/bin/python" />
+      <option name="SDK_NAME" value="Poetry (pydantic-tests)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_pattern" value="&quot;test_*.py&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/test/python/test_lens_types.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <option name="_new_target" value="&quot;python.test_timing_types.TimingTestCases.test_timing_schemas_match&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <configuration name="Unittests in python" type="tests" factoryName="Unittests" nameIsGenerated="true">
@@ -388,19 +413,19 @@
     <list>
       <item itemvalue="Python.main" />
       <item itemvalue="Python tests.Unittests in python" />
-      <item itemvalue="Python tests.Python tests for python.test_compatibility.CompatibilityTestCases.test_schema_for_serialization" />
-      <item itemvalue="Python tests.Python tests for python.test_camera_types.CameraTypesTestCases.test_static_camera_schemas_match" />
-      <item itemvalue="Python tests.Python tests for python.test_lens_types.LensTypesTestCases.test_distortion" />
-      <item itemvalue="Python tests.Python tests in test_lens_types.py" />
-      <item itemvalue="Python tests.Python tests in test_camera_types.py" />
+      <item itemvalue="Python tests.Python tests for python.test_lens_types.LensTypesTestCases.test_regular_lens_schemas_match" />
+      <item itemvalue="Python tests.Unittests for python.test_timing_types.TimingTestCases.test_synchronization_ptp" />
+      <item itemvalue="Python tests.Unittests for python.test_timing_types.TimingTestCases.test_timecode" />
+      <item itemvalue="Python tests.Unittests for python.test_timing_types.TimingTestCases.test_timestamp" />
+      <item itemvalue="Python tests.Unittests for python.test_timing_types.TimingTestCases.test_timing_schemas_match" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.Python tests for python.test_lens_types.LensTypesTestCases.test_distortion" />
-        <item itemvalue="Python tests.Python tests for python.test_compatibility.CompatibilityTestCases.test_schema_for_serialization" />
-        <item itemvalue="Python tests.Python tests in test_camera_types.py" />
-        <item itemvalue="Python tests.Python tests in test_lens_types.py" />
-        <item itemvalue="Python tests.Python tests for python.test_camera_types.CameraTypesTestCases.test_static_camera_schemas_match" />
+        <item itemvalue="Python tests.Unittests for python.test_timing_types.TimingTestCases.test_timing_schemas_match" />
+        <item itemvalue="Python tests.Unittests for python.test_timing_types.TimingTestCases.test_timestamp" />
+        <item itemvalue="Python tests.Unittests for python.test_timing_types.TimingTestCases.test_timecode" />
+        <item itemvalue="Python tests.Unittests for python.test_timing_types.TimingTestCases.test_synchronization_ptp" />
+        <item itemvalue="Python tests.Python tests for python.test_lens_types.LensTypesTestCases.test_regular_lens_schemas_match" />
       </list>
     </recent_temporary>
   </component>
@@ -450,15 +475,7 @@
       <workItem from="1735609740629" duration="1213000" />
       <workItem from="1735743133253" duration="596000" />
       <workItem from="1735773201350" duration="23848000" />
-      <workItem from="1735846600431" duration="7625000" />
-    </task>
-    <task id="LOCAL-00065" summary="Don't try and convert None to a rational in field validation used by a couple of rational attributes">
-      <option name="closed" value="true" />
-      <created>1734480392307</created>
-      <option name="number" value="00065" />
-      <option name="presentableId" value="LOCAL-00065" />
-      <option name="project" value="LOCAL" />
-      <updated>1734480392307</updated>
+      <workItem from="1735846600431" duration="16638000" />
     </task>
     <task id="LOCAL-00066" summary="Make the expected schema more visually compact.">
       <option name="closed" value="true" />
@@ -844,7 +861,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735847711221</updated>
     </task>
-    <option name="localTasksCounter" value="114" />
+    <task id="LOCAL-00114" summary="More progress towards schema equality">
+      <option name="closed" value="true" />
+      <created>1735854712687</created>
+      <option name="number" value="00114" />
+      <option name="presentableId" value="LOCAL-00114" />
+      <option name="project" value="LOCAL" />
+      <updated>1735854712687</updated>
+    </task>
+    <option name="localTasksCounter" value="115" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -862,7 +887,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Just a general catch-up in hopes of getting Nick Shaw to look at it" />
     <MESSAGE value="recursive to_json() for CompatibleBaseModel, and adjustments for type correctness (tuple instead of list) in test_model.py" />
     <MESSAGE value="FInish adding clip_property and constraints to all parameters." />
     <MESSAGE value="Move description properties from parameters down to the other properties, when optional or array JSON structure is interposed. Add units to match classic camdkit." />
@@ -887,7 +911,8 @@
     <MESSAGE value="Better model_field_schema, but not done" />
     <MESSAGE value="Incomplete progress towards passing all unit tests, especially those of schema equivalence" />
     <MESSAGE value="Add some extracted JSON from classic camdkit against which to test" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add some extracted JSON from classic camdkit against which to test" />
+    <MESSAGE value="More progress towards schema equality" />
+    <option name="LAST_COMMIT_MESSAGE" value="More progress towards schema equality" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -914,13 +939,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test/python/test_timing_types.py</url>
-          <line>497</line>
+          <line>488</line>
           <option name="timeStamp" value="300" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/python/test_string_types.py</url>
+          <line>46</line>
+          <option name="timeStamp" value="319" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/test/python/test_transform_types.py</url>
+          <line>190</line>
+          <option name="timeStamp" value="320" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/test/python/test_lens_types.py</url>
-          <line>74</line>
-          <option name="timeStamp" value="308" />
+          <line>91</line>
+          <option name="timeStamp" value="321" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -933,14 +968,18 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/pydantic_tests$camera_types.coverage" NAME="camera_types Coverage Results" MODIFIED="1734106899074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1735853599109" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_python_test_timing_types_TimingTestCases_test_timestamp.coverage" NAME="Unittests for python.test_timing_types.TimingTestCases.test_timestamp Coverage Results" MODIFIED="1735862055216" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/pydantic_tests$scratch.coverage" NAME="scratch Coverage Results" MODIFIED="1728857315751" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/pydantic_tests$scratch_1.coverage" NAME="scratch_1 Coverage Results" MODIFIED="1735495359824" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$compatibility.coverage" NAME="compatibility Coverage Results" MODIFIED="1734891268851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1735853825691" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$clip.coverage" NAME="clip Coverage Results" MODIFIED="1735174811083" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_python_test_timing_types_TimingTestCases_test_synchronization_ptp.coverage" NAME="Unittests for python.test_timing_types.TimingTestCases.test_synchronization_ptp Coverage Results" MODIFIED="1735861707821" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_python_test_timing_types_TimingTestCases_test_timecode.coverage" NAME="Unittests for python.test_timing_types.TimingTestCases.test_timecode Coverage Results" MODIFIED="1735861881081" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1735861531394" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_test_clip_ClipTestCases_test_lens_regular_parameters.coverage" NAME="Unittests for test_clip.ClipTestCases.test_lens_regular_parameters Coverage Results" MODIFIED="1734539427401" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_python_test_timing_types_TimingTestCases_test_timing_schemas_match.coverage" NAME="Unittests for python.test_timing_types.TimingTestCases.test_timing_schemas_match Coverage Results" MODIFIED="1735862222667" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$camera_types.coverage" NAME="camera_types Coverage Results" MODIFIED="1734106899074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1735862967891" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$compatibility.coverage" NAME="compatibility Coverage Results" MODIFIED="1734891268851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$clip.coverage" NAME="clip Coverage Results" MODIFIED="1735174811083" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
   </component>
 </project>

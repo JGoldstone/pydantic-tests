@@ -16,11 +16,7 @@ from pydantic import BaseModel
 from pydantic.json_schema import JsonSchemaValue
 
 from camdkit.camera_types import StaticCamera
-from camdkit.compatibility import (property_schema_is_optional,
-                                   property_schema_is_array,
-                                   wrap_classic_camdkit_properties_as_optional,
-                                   CompatibleBaseModel, wrap_classic_camdkit_schema_as_optional)
-
+from camdkit.compatibility import CompatibleBaseModel
 
 class PureOpt(BaseModel):
     a: int
@@ -52,8 +48,7 @@ EXPECTED_COMPATIBLE_PURE_OPT_SCHEMA = {
     "additionalProperties": False,
     "properties": {
         "a": { "type": "integer" },
-        "b": { "anyOf": [ { "type": "integer" }, { "type": "null" } ],
-               "default": None },
+        "b": { "type": "integer" },
         "c": { "type": "string" }
     },
     "required": [ "a", "c" ]
@@ -171,7 +166,6 @@ class CompatibilityTestCases(unittest.TestCase):
     def test_schema_generation(self):
         self.assertDictEqual(EXPECTED_PURE_OPT_SCHEMA, PureOpt.model_json_schema())
         self.assertDictEqual(EXPECTED_COMPATIBLE_PURE_OPT_SCHEMA, CompatiblePureOpt.make_json_schema())
-        self.assertDictEqual(EXPECTED_COMPATIBLE_PURE_OPT_SCHEMA, CompatiblePureOpt.make_json_schema())
         self.assertDictEqual(EXPECTED_ANNOTATED_OPT_SCHEMA, AnnotatedOpt.model_json_schema())
         self.assertDictEqual(EXPECTED_PURE_ARRAY_SCHEMA, PureArray.model_json_schema())
         self.assertDictEqual(EXPECTED_OPT_ARRAY_SCHEMA, OptArray.model_json_schema())
@@ -184,96 +178,6 @@ class CompatibilityTestCases(unittest.TestCase):
         annotated_opt_schema.pop("title", None)
         self.assertDictEqual(pure_opt_schema, annotated_opt_schema)
 
-    def test_detecting_optional_schema_property(self):
-        """detect Pydantic-generated property schema for <var>: <type> | None """
-        pure_opt_schema = PureOpt.model_json_schema()
-        self.assertTrue(property_schema_is_optional(pure_opt_schema["properties"]["b"]))
-        self.assertFalse(property_schema_is_optional((pure_opt_schema["properties"]["b"],)))
-        no_any_of: dict[str, Any] = deepcopy(EXPECTED_PURE_OPT_SCHEMA)
-        no_any_of["properties"]["b"] = { "title": "B", "type": "boolean", "default": True }
-        self.assertFalse(property_schema_is_optional(no_any_of))
-        no_default: dict[str, Any] = deepcopy(EXPECTED_PURE_OPT_SCHEMA)
-        no_default["properties"]["b"] = { "title": "B", "anyOf": [ {"type": "integer"}, {"type": "null"} ] }
-        self.assertFalse(property_schema_is_optional(no_default))
-        any_of_is_not_list: dict[str, Any] = deepcopy(EXPECTED_PURE_OPT_SCHEMA)
-        any_of_is_not_list["properties"]["b"]["anyOf"] = "foo"
-        self.assertFalse(property_schema_is_optional(any_of_is_not_list))
-        any_of_list_is_too_small: dict[str, Any] = deepcopy(EXPECTED_PURE_OPT_SCHEMA)
-        any_of_list_is_too_small["properties"]["b"]["anyOf"] = any_of_list_is_too_small["properties"]["b"]["anyOf"][:1]
-        self.assertFalse(property_schema_is_optional(any_of_list_is_too_small))
-        any_of_list_is_too_long: dict[str, Any] = deepcopy(EXPECTED_PURE_OPT_SCHEMA)
-        any_of_list_is_too_long["properties"]["b"]["anyOf"].append({"foo": "bar"})
-        self.assertFalse(property_schema_is_optional(any_of_list_is_too_long))
-        any_of_list_first_elem_not_dict: dict[str, Any] = deepcopy(EXPECTED_PURE_OPT_SCHEMA)
-        any_of_list_first_elem_not_dict["properties"]["b"][0] = "foo"
-        self.assertFalse(property_schema_is_optional(any_of_list_first_elem_not_dict))
-        any_of_first_item_missing_type = deepcopy(EXPECTED_PURE_OPT_SCHEMA)
-        any_of_first_item_missing_type["properties"]["b"]["anyOf"][0].pop("item", None)
-        self.assertFalse(property_schema_is_optional(any_of_first_item_missing_type))
-        any_of_first_item_unsupported_type = deepcopy(EXPECTED_PURE_OPT_SCHEMA)
-        any_of_first_item_unsupported_type["properties"]["b"]["anyOf"][0]["type"] = complex
-        self.assertFalse(property_schema_is_optional(any_of_first_item_unsupported_type))
-
-    def test_detecting_array_schema_property(self):
-        """detect Pydantic-generated property schema for <var>: tuple[<type>, ...]"""
-        pure_array_schema = PureArray.model_json_schema()
-        self.assertTrue(property_schema_is_array(pure_array_schema["properties"]["b"]))
-        self.assertFalse(property_schema_is_array((pure_array_schema["properties"]["b"],)))
-        no_items: dict[str, Any] = deepcopy(EXPECTED_PURE_ARRAY_SCHEMA)
-        no_items["properties"]["b"].pop("items", None)
-        self.assertFalse(property_schema_is_array(no_items))
-        no_type: dict[str, Any] = deepcopy(EXPECTED_PURE_ARRAY_SCHEMA)
-        no_type["properties"]["b"].pop("type", None)
-        self.assertFalse(property_schema_is_array(no_type))
-        type_is_not_array: dict[str, Any] = deepcopy(EXPECTED_PURE_ARRAY_SCHEMA)
-        type_is_not_array["properties"]["b"]["type"] = "string"
-        self.assertFalse(property_schema_is_array(no_type))
-
-    def test_detecting_optional_anamorphic_squeeze(self):
-        full_schema: dict[str, Any] = deepcopy(STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE)
-        property_schema: dict[str, Any] = full_schema["properties"]["anamorphicSqueeze"]
-        self.assertTrue(property_schema_is_optional(property_schema))
-
-    def test_wrapping_classic_camdkit_property(self):
-        with open("resources/model/static_camera.json", "r") as file:
-            classic_schema = json.load(file)
-            remove_properties_besides(classic_schema, "anamorphicSqueeze")
-            self.assertDictEqual(CLASSIC_STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE, classic_schema)
-            # rewrapped_schema: JsonSchemaValue = { k: v for k, v in classic_schema.items() if k != "properties" }
-            # rewrapped_schema["properties"] = wrap_classic_camdkit_properties_as_optional(classic_schema)
-            rewrapped_schema = wrap_classic_camdkit_schema_as_optional(classic_schema)
-            pydantic_schema = StaticCamera.make_json_schema()
-            remove_properties_besides(pydantic_schema, keeper="anamorphicSqueeze")
-            self.assertDictEqual(STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE, pydantic_schema)
-            rewrapped_anam = rewrapped_schema["properties"]["anamorphicSqueeze"]
-            pydantic_anam = pydantic_schema["properties"]["anamorphicSqueeze"]
-            self.assertDictEqual(pydantic_anam, rewrapped_anam)
-            self.assertDictEqual(pydantic_schema, rewrapped_schema)
-
-    def test_wrapping_classic_camdkit_properties(self):
-        with open("resources/model/static_camera.json", "r") as file:
-            classic_schema = json.load(file)
-            rewrapped_schema = wrap_classic_camdkit_schema_as_optional(classic_schema)
-            pydantic_schema = StaticCamera.make_json_schema()
-            self.assertDictEqual(rewrapped_schema, pydantic_schema)
-
-
-    def test_schema_for_serialization(self):
-        sers = StaticCamera.make_json_schema()
-        print('stop here')
-
-
-
-
-
-    # def test_converting_pydantic_optional_schema_to_classic_schema(self):
-    #     full_pydantic_schema: dict[str, Any] = deepcopy(STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE)
-    #     pydantic_property_schema: dict[str, Any] = full_pydantic_schema["properties"]["anamorphicSqueeze"]
-    #     full_classic_schema: dict[str, Any] = deepcopy(CLASSIC_STATIC_CAMERA_SCHEMA_W_JUST_ANAMORPHIC_SQUEEZE)
-    #     classic_property_schema: dict[str, Any] = full_classic_schema["properties"]["anamorphicSqueeze"]
-    #     self.assertNotEqual(classic_property_schema, pydantic_property_schema)
-    #     convert_pydantic_optional_schema_to_classic_schema(pydantic_property_schema)
-    #     self.assertEqual(classic_property_schema, pydantic_property_schema)
 
 if __name__ == '__main__':
     unittest.main()

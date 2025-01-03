@@ -9,9 +9,10 @@ import doctest
 from typing import Annotated, Any
 
 from pydantic import Field, field_validator
+from pydantic.json_schema import JsonSchemaMode, JsonSchemaValue
 
 from camdkit.compatibility import CompatibleBaseModel
-from camdkit.units import SECOND
+from camdkit.units import SECOND, METERS_AND_DEGREES
 from camdkit.numeric_types import (NonNegativeInt,
                                    UnityOrGreaterFloat,
                                    StrictlyPositiveRational,
@@ -59,33 +60,56 @@ class Clip(CompatibleBaseModel):
 
     # The "global_" prefix is here because, without it, we would have BaseModel attributes
     # with the same name, from the user's POV, as the property
-    global_protocol: Annotated[tuple[VersionedProtocol, ...] | None, Field(alias="protocol")] = None
+    global_protocol: Annotated[tuple[VersionedProtocol, ...] | None,
+      Field(alias="protocol",
+            json_schema_extra={"clip_property": "protocol"})] = None
     """Name of the protocol in which the sample is being employed, and
     version of that protocol
     """
-    global_sample_id: Annotated[tuple[UUIDURN, ...] | None, Field(alias="sampleId")] = None
+
+    global_sample_id: Annotated[tuple[UUIDURN, ...] | None,
+      Field(alias="sampleId",
+            json_schema_extra={"clip_property": "sample_id"})] = None
     """URN serving as unique identifier of the sample in which data is
     being transported.
     """
-    global_source_id: Annotated[tuple[UUIDURN, ...] | None, Field(alias="sourceId")] = None
+
+    global_source_id: Annotated[tuple[UUIDURN, ...] | None,
+      Field(alias="sourceId",
+            json_schema_extra={"clip_property": "source_id"})] = None
     """URN serving as unique identifier of the source from which data is
     being transported.
     """
-    global_source_number: Annotated[tuple[NonNegativeInt, ...] | None, Field(alias="sourceNumber")] = None
+
+    global_source_number: Annotated[tuple[NonNegativeInt, ...] | None,
+      Field(alias="sourceNumber",
+            json_schema_extra={"clip_property": "source_number"})] = None
     """Number that identifies the index of the stream from a source from which
     data is being transported. This is most important in the case where a source
     is producing multiple streams of samples.
     """
-    global_related_sample_ids: Annotated[tuple[tuple[UUIDURN, ...], ...] | None, Field(alias="relatedSampleIds")] = None
+
+    global_related_sample_ids: Annotated[tuple[tuple[UUIDURN, ...], ...] | None,
+      Field(alias="relatedSampleIds",
+            json_schema_extra={"clip_property": "related_sample_ids"})] = None
     """List of sampleId properties of samples related to this sample. The
     existence of a sample with a given sampleId is not guaranteed.
     """
-    global_global_stage: Annotated[tuple[GlobalPosition, ...] | None, Field(alias="globalStage")] = None
+
+    global_global_stage: Annotated[tuple[GlobalPosition, ...] | None,
+      Field(alias="globalStage",
+            json_schema_extra={"clip_property": "global_stage"})] = None
     """Position of stage origin in global ENU and geodetic coordinates
     (E, N, U, lat0, lon0, h0). Note this may be dynamic if the stage is
     inside a moving vehicle.
     """
-    global_transforms: Annotated[tuple[tuple[Transform, ...], ...] | None, Field(alias="transforms")] = None
+
+    global_transforms: Annotated[tuple[tuple[Transform, ...], ...] | None,
+      Field(alias="transforms",
+            min_length=1,
+            json_schema_extra={"units": METERS_AND_DEGREES,
+                               "clip_property": "transforms",
+                               "uniqueItems": False})] = None
     """A list of transforms.
     Transforms are composed in order with the last in the list representing
     the X,Y,Z in meters of camera sensor relative to stage origin.
@@ -109,8 +133,9 @@ class Clip(CompatibleBaseModel):
     """
 
     @classmethod
-    def make_json_schema(cls, exclude_camdkit_internals: bool = True) -> dict[str, Any]:
-        result = CLIP_SCHEMA_PRELUDE | super(Clip, cls).make_json_schema(exclude_camdkit_internals)
+    def make_json_schema(cls, mode: JsonSchemaMode = 'serialization',
+                         exclude_camdkit_internals: bool = True) -> JsonSchemaValue:
+        result = CLIP_SCHEMA_PRELUDE | super(Clip, cls).make_json_schema(mode, exclude_camdkit_internals)
         return result
 
 

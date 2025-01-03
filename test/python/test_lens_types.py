@@ -72,7 +72,7 @@ class LensTypesTestCases(unittest.TestCase):
         self.assertIn("properties", full_actual_schema)
         self.assertIn("distortion", full_actual_schema["properties"])
         actual_schema = full_actual_schema["properties"]["distortion"]
-        self.assertDictEqual(expected_schema, actual_schema)
+        self.assertEqual(expected_schema, actual_schema)
 
     def test_static_lens_schemas_match(self):
         expected: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/static_lens.json"))
@@ -89,7 +89,7 @@ class LensTypesTestCases(unittest.TestCase):
                 print(f"broken: {k}")
         efle = ep["exposureFalloff"]
         efla = ap["exposureFalloff"]
-        self.assertDictEqual(expected, actual)
+        self.assertEqual(expected, actual)
 
 
 if __name__ == '__main__':

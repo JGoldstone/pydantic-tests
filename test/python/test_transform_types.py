@@ -6,12 +6,25 @@
 
 """Types for modeling of tracker-related metadata"""
 
+import json
 import unittest
 
-from pydantic import ValidationError
+from pathlib import Path
 
+from pydantic import ValidationError
+from pydantic.json_schema import JsonSchemaValue
+
+from camdkit.clip import Clip
+from camdkit.compatibility import canonicalize_descriptions
 from camdkit.string_types import UUIDURN
 from camdkit.transform_types import Vector3, Rotator3, Transform
+
+
+def load_classic_camdkit_schema(path: Path) -> JsonSchemaValue:
+    with open(path, "r", encoding="utf-8") as file:
+        schema = json.load(file)
+        canonicalize_descriptions(schema)
+        return schema
 
 
 class TestTransformCases(unittest.TestCase):
@@ -56,17 +69,12 @@ class TestTransformCases(unittest.TestCase):
         # verify that we can make a dupe of the original from the JSON
         valid_v3_from_json = Vector3.from_json(valid_v3_as_json)
         self.assertEqual(valid_v3, valid_v3_from_json)
-        # verify that the JSON schema from Pydantic is what we think it iss
-        expected_schema = {
-            "type": "object",
-            "properties": {
-                "x": { "type": "number" },
-                "y": { "type": "number" },
-                "z": { "type": "number" }
-            },
-            "required": [ "x", "y",  "z" ],
-            "additionalProperties": False
-        }
+        # verify that the JSON schema from Pydantic is what we think it is
+        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/transforms.json"))
+        self.assertIn("items", full_expected_schema)
+        self.assertIn("properties", full_expected_schema["items"])
+        self.assertIn("rotation", full_expected_schema["items"]["properties"])
+        expected_schema = full_expected_schema["items"]["properties"]["translation"]
         actual_schema = Vector3.make_json_schema()
         self.assertEqual(expected_schema, actual_schema)
 
@@ -110,17 +118,12 @@ class TestTransformCases(unittest.TestCase):
         # verify that we can make a dupe of the original from the JSON
         valid_v3_from_json = Rotator3.from_json(valid_v3_as_json)
         self.assertEqual(valid_v3, valid_v3_from_json)
-        # verify that the JSON schema from Pydantic is what we think it iss
-        expected_schema = {
-            "type": "object",
-            "properties": {
-                "pan": { "type": "number" },
-                "tilt": { "type": "number" },
-                "roll": { "type": "number" }
-            },
-            "required": [ "pan", "tilt",  "roll" ],
-            "additionalProperties": False
-        }
+        # verify that the JSON schema from Pydantic is what we think it is
+        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/transforms.json"))
+        self.assertIn("items", full_expected_schema)
+        self.assertIn("properties", full_expected_schema["items"])
+        self.assertIn("rotation", full_expected_schema["items"]["properties"])
+        expected_schema = full_expected_schema["items"]["properties"]["rotation"]
         actual_schema = Rotator3.make_json_schema()
         self.assertEqual(expected_schema, actual_schema)
     
@@ -129,7 +132,6 @@ class TestTransformCases(unittest.TestCase):
         valid_rotator = Rotator3(10.0, 20.0, 30.0)
         valid_scale = Vector3(0.5, 1.0, 2.0)
         valid_id: UUIDURN = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf7"
-        valid_parent_id: UUIDURN = "urn:uuid:f81d4fae-7dec-11d0-a765-00a0c91e6bf6"
         with self.assertRaises(ValidationError):
             Transform(translation="foo", rotation=valid_rotator)
         with self.assertRaises(ValidationError):
@@ -140,15 +142,11 @@ class TestTransformCases(unittest.TestCase):
         with self.assertRaises(ValidationError):
             Transform(translation=valid_translation, rotation=valid_rotator,
                       id=0+1j)
-        with self.assertRaises(ValidationError):
-            Transform(translation=valid_translation, rotation=valid_rotator,
-                      parent_id=0+1j)
         valid_transform = Transform(translation=valid_translation, rotation=valid_rotator)
         self.assertEqual(valid_transform.translation, valid_translation)
         self.assertEqual(valid_transform.rotation, valid_rotator)
         self.assertIsNone(valid_transform.scale)
         self.assertIsNone(valid_transform.id)
-        self.assertIsNone(valid_transform.parent_id)
         updated_translation = Vector3(8 * valid_translation.x,
                                       8 * valid_translation.y,
                                       8 * valid_translation.z)
@@ -167,79 +165,31 @@ class TestTransformCases(unittest.TestCase):
         self.assertEqual(valid_transform.id, valid_id)
         valid_transform.id = None
         self.assertIsNone(valid_transform.id)
-        valid_transform.parent_id = valid_parent_id
-        self.assertEqual(valid_transform.parent_id, valid_parent_id)
-        valid_transform.parent_id = None
-        self.assertIsNone(valid_transform.parent_id)
         valid_transform = Transform(translation=valid_translation,
                                     rotation=valid_rotator,
                                     scale=valid_scale,
-                                    id=valid_id,
-                                    parent_id=valid_parent_id)
+                                    id=valid_id)
         self.assertEqual(valid_transform.translation, valid_translation)
         self.assertEqual(valid_transform.rotation, valid_rotator)
         self.assertEqual(valid_transform.scale, valid_scale)
         self.assertEqual(valid_transform.id, valid_id)
-        self.assertEqual(valid_transform.parent_id, valid_parent_id)
+
         valid_transform_as_json = Transform.to_json(valid_transform)
         self.assertEqual(valid_transform_as_json["translation"], Vector3.to_json(valid_translation))
         self.assertEqual(valid_transform_as_json["rotation"], Rotator3.to_json(valid_rotator))
         self.assertEqual(valid_transform_as_json["scale"], Vector3.to_json(valid_scale))
         self.assertEqual(valid_transform_as_json["id"], valid_id)
-        self.assertEqual(valid_transform_as_json["parent_id"], valid_parent_id)
+
         valid_transform_from_json = Transform.from_json(valid_transform_as_json)
         self.assertEqual(valid_transform, valid_transform_from_json)
-        expected_schema = {
-            "type": "object",
-            "properties": {
-                "translation": {
-                    "type": "object",
-                    "properties": { "x": { "type": "number" },
-                                    "y": {  "type": "number" },
-                                    "z": {  "type": "number" } },
-                    "required": [ "x", "y", "z" ],
-                    "additionalProperties": False
-                },
-                "rotation": {
-                    "type": "object",
-                    "properties": { "pan": { "type": "number" },
-                                    "tilt": { "type": "number" },
-                                    "roll": { "type": "number" } },
-                    "required": [ "pan", "tilt", "roll" ],
-                    "additionalProperties": False
-                },
-                "scale": {
-                    "anyOf": [
-                        { "type": "object",
-                          "properties": { "x": { "type": "number" },
-                                          "y": {  "type": "number" },
-                                          "z": { "type": "number" } },
-                          "required": [ "x", "y", "z" ],
-                          "additionalProperties": False
-                          },
-                        { "type": "null" } ],
-                    "default": None
-                },
-                "id": {
-                    "anyOf": [
-                        { "type": "string",
-                          "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$" },
-                        { "type": "null" } ],
-                    "default": None
-                },
-                "parent_id": {
-                    "anyOf": [
-                        { "type": "string",
-                          "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$" },
-                        { "type": "null" } ],
-                    "default": None
-                }
-            },
-            "required": [ "translation", "rotation" ],
-            "additionalProperties": False
-        }
-        actual_schema = Transform.make_json_schema()
+
+        expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/transforms.json"))
+        full_actual_schema: JsonSchemaValue = Clip.make_json_schema()
+        self.assertIn("properties", full_actual_schema)
+        self.assertIn("transforms", full_actual_schema["properties"])
+        actual_schema: JsonSchemaValue = full_actual_schema["properties"]["transforms"]
         self.assertEqual(expected_schema, actual_schema)
+
 
 if __name__ == '__main__':
     unittest.main()
