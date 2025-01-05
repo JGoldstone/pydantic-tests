@@ -7,7 +7,7 @@
       "items": {
         "type": "number"
       },
-      "description": "This list provides optional additonal custom coefficients that can \nextend the existing lens model. The meaning of and how these characeristics\nare to be applied to a virtual camera would require negotiation between a\nparticular producer and consumer.\n"
+      "description": "This list provides optional additional custom coefficients that can\nextend the existing lens model. The meaning of and how these characteristics\nare to be applied to a virtual camera would require negotiation between a\nparticular producer and consumer.\n"
     },
     "distortionOffset": {
       "type": "object",
@@ -102,7 +102,7 @@
           ]
         }
       ],
-      "description": "\nNormalised real numbers (0-1) for focus, iris and zoom.\nEncoders are represented in this way (as opposed to raw integer values) to ensure values remain independent of encoder resolution, mininum and maximum (at an acceptable loss of precision).\nThese values are only relevant in lenses with end-stops that demarcate the 0 and 1 range.\nValue should be provided in the following directions (if known): Focus:   0=infinite     1=closest Iris:    0=open         1=closed Zoom:    0=wide angle   1=telephoto\n"
+      "description": "\nNormalised real numbers (0-1) for focus, iris and zoom.\nEncoders are represented in this way (as opposed to raw integer\nvalues) to ensure values remain independent of encoder resolution,\nminimum and maximum (at an acceptable loss of precision).\nThese values are only relevant in lenses with end-stops that\ndemarcate the 0 and 1 range.\nValue should be provided in the following directions (if known):\nFocus:   0=infinite     1=closest\nIris:    0=open         1=closed\nZoom:    0=wide angle   1=telephoto\n"
     },
     "entrancePupilOffset": {
       "type": "number",
@@ -197,7 +197,7 @@
           ]
         }
       ],
-      "description": "\nRaw encoder values for focus, iris and zoom.\nThese values are dependent on encoder resolution and before any homing / ranging has taken place.\n"
+      "description": "Raw encoder values for focus, iris and zoom.\nThese values are dependent on encoder resolution and before any\nhoming / ranging has taken place.\n"
     },
     "tStop": {
       "type": "number",
