@@ -227,7 +227,7 @@
           }
         }
       },
-      "description": "SMPTE timecode of the sample. Timecode is a standard for labeling\nindividual frames of data in media systems and is useful for\ninter-frame synchronization.- format.frameRate: The frame rate as a rational number. Drop frame\nrates such as 29.97 should be represented as e.g. 30000/1001. The\ntimecode frame rate may differ from the sample frequency.\n"
+      "description": "SMPTE timecode of the sample. Timecode is a standard for labeling\nindividual frames of data in media systems and is useful for\ninter-frame synchronization.\n- format.frameRate: The frame rate as a rational number. Drop frame\nrates such as 29.97 should be represented as e.g. 30000/1001. The\ntimecode frame rate may differ from the sample frequency.\n"
     }
   }
 }
