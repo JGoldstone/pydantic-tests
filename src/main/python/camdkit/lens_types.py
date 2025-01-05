@@ -168,7 +168,7 @@ class Lens(CompatibleBaseModel):
                                "constraints": """The parameter shall be a tuple of items of the class itemClass.
     The tuple can be empty
     """})] = None
-    """This list provides optional additional custom coefficients that can 
+    """This list provides optional additional custom coefficients that can
     extend the existing lens model. The meaning of and how these characteristics
     are to be applied to a virtual camera would require negotiation between a
     particular producer and consumer.
