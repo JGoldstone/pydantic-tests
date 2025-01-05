@@ -217,6 +217,9 @@ object the radial and tangential coefficients shall each be real numbers.
 
     encoders: Annotated[tuple[FizEncoders, ...] | None,
       Field(json_schema_extra={"clip_property": "lens_encoders",
+                               "anyOf": [{"required": ["focus"]},
+                                         {"required": ["iris"]},
+                                         {"required": ["zoom"]}],
                                "constraints": """
 The parameter shall contain at least one normalised values (0..1) for the FIZ encoders.
 """})] = None
@@ -290,6 +293,9 @@ The parameter shall contain at least one normalised values (0..1) for the FIZ en
     raw_encoders: Annotated[tuple[RawFizEncoders, ...] | None,
       Field(alias="rawEncoders",
             json_schema_extra={"clip_property": "lens_raw_encoders",
+                               "anyOf": [{"required": ["focus"]},
+                                         {"required": ["iris"]},
+                                         {"required": ["zoom"]}],
                                "constraints": """
 The parameter shall contain at least one integer value for the FIZ encoders.
 """})] = None
