@@ -14,7 +14,9 @@ from camdkit.compatibility import (CompatibleBaseModel,
                                    BOOLEAN,
                                    NONBLANK_UTF8_MAX_1023_CHARS,
                                    UUID_URN,
-                                   NON_NEGATIVE_REAL, REAL,
+                                   NON_NEGATIVE_REAL,
+                                   STRICTLY_POSITIVE_REAL,
+                                   REAL,
                                    REAL_AT_LEAST_UNITY)
 from camdkit.numeric_types import (NonNegativeFloat, StrictlyPositiveFloat, NormalizedFloat,
                                    NonNegativeInt, UnityOrGreaterFloat)
@@ -273,12 +275,11 @@ The parameter shall contain at least one normalised values (0..1) for the FIZ en
                                "constraints": NON_NEGATIVE_REAL})] = None
     """Focal length of the lens."""
 
-    # TODO file on why camdkit has this as NonNegativeFloat instead of StrictlyPositiveFloat
-    focus_distance: Annotated[tuple[NonNegativeFloat, ...] | None,
+    focus_distance: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
       Field(alias="focusDistance",
             json_schema_extra={"units": METER,
                                "clip_property": "lens_focus_distance",
-                               "constraints": NON_NEGATIVE_REAL})] = None
+                               "constraints": STRICTLY_POSITIVE_REAL})] = None
     """Focus distance/position of the lens"""
 
     projection_offset: Annotated[tuple[ProjectionOffset, ...],
