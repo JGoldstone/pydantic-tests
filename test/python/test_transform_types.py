@@ -18,6 +18,7 @@ from camdkit.clip import Clip
 from camdkit.compatibility import canonicalize_descriptions
 from camdkit.string_types import UUIDURN
 from camdkit.transform_types import Vector3, Rotator3, Transform
+from camdkit.units import DEGREE, METER
 
 
 def load_classic_camdkit_schema(path: Path) -> JsonSchemaValue:
@@ -76,6 +77,9 @@ class TestTransformCases(unittest.TestCase):
         self.assertIn("rotation", full_expected_schema["items"]["properties"])
         expected_schema = full_expected_schema["items"]["properties"]["translation"]
         actual_schema = Vector3.make_json_schema()
+        # This is only required because we are testing outside the context in which
+        # the Vector3 object will actually be used.
+        actual_schema["units"] = METER
         self.assertEqual(expected_schema, actual_schema)
 
     def test_rotator3(self):
@@ -125,6 +129,11 @@ class TestTransformCases(unittest.TestCase):
         self.assertIn("rotation", full_expected_schema["items"]["properties"])
         expected_schema = full_expected_schema["items"]["properties"]["rotation"]
         actual_schema = Rotator3.make_json_schema()
+        # The units are attached to the parameter, not to the underlying Model
+        # (or dataclass, in classic camdkit), so as we are testing the underlying
+        # model here against a piece of the overall schema, we need to add DEGREE
+        # as a unit, as we did for Vector3 with METER
+        actual_schema["units"] = DEGREE
         self.assertEqual(expected_schema, actual_schema)
     
     def test_transform(self):
