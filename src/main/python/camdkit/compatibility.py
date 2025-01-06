@@ -68,6 +68,9 @@ REAL: Final[str] = \
 NON_NEGATIVE_REAL: Final[str] = \
     """The parameter shall be a non-negative real number."""
 
+STRICTLY_POSITIVE_REAL: Final[str] = \
+    """The parameter shall be a real number greater than 0."""
+
 REAL_AT_LEAST_UNITY: Final[str]= \
     """The parameter shall be a real number >= 1."""
 
