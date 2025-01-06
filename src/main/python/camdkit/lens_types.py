@@ -111,6 +111,8 @@ class Distortion(CompatibleBaseModel):
         super(Distortion, self).__init__(radial=radial, tangential=tangential, model=model)
 
 
+type Distortions = Annotated[tuple[Distortion, ...], Field(min_length=1)]
+
 class PlanarOffset(CompatibleBaseModel):
     x: float
     y: float
@@ -176,9 +178,8 @@ class Lens(CompatibleBaseModel):
     particular producer and consumer.
     """
 
-    # TODO as distortion is 'special' with min_length, ask about that. Typo?
-    distortion: Annotated[tuple[tuple[Distortion, ...], ...] | None,
-      Field(min_length = 1,
+    distortion: Annotated[tuple[Distortions, ...] | None,
+      Field(min_length=1,
             json_schema_extra={"clip_property": "lens_distortions",
                                "constraints": """The list shall contain at least one Distortion object, and in each
 object the radial and tangential coefficients shall each be real numbers.
