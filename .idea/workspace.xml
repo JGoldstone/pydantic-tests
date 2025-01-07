@@ -8,7 +8,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="A variety of changes to get to where generated documentation passes and all other unit tests pass as well.">
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="IDE changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -472,15 +472,7 @@
       <workItem from="1735846600431" duration="45381000" />
       <workItem from="1736100294577" duration="13616000" />
       <workItem from="1736179216813" duration="1223000" />
-      <workItem from="1736180446321" duration="51591000" />
-    </task>
-    <task id="LOCAL-00089" summary="Just a general catch-up in hopes of getting Nick Shaw to look at it">
-      <option name="closed" value="true" />
-      <created>1734895019351</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
-      <option name="project" value="LOCAL" />
-      <updated>1734895019351</updated>
+      <workItem from="1736180446321" duration="52518000" />
     </task>
     <task id="LOCAL-00090" summary="recursive to_json() for CompatibleBaseModel, and adjustments for type correctness (tuple instead of list) in test_model.py">
       <option name="closed" value="true" />
@@ -866,7 +858,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736284111799</updated>
     </task>
-    <option name="localTasksCounter" value="138" />
+    <task id="LOCAL-00138" summary="IDE changes">
+      <option name="closed" value="true" />
+      <created>1736284685490</created>
+      <option name="number" value="00138" />
+      <option name="presentableId" value="LOCAL-00138" />
+      <option name="project" value="LOCAL" />
+      <updated>1736284685490</updated>
+    </task>
+    <option name="localTasksCounter" value="139" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -884,7 +884,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Incomplete progress towards passing all unit tests, especially those of schema equivalence" />
     <MESSAGE value="Add some extracted JSON from classic camdkit against which to test" />
     <MESSAGE value="More progress towards schema equality" />
     <MESSAGE value="And yet more progress towards schema equality" />
@@ -909,7 +908,8 @@
     <MESSAGE value="Fix clip_property for tracker notes and type spec for both notes and rcording" />
     <MESSAGE value="Add missing clip_property for duration" />
     <MESSAGE value="A variety of changes to get to where generated documentation passes and all other unit tests pass as well." />
-    <option name="LAST_COMMIT_MESSAGE" value="A variety of changes to get to where generated documentation passes and all other unit tests pass as well." />
+    <MESSAGE value="IDE changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="IDE changes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
