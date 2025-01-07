@@ -10,6 +10,7 @@ import jsonref
 
 from abc import abstractmethod
 from typing import Final, Any, Self
+from copy import deepcopy
 
 from pydantic import BaseModel, ValidationError, ConfigDict
 from pydantic.json_schema import (GenerateJsonSchema,
@@ -198,27 +199,25 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
                                        f" because we don't know how to hoist up the layer"
                                        f" underneath it")
 
-        if True:  # clip_property := clip_property_from_schema(schema):
-            removed_tuple_layer: bool = False
-            while True:
-                removed_layer: bool = False
-                if default_layer := find_layer(schema, 'default'):
-                    remove_layer(schema, default_layer)
+        removed_tuple_layer: bool = False
+        mutable_schema: ModelField = deepcopy(schema)
+        while True:
+            removed_layer: bool = False
+            if default_layer := find_layer(mutable_schema, 'default'):
+                remove_layer(mutable_schema, default_layer)
+                removed_layer = True
+            if nullable_layer := find_layer(mutable_schema, 'nullable'):
+                remove_layer(mutable_schema, nullable_layer)
+                removed_layer = True
+            if tuple_layer := find_layer(mutable_schema, 'tuple'):
+                if  clip_property_from_schema(mutable_schema) and not removed_tuple_layer:
+                    remove_layer(mutable_schema, tuple_layer)
                     removed_layer = True
-                if nullable_layer := find_layer(schema, 'nullable'):
-                    remove_layer(schema, nullable_layer)
-                    removed_layer = True
-                if tuple_layer := find_layer(schema, 'tuple'):
-                    if  clip_property_from_schema(schema) and not removed_tuple_layer:
-                        remove_layer(schema, tuple_layer)
-                        removed_layer = True
-                        removed_tuple_layer = True
-                # if model_fields_layer := find_layer(schema, 'model-fields'):
-                #     remove_layer(schema, model_fields_layer)
-                if not removed_layer:
-                    break
+                    removed_tuple_layer = True
+            if not removed_layer:
+                break
 
-        json_schema = super().model_field_schema(schema)
+        json_schema: JsonSchemaValue = super().model_field_schema(mutable_schema)
         return json_schema
 
     def sort(
