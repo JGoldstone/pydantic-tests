@@ -24,7 +24,7 @@
           "type": "number"
         }
       },
-      "description": "Offset in x and y of the centre of distortion of the virtual camera ",
+      "description": "Offset in x and y of the centre of distortion of the virtual camera",
       "units": "millimeter"
     },
     "distortionOverscan": {
@@ -102,7 +102,7 @@
           ]
         }
       ],
-      "description": "\nNormalised real numbers (0-1) for focus, iris and zoom.\nEncoders are represented in this way (as opposed to raw integer\nvalues) to ensure values remain independent of encoder resolution,\nminimum and maximum (at an acceptable loss of precision).\nThese values are only relevant in lenses with end-stops that\ndemarcate the 0 and 1 range.\nValue should be provided in the following directions (if known):\nFocus:   0=infinite     1=closest\nIris:    0=open         1=closed\nZoom:    0=wide angle   1=telephoto\n"
+      "description": "Normalised real numbers (0-1) for focus, iris and zoom.\nEncoders are represented in this way (as opposed to raw integer\nvalues) to ensure values remain independent of encoder resolution,\nminimum and maximum (at an acceptable loss of precision).\nThese values are only relevant in lenses with end-stops that\ndemarcate the 0 and 1 range.\nValue should be provided in the following directions (if known):\nFocus:   0=infinite     1=closest\nIris:    0=open         1=closed\nZoom:    0=wide angle   1=telephoto\n"
     },
     "entrancePupilOffset": {
       "type": "number",

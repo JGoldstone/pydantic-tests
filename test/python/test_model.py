@@ -219,7 +219,7 @@ class ModelTest(unittest.TestCase):
   def test_documentation(self):
     doc = Clip.make_documentation()
 
-    self.assertIn(ActiveSensorPhysicalDimensions.canonical_name, [e["canonical_name"] for e in doc])
+    self.assertIn("activeSensorPhysicalDimensions", [e["canonical_name"] for e in doc])
 
   def test_duration_fraction(self):
     clip = Clip()

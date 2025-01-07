@@ -25,7 +25,9 @@ __all__ = [
     'NONBLANK_UTF8_MAX_1023_CHARS', 'UUID_URN',
     'RATIONAL', 'STRICTLY_POSITIVE_RATIONAL',
     'NON_NEGATIVE_INTEGER', 'STRICTLY_POSITIVE_INTEGER',
-    'NON_NEGATIVE_REAL', 'REAL', 'REAL_AT_LEAST_UNITY',
+    'NON_NEGATIVE_REAL', 'STRICTLY_POSITIVE_REAL',
+    'REAL', 'REAL_AT_LEAST_UNITY',
+    'PROTOCOL', 'ARRAY', 'GLOBAL_POSITION', 'TRANSFORMS',
     'canonicalize_descriptions'
 ]
 
@@ -38,30 +40,28 @@ codepoints.
 """
 
 UUID_URN: Final[str] = \
-    """The parameter shall be a UUID URN as specified in IETF RFC 4122.
-    Only lowercase characters shall be used.
-    Example: `f81d4fae-7dec-11d0-a765-00a0c91e6bf6`
-    """
+"""The parameter shall be a UUID URN as specified in IETF RFC 4122.
+Only lowercase characters shall be used.
+Example: `f81d4fae-7dec-11d0-a765-00a0c91e6bf6`
+"""
 
 RATIONAL: Final[str] = \
-    """The parameter shall be a rational number where (i) the numerator
-    is in the range [-2,147,483,648..2,147,483,647] and (ii) the
-    denominator is in the range (0..4,294,967,295].
-    """
+"""The parameter shall be a rational number where (i) the numerator
+is in the range [-2,147,483,648..2,147,483,647] and (ii) the
+denominator is in the range (0..4,294,967,295].
+"""
 
 STRICTLY_POSITIVE_RATIONAL: Final[str] = \
-    """The parameter shall be a rational number whose numerator
-    is in the range [0..2,147,483,647] and denominator in the range
-    (0..4,294,967,295].
-    """
+"""The parameter shall be a rational number whose numerator
+is in the range [0..2,147,483,647] and denominator in the range
+(0..4,294,967,295].
+"""
 
 NON_NEGATIVE_INTEGER: Final[str] = \
-    """The parameter shall be a integer in the range (0..4,294,967,295].
-    """
+"""The parameter shall be a integer in the range (0..4,294,967,295]."""
 
 STRICTLY_POSITIVE_INTEGER: Final[str] = \
-    """The parameter shall be a integer in the range (1..4,294,967,295].
-    """
+"""The parameter shall be a integer in the range (1..4,294,967,295]."""
 
 REAL: Final[str] = \
     """The parameter shall be a real number."""
@@ -74,6 +74,22 @@ STRICTLY_POSITIVE_REAL: Final[str] = \
 
 REAL_AT_LEAST_UNITY: Final[str]= \
     """The parameter shall be a real number >= 1."""
+
+PROTOCOL: Final[str] = \
+"""Protocol name is nonblank string; protocol version is basic x.y.z
+semantic versioning string
+"""
+
+ARRAY: Final[str] = \
+"""The parameter shall be a tuple of items of the class itemClass.
+The tuple can be empty
+"""
+
+GLOBAL_POSITION: Final[str] = \
+    """Each field in the GlobalPosition shall be a real number"""
+
+TRANSFORMS: Final[str] = \
+    """Each component of each transform shall contain Real numbers."""
 
 # Attributes of parameters that should be culled from any exported property_schema
 ALWAYS_EXCLUDED = ("title",)
@@ -168,7 +184,7 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
                 if trapdoor:
                     if trapdoor in current_layer:
                         if current_layer == layer_to_be_removed:
-                            print(f"removing layer of type {current_layer_type}")
+                            # print(f"removing layer of type {current_layer_type}")
                             layer_below = current_layer[trapdoor]
                             if must_index:
                                 layer_below = layer_below[0]
@@ -182,11 +198,11 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
                             merged_not_popped_keys: set[str] = {"min_length", "max_length"}
                             for k in current_keys:
                                 if k not in merged_not_popped_keys:
-                                    print(f"popped key {k} for type {current_layer_type}")
+                                    # print(f"popped key {k} for type {current_layer_type}")
                                     current_layer.pop(k)
                                 else:
                                     pass
-                                    print(f"skipped pop of key {k} for type {current_layer_type}")
+                                    # print(f"skipped pop of key {k} for type {current_layer_type}")
                             for k, v in layer_below.items():
                                 current_layer[k] = v
                             return

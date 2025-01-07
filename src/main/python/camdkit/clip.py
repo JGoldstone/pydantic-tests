@@ -11,8 +11,15 @@ from typing import Annotated, Any
 from pydantic import Field, field_validator
 from pydantic.json_schema import JsonSchemaMode, JsonSchemaValue
 
-from camdkit.compatibility import CompatibleBaseModel
-from camdkit.units import SECOND, METERS_AND_DEGREES
+from camdkit.compatibility import (CompatibleBaseModel,
+                                   UUID_URN,
+                                   NON_NEGATIVE_INTEGER,
+                                   STRICTLY_POSITIVE_RATIONAL,
+                                   PROTOCOL,
+                                   ARRAY,
+                                   GLOBAL_POSITION,
+                                   TRANSFORMS)
+from camdkit.units import METER, METERS_AND_DEGREES, SECOND
 from camdkit.numeric_types import (NonNegativeInt,
                                    UnityOrGreaterFloat,
                                    StrictlyPositiveRational,
@@ -23,7 +30,7 @@ from camdkit.lens_types import (StaticLens, Lens,
 from camdkit.camera_types import StaticCamera, PhysicalDimensions, SenselDimensions
 from camdkit.string_types import NonBlankUTF8String, UUIDURN
 from camdkit.tracker_types import StaticTracker, Tracker, GlobalPosition
-from camdkit.timing_types import Timing, TimingMode, Timestamp, Synchronization, Timecode
+from camdkit.timing_types import Timing, TimingMode, Timestamp, Synchronization, Timecode, Sampling
 from camdkit.versioning_types import VersionedProtocol
 from camdkit.transform_types import Transform
 
@@ -39,6 +46,7 @@ CLIP_SCHEMA_PRELUDE = {
 class Static(CompatibleBaseModel):
     duration: Annotated[StrictlyPositiveRational | None,
       Field(json_schema_extra={"clip_property": "duration",
+                               "constraints": STRICTLY_POSITIVE_RATIONAL,
                                "units": SECOND})] = None
     """Duration of the clip"""
 
@@ -63,28 +71,32 @@ class Clip(CompatibleBaseModel):
     # with the same name, from the user's POV, as the property
     global_protocol: Annotated[tuple[VersionedProtocol, ...] | None,
       Field(alias="protocol",
-            json_schema_extra={"clip_property": "protocol"})] = None
+            json_schema_extra={"clip_property": "protocol",
+                               "constraints": PROTOCOL})] = None
     """Name of the protocol in which the sample is being employed, and
     version of that protocol
     """
 
     global_sample_id: Annotated[tuple[UUIDURN, ...] | None,
       Field(alias="sampleId",
-            json_schema_extra={"clip_property": "sample_id"})] = None
+            json_schema_extra={"clip_property": "sample_id",
+                               "constraints": UUID_URN})] = None
     """URN serving as unique identifier of the sample in which data is
     being transported.
     """
 
     global_source_id: Annotated[tuple[UUIDURN, ...] | None,
       Field(alias="sourceId",
-            json_schema_extra={"clip_property": "source_id"})] = None
+            json_schema_extra={"clip_property": "source_id",
+                               "constraints": UUID_URN})] = None
     """URN serving as unique identifier of the source from which data is
     being transported.
     """
 
     global_source_number: Annotated[tuple[NonNegativeInt, ...] | None,
       Field(alias="sourceNumber",
-            json_schema_extra={"clip_property": "source_number"})] = None
+            json_schema_extra={"clip_property": "source_number",
+                               "constraints": NON_NEGATIVE_INTEGER})] = None
     """Number that identifies the index of the stream from a source from which
     data is being transported. This is most important in the case where a source
     is producing multiple streams of samples.
@@ -92,14 +104,17 @@ class Clip(CompatibleBaseModel):
 
     global_related_sample_ids: Annotated[tuple[tuple[UUIDURN, ...], ...] | None,
       Field(alias="relatedSampleIds",
-            json_schema_extra={"clip_property": "related_sample_ids"})] = None
+            json_schema_extra={"clip_property": "related_sample_ids",
+                               "constraints": ARRAY})] = None
     """List of sampleId properties of samples related to this sample. The
     existence of a sample with a given sampleId is not guaranteed.
     """
 
     global_global_stage: Annotated[tuple[GlobalPosition, ...] | None,
       Field(alias="globalStage",
-            json_schema_extra={"clip_property": "global_stage"})] = None
+            json_schema_extra={"units": METER,
+                               "clip_property": "global_stage",
+                               "constraints": GLOBAL_POSITION})] = None
     """Position of stage origin in global ENU and geodetic coordinates
     (E, N, U, lat0, lon0, h0). Note this may be dynamic if the stage is
     inside a moving vehicle.
@@ -110,6 +125,7 @@ class Clip(CompatibleBaseModel):
             min_length=1,
             json_schema_extra={"units": METERS_AND_DEGREES,
                                "clip_property": "transforms",
+                               "constraints": TRANSFORMS,
                                "uniqueItems": False})] = None
     """A list of transforms.
     Transforms are composed in order with the last in the list representing
@@ -134,14 +150,48 @@ class Clip(CompatibleBaseModel):
     """
 
     @classmethod
+    def make_documentation(cls) -> list[dict[str, str]]:
+        full_schema = Clip.make_json_schema(mode='validation',
+                                            exclude_camdkit_internals=False)
+        documentation: list[dict[str, str]] = []
+
+        def document_clip_property(key: str,
+                                   property_schema: JsonSchemaValue,
+                                   parents: list[str]) -> None:
+            if parents and parents[0] == '':
+                parents.pop(0)
+            print(f"documenting clip property: {property_schema["clip_property"]}; parents {parents}")
+            documentation.append({
+                "python_name": property_schema["clip_property"],
+                "canonical_name": key,
+                "description": property_schema["description"],
+                "constraints": property_schema["constraints"] if "constraints" in property_schema else None,
+                "sampling": (Sampling.STATIC.value.capitalize()
+                             if "static" in parents or property_schema["clip_property"] == "duration"
+                             else Sampling.REGULAR.value.capitalize()),
+                "section": (parents[-1]
+                            if parents and property_schema["clip_property"] != "duration"
+                            else "None"),
+                "units": property_schema["units"] if "units" in property_schema else "None"
+            })
+
+        def traverse_json_schema(level: JsonSchemaValue, name: str, parents: list[str]) -> None:
+            if level.get("properties", None):
+                for key, value in level["properties"].items():
+                    if "clip_property" in value:
+                        document_clip_property(key, value, parents + [name])
+                    elif "properties" in value:
+                        traverse_json_schema(value, key, parents + [name])
+
+
+        traverse_json_schema(full_schema, "", [])
+        return documentation
+
+    @classmethod
     def make_json_schema(cls, mode: JsonSchemaMode = 'serialization',
                          exclude_camdkit_internals: bool = True) -> JsonSchemaValue:
         result = CLIP_SCHEMA_PRELUDE | super(Clip, cls).make_json_schema(mode, exclude_camdkit_internals)
         return result
-
-
-    # def from_json(self, json_dict: dict):
-    #     self.static = Static(**json_dict["static"])
 
     def value_from_hierarchy(self, attrs: tuple[str, ...]):
         obj = self

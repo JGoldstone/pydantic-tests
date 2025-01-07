@@ -42,9 +42,7 @@ class PhysicalDimensions(CompatibleBaseModel):
 
 
 class SenselDimensions(CompatibleBaseModel):
-    """Photosite resolution of the active area of the camera sensor in
-    pixels
-    """
+    """Photosite resolution of the active area of the camera sensor in pixels"""
     height: Annotated[int, Field(ge=0, le=MAX_INT_32)]
     width: Annotated[int, Field(ge=0, le=MAX_INT_32)]
 
@@ -62,7 +60,8 @@ class StaticCamera(CompatibleBaseModel):
     capture_frame_rate: Annotated[StrictlyPositiveRational | None,
     Field(alias="captureFrameRate",
           json_schema_extra={"units": HERTZ,
-                             "clip_property": "capture_frame_rate", })] = None
+                             "clip_property": "capture_frame_rate",
+                             "constraints": STRICTLY_POSITIVE_RATIONAL})] = None
     """Capture frame rate of the camera"""
 
     active_sensor_physical_dimensions: Annotated[PhysicalDimensions | None,
@@ -97,7 +96,7 @@ class StaticCamera(CompatibleBaseModel):
 
     firmware_version: Annotated[NonBlankUTF8String | None,
       Field(alias="firmwareVersion",
-            json_schema_extra={"clip_property": "camera_firmware_version",
+            json_schema_extra={"clip_property": "camera_firmware",
                                "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
     """Non-blank string identifying camera firmware version"""
 

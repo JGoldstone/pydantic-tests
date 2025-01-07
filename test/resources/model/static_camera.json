@@ -19,7 +19,7 @@
           "minimum": 0.0
         }
       },
-      "description": "Height and width of the active area of the camera sensor in microns ",
+      "description": "Height and width of the active area of the camera sensor in microns",
       "units": "millimeter"
     },
     "activeSensorResolution": {
@@ -41,7 +41,7 @@
           "maximum": 2147483647
         }
       },
-      "description": "Photosite resolution of the active area of the camera sensor in\npixels\n",
+      "description": "Photosite resolution of the active area of the camera sensor in pixels",
       "units": "pixel"
     },
     "anamorphicSqueeze": {
@@ -120,7 +120,7 @@
     "fdlLink": {
       "type": "string",
       "pattern": "^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
-      "description": "URN identifying the ASC Framing Decision List used by the camera. "
+      "description": "URN identifying the ASC Framing Decision List used by the camera."
     },
     "isoSpeed": {
       "type": "integer",

@@ -155,7 +155,7 @@ class CameraTypesTestCases(unittest.TestCase):
                     "maximum": 2147483647
                 }
             },
-            "description": "Photosite resolution of the active area of the camera sensor in\npixels\n",
+            "description": "Photosite resolution of the active area of the camera sensor in pixels",
             "units": "pixel"
         }
         actual_schema = SenselDimensions.make_json_schema()

@@ -17,7 +17,8 @@ from camdkit.compatibility import (CompatibleBaseModel,
                                    NON_NEGATIVE_REAL,
                                    STRICTLY_POSITIVE_REAL,
                                    REAL,
-                                   REAL_AT_LEAST_UNITY)
+                                   REAL_AT_LEAST_UNITY,
+                                   ARRAY)
 from camdkit.numeric_types import (NonNegativeFloat, StrictlyPositiveFloat, NormalizedFloat,
                                    NonNegativeInt, UnityOrGreaterFloat)
 from camdkit.string_types import NonBlankUTF8String
@@ -66,21 +67,20 @@ class StaticLens(CompatibleBaseModel):
     serial_number: Annotated[NonBlankUTF8String | None,
       Field(alias="serialNumber",
             json_schema_extra={"clip_property": "lens_serial_number",
-                               "constraints": UUID_URN})] = None
+                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
     """Non-blank string uniquely identifying the lens"""
 
     firmware_version: Annotated[NonBlankUTF8String | None,
       Field(alias="firmwareVersion",
-            json_schema_extra={"clip_property": "lens_firmware_version",
+            json_schema_extra={"clip_property": "lens_firmware",
                                "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
     """Non-blank string identifying lens firmware version"""
 
-    nominal_focal_length: Annotated[NonNegativeFloat | None,
+    nominal_focal_length: Annotated[StrictlyPositiveFloat | None,
       Field(alias="nominalFocalLength",
             json_schema_extra={"units": MILLIMETER,
                                "clip_property": "lens_nominal_focal_length",
-                               "constraints": {"clip_property": "lens_firmware_version",
-                                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS}})] = None
+                               "constraints": STRICTLY_POSITIVE_REAL})] = None
     """Nominal focal length of the lens. The number printed on the side
     of a prime lens, e.g. 50 mm, and undefined in the case of a zoom lens.
     """
@@ -169,9 +169,7 @@ class Lens(CompatibleBaseModel):
     # TODO: watch GitHub issue #127 to see if we can get rid of the 'custom' field
     custom: Annotated[tuple[tuple[float, ...], ...] | None,
       Field(json_schema_extra={"clip_property": "lens_custom",
-                               "constraints": """The parameter shall be a tuple of items of the class itemClass.
-    The tuple can be empty
-    """})] = None
+                               "constraints": ARRAY})] = None
     """This list provides optional additional custom coefficients that can
     extend the existing lens model. The meaning of and how these characteristics
     are to be applied to a virtual camera would require negotiation between a

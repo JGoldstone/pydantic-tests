@@ -236,7 +236,7 @@ elapsed since the start of the epoch.
     """
 
     timecode: Annotated[tuple[Timecode, ...] | None,
-      Field(json_schema_extra={"clip_property": "timing_sequence_number",
+      Field(json_schema_extra={"clip_property": "timing_timecode",
                                "constraints": """The parameter shall contain a valid format and hours, minutes,
 seconds and frames with appropriate min/max values.
 """})] = None
