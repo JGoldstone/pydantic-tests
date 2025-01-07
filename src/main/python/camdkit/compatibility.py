@@ -172,8 +172,20 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
                             if must_index:
                                 layer_below = layer_below[0]
                             current_keys = list(current_layer.keys())
+                            # TODO re-evaluate whether this is too fragile to keep. The effect is
+                            #   to merge the lower layer keys into what's coming up. If what's
+                            #   coming up has the same key but a different value, it wins.
+                            #   The hazard is a container with at most two things is wrapped around
+                            #   a container with at least four things, so you end up with a merged
+                            #   min_length of 4 and max_length of 2.
+                            merged_not_popped_keys: set[str] = {"min_length", "max_length"}
                             for k in current_keys:
-                                current_layer.pop(k)
+                                if k not in merged_not_popped_keys:
+                                    print(f"popped key {k} for type {current_layer_type}")
+                                    current_layer.pop(k)
+                                else:
+                                    pass
+                                    print(f"skipped pop of key {k} for type {current_layer_type}")
                             for k, v in layer_below.items():
                                 current_layer[k] = v
                             return
