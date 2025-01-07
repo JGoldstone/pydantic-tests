@@ -141,7 +141,7 @@
     },
     "focusDistance": {
       "type": "number",
-      "minimum": 0.0,
+      "exclusiveMinimum": 0.0,
       "description": "Focus distance/position of the lens",
       "units": "meter"
     },
