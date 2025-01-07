@@ -68,7 +68,7 @@ class LensTypesTestCases(unittest.TestCase):
         self.assertIn("properties", full_expected_schema)
         self.assertIn("distortion", full_expected_schema["properties"])
         expected_schema = full_expected_schema["properties"]["distortion"]
-        full_actual_schema: dict[str, Any] = Lens.make_json_schema()
+        full_actual_schema: JsonSchemaValue = Lens.make_json_schema()
         self.assertIn("properties", full_actual_schema)
         self.assertIn("distortion", full_actual_schema["properties"])
         actual_schema = full_actual_schema["properties"]["distortion"]
@@ -82,13 +82,6 @@ class LensTypesTestCases(unittest.TestCase):
     def test_regular_lens_schemas_match(self):
         expected: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/lens.json"))
         actual = Lens.make_json_schema()
-        ep = expected["properties"]
-        ap = actual["properties"]
-        for k in ep.keys():
-            if ep[k] != ap[k]:
-                print(f"broken: {k}")
-        efle = ep["exposureFalloff"]
-        efla = ap["exposureFalloff"]
         self.assertEqual(expected, actual)
 
 
