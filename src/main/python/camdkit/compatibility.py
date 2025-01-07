@@ -130,7 +130,7 @@ class CompatibleSchemaGenerator(GenerateJsonSchema):
                      'model-fields': ('fields', False)}
             try:
                 return table[layer_type]
-            except KeyError as e:
+            except KeyError:
                 return None, False
 
         def find_layer(layer_schema: dict[str, Any],
