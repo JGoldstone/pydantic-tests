@@ -483,16 +483,9 @@ container. Of course the real way to fix this is, as discussed above, to automat
 
 In the validation message for strings parameters there's a missing "n" at the end of "betwee"
 
-In the docstring for lens_custom it's "additonal" where it should be "additional"
-
 The presence or absence of "additionalProperties": False in generated JSON schemas seems...irregular 
 
 The model name in Distortion can be of infinite length
-
-The numerator for the rational framerate built into the Timecode object should have a numerator that's within
-values for positive signed ints; same for frequency in synchronization
-
-The docstring for recordedTimestamp needs to lose its leading \n
 
 ### questionable
 
@@ -507,3 +500,5 @@ Am I correct in thinking that when we simplified Transform objects we loosened t
 that the id be a UUIDURN ? I've relaxed that restriction in the Pydantic implementation to 
 match what I see manually generated in the classic version, but is it wise to do allow
 anything in there?
+
+
