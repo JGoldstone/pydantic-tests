@@ -51,13 +51,13 @@ class StaticTracker(CompatibleBaseModel):
 
 class Tracker(CompatibleBaseModel):
     notes: Annotated[tuple[NonBlankUTF8String, ...] | None,
-      Field(json_schema_extra={"clip_property": "tracker_firmware",
-                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] | None = None
+      Field(json_schema_extra={"clip_property": "tracker_notes",
+                               "constraints": NONBLANK_UTF8_MAX_1023_CHARS})] = None
     """Non-blank string containing notes about tracking system"""
 
     recording: Annotated[tuple[bool, ...] | None,
       Field(json_schema_extra={"clip_property": "tracker_recording",
-                               "constraints": BOOLEAN})] | None = None
+                               "constraints": BOOLEAN})] = None
     """Boolean indicating whether tracking system is recording data"""
 
     slate: Annotated[tuple[NonBlankUTF8String, ...] | None,
