@@ -38,7 +38,8 @@ CLIP_SCHEMA_PRELUDE = {
 # TODO: introspect all of these, or at least the static ones
 class Static(CompatibleBaseModel):
     duration: Annotated[StrictlyPositiveRational | None,
-      Field(json_schema_extra={'units': SECOND})] = None
+      Field(json_schema_extra={"clip_property": "duration",
+                               "units": SECOND})] = None
     """Duration of the clip"""
 
     camera: StaticCamera = StaticCamera()
