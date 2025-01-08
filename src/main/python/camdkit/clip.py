@@ -6,7 +6,7 @@
 
 """Types for modeling clips"""
 from collections.abc import Callable
-from typing import Annotated, Any
+from typing import Annotated, Any, get_type_hints
 
 from pydantic import Field, field_validator
 from pydantic.json_schema import JsonSchemaMode, JsonSchemaValue
@@ -59,6 +59,9 @@ class Static(CompatibleBaseModel):
     camera: StaticCamera = StaticCamera()
     lens: StaticLens = StaticLens()
     tracker: StaticTracker = StaticTracker()
+
+type ModelPath = tuple[tuple[str, type], ...]
+
 
 class Clip(CompatibleBaseModel):
     static: Static = Static()
@@ -153,26 +156,40 @@ class Clip(CompatibleBaseModel):
     def traverse_json_schema(cls,
                              name: str,
                              level: JsonSchemaValue,
-                             parents: list[str],
-                             function: Callable[[str, JsonSchemaValue, list[str]], None]) -> None:
+                             model_path: ModelPath,
+                             function: Callable[[str, JsonSchemaValue, ModelPath], None]) -> None:
         if level.get("properties", None):
             for key, value in level["properties"].items():
                 if "clip_property" in value:
-                    function(key, value, parents + [name])
+                    function(key, value, model_path)
                 elif "properties" in value:
-                    Clip.traverse_json_schema(key, value, parents + [name], function)
+                    last_step = model_path[-1]
+                    last_model = last_step[1]
+                    hints = get_type_hints(last_model)
+                    next_model = hints[key]
+                    Clip.traverse_json_schema(key, value, model_path + ((key, next_model),), function)
+
+    @classmethod
+    def setup_clip_properties(cls) -> None:
+        def property_adder(name: str,
+                                 property_schema: JsonSchemaValue,
+                                 model_path: ModelPath) -> None:
+            clip_property = property_schema["clip_property"]
+            print(f"about to add {clip_property} to clip properties, model_path={model_path}")
+            # Clip.add_property(name, model_path)
+
+        full_schema = Clip.make_json_schema(mode='validation', exclude_camdkit_internals=False)
+        Clip.traverse_json_schema("", full_schema, (('', Clip),), property_adder)
 
     @classmethod
     def make_documentation(cls) -> list[dict[str, str]]:
-        full_schema = Clip.make_json_schema(mode='validation',
-                                            exclude_camdkit_internals=False)
         documentation: list[dict[str, str]] = []
 
         def document_clip_property(key: str,
                                    property_schema: JsonSchemaValue,
-                                   parents: list[str]) -> None:
-            if parents and parents[0] == '':
-                parents.pop(0)
+                                   model_path: ModelPath) -> None:
+            last_step = model_path[-1]
+            section: str | None = last_step[0] if last_step[0] else None
             # print(f"documenting clip property: {property_schema["clip_property"]}; parents {parents}")
             documentation.append({
                 "python_name": property_schema["clip_property"],
@@ -180,15 +197,14 @@ class Clip(CompatibleBaseModel):
                 "description": property_schema["description"],
                 "constraints": property_schema["constraints"] if "constraints" in property_schema else None,
                 "sampling": (Sampling.STATIC.value.capitalize()
-                             if "static" in parents or property_schema["clip_property"] == "duration"
+                             if "static" in [nm for nm, cl in model_path] or property_schema["clip_property"] == "duration"
                              else Sampling.REGULAR.value.capitalize()),
-                "section": (parents[-1]
-                            if parents and property_schema["clip_property"] != "duration"
-                            else "None"),
+                "section": (section if property_schema["clip_property"] != "duration" else "None"),
                 "units": property_schema["units"] if "units" in property_schema else "None"
             })
 
-        Clip.traverse_json_schema("", full_schema, [], document_clip_property)
+        full_schema = Clip.make_json_schema(mode='validation', exclude_camdkit_internals=False)
+        Clip.traverse_json_schema("", full_schema, (('', Clip),), document_clip_property)
         return documentation
 
     @classmethod

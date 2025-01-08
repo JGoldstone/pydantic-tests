@@ -8,11 +8,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Rearrange directory structure to match camdkit.">
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Reorder definitions for clarity; remove print statements.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/experiments/learnings.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/experiments/learnings.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/clip.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/framework.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/framework.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/numeric_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/numeric_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/python/test_clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/python/test_clip.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +83,9 @@
     "Python tests.Python tests for python.test_camera_types.CameraTypesTestCases.test_physical_dimensions.executor": "Run",
     "Python tests.Python tests for python.test_camera_types.CameraTypesTestCases.test_sensel_dimensions.executor": "Debug",
     "Python tests.Python tests for python.test_camera_types.CameraTypesTestCases.test_static_camera_schemas_match.executor": "Run",
+    "Python tests.Python tests for python.test_clip.ClipTestCases.test_add_property.executor": "Debug",
     "Python tests.Python tests for python.test_clip.ClipTestCases.test_make_documentation.executor": "Run",
+    "Python tests.Python tests for python.test_clip.ClipTestCases.test_setup_clip_properties.executor": "Run",
     "Python tests.Python tests for python.test_compatibility.CompatibilityTestCases.test_schema_for_serialization.executor": "Run",
     "Python tests.Python tests for python.test_compatibility.CompatibilityTestCases.test_schema_generation.executor": "Run",
     "Python tests.Python tests for python.test_lens_types.LensTypesTestCases.test_distortion.executor": "Run",
@@ -287,7 +289,7 @@
       <recent name="$PROJECT_DIR$/src/main/python/camdkit" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Unittests in python">
+  <component name="RunManager" selected="Python tests.Python tests for python.test_clip.ClipTestCases.test_setup_clip_properties">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -327,6 +329,22 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests for python.test_clip.ClipTestCases.test_add_property" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="pydantic tests" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;python.test_clip.ClipTestCases.test_add_property&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <configuration name="Python tests for python.test_clip.ClipTestCases.test_make_documentation" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
@@ -340,6 +358,22 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;python.test_clip.ClipTestCases.test_make_documentation&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for python.test_clip.ClipTestCases.test_setup_clip_properties" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="pydantic tests" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;python.test_clip.ClipTestCases.test_setup_clip_properties&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
@@ -357,38 +391,6 @@
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;python.test_model.ModelTest.test_documentation&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests in test_lens_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="pydantic tests" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/src/test/python/test_lens_types.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests in test_timing_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="pydantic tests" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/src/test/python/test_timing_types.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
     <configuration name="Unittests in python" type="tests" factoryName="Unittests" nameIsGenerated="true">
@@ -412,19 +414,19 @@
     <list>
       <item itemvalue="Python.main" />
       <item itemvalue="Python tests.Unittests in python" />
+      <item itemvalue="Python tests.Python tests for python.test_clip.ClipTestCases.test_add_property" />
+      <item itemvalue="Python tests.Python tests for python.test_clip.ClipTestCases.test_setup_clip_properties" />
       <item itemvalue="Python tests.Python tests for python.test_camera_types.CameraTypesTestCases.test_physical_dimensions" />
       <item itemvalue="Python tests.Python tests for python.test_clip.ClipTestCases.test_make_documentation" />
       <item itemvalue="Python tests.Python tests for python.test_model.ModelTest.test_documentation" />
-      <item itemvalue="Python tests.Python tests in test_lens_types.py" />
-      <item itemvalue="Python tests.Python tests in test_timing_types.py" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests for python.test_clip.ClipTestCases.test_setup_clip_properties" />
+        <item itemvalue="Python tests.Python tests for python.test_clip.ClipTestCases.test_make_documentation" />
+        <item itemvalue="Python tests.Python tests for python.test_clip.ClipTestCases.test_add_property" />
         <item itemvalue="Python tests.Python tests for python.test_camera_types.CameraTypesTestCases.test_physical_dimensions" />
         <item itemvalue="Python tests.Python tests for python.test_model.ModelTest.test_documentation" />
-        <item itemvalue="Python tests.Python tests for python.test_clip.ClipTestCases.test_make_documentation" />
-        <item itemvalue="Python tests.Python tests in test_lens_types.py" />
-        <item itemvalue="Python tests.Python tests in test_timing_types.py" />
       </list>
     </recent_temporary>
   </component>
@@ -477,63 +479,7 @@
       <workItem from="1735846600431" duration="45381000" />
       <workItem from="1736100294577" duration="13616000" />
       <workItem from="1736179216813" duration="1223000" />
-      <workItem from="1736180446321" duration="60768000" />
-    </task>
-    <task id="LOCAL-00094" summary="Clearer names for functions to detect optional and array property schema">
-      <option name="closed" value="true" />
-      <created>1735247968768</created>
-      <option name="number" value="00094" />
-      <option name="presentableId" value="LOCAL-00094" />
-      <option name="project" value="LOCAL" />
-      <updated>1735247968768</updated>
-    </task>
-    <task id="LOCAL-00095" summary="Add saved JSON points of comparison from classic implementation in a test resource directory.">
-      <option name="closed" value="true" />
-      <created>1735304497503</created>
-      <option name="number" value="00095" />
-      <option name="presentableId" value="LOCAL-00095" />
-      <option name="project" value="LOCAL" />
-      <updated>1735304497503</updated>
-    </task>
-    <task id="LOCAL-00096" summary="Add missing fdlLink alias for fdl_link parameter">
-      <option name="closed" value="true" />
-      <created>1735306137093</created>
-      <option name="number" value="00096" />
-      <option name="presentableId" value="LOCAL-00096" />
-      <option name="project" value="LOCAL" />
-      <updated>1735306137093</updated>
-    </task>
-    <task id="LOCAL-00097" summary="Supply no-arg constructor values for Clip's tracker, timing, lens, and static (and all static's component) parameters">
-      <option name="closed" value="true" />
-      <created>1735306337767</created>
-      <option name="number" value="00097" />
-      <option name="presentableId" value="LOCAL-00097" />
-      <option name="project" value="LOCAL" />
-      <updated>1735306337767</updated>
-    </task>
-    <task id="LOCAL-00098" summary="Remove class docstring for StaticCamera; clear out unused import and a dead TODO">
-      <option name="closed" value="true" />
-      <created>1735332630963</created>
-      <option name="number" value="00098" />
-      <option name="presentableId" value="LOCAL-00098" />
-      <option name="project" value="LOCAL" />
-      <updated>1735332630963</updated>
-    </task>
-    <task id="LOCAL-00099" summary="Incomplete push towards matching schema">
-      <option name="closed" value="true" />
-      <created>1735332675324</created>
-      <option name="number" value="00099" />
-      <option name="presentableId" value="LOCAL-00099" />
-      <option name="project" value="LOCAL" />
-      <updated>1735332675324</updated>
-    </task>
-    <task id="LOCAL-00100" summary="wrapping classic camdkit schema as with pydantic-style Optional works">
-      <option name="closed" value="true" />
-      <created>1735390044978</created>
-      <option name="number" value="00100" />
-      <option name="presentableId" value="LOCAL-00100" />
-      <option name="project" value="LOCAL" />
-      <updated>1735390044978</updated>
+      <workItem from="1736180446321" duration="88860000" />
     </task>
     <task id="LOCAL-00101" summary="Add missing units on capture frame rate and shutter angle">
       <option name="closed" value="true" />
@@ -871,7 +817,63 @@
       <option name="project" value="LOCAL" />
       <updated>1736302918057</updated>
     </task>
-    <option name="localTasksCounter" value="143" />
+    <task id="LOCAL-00143" summary="Allow a few userful arithmetic operations on Rational and StrictlyPositiveRational objects">
+      <option name="closed" value="true" />
+      <created>1736303027489</created>
+      <option name="number" value="00143" />
+      <option name="presentableId" value="LOCAL-00143" />
+      <option name="project" value="LOCAL" />
+      <updated>1736303027489</updated>
+    </task>
+    <task id="LOCAL-00144" summary="Adjust import forwarding contents of model.py and framework.py">
+      <option name="closed" value="true" />
+      <created>1736303067841</created>
+      <option name="number" value="00144" />
+      <option name="presentableId" value="LOCAL-00144" />
+      <option name="project" value="LOCAL" />
+      <updated>1736303067841</updated>
+    </task>
+    <task id="LOCAL-00145" summary="Copy over various files from classic camdkit to aid in compatibility testing">
+      <option name="closed" value="true" />
+      <created>1736303120164</created>
+      <option name="number" value="00145" />
+      <option name="presentableId" value="LOCAL-00145" />
+      <option name="project" value="LOCAL" />
+      <updated>1736303120164</updated>
+    </task>
+    <task id="LOCAL-00146" summary="Comment out print statement.">
+      <option name="closed" value="true" />
+      <created>1736303144926</created>
+      <option name="number" value="00146" />
+      <option name="presentableId" value="LOCAL-00146" />
+      <option name="project" value="LOCAL" />
+      <updated>1736303144926</updated>
+    </task>
+    <task id="LOCAL-00147" summary="Add mechanism to add properties from outside the Clip definition itself.">
+      <option name="closed" value="true" />
+      <created>1736369745335</created>
+      <option name="number" value="00147" />
+      <option name="presentableId" value="LOCAL-00147" />
+      <option name="project" value="LOCAL" />
+      <updated>1736369745335</updated>
+    </task>
+    <task id="LOCAL-00148" summary="Refactor out schema traversal so we can use it for property setup.">
+      <option name="closed" value="true" />
+      <created>1736371832927</created>
+      <option name="number" value="00148" />
+      <option name="presentableId" value="LOCAL-00148" />
+      <option name="project" value="LOCAL" />
+      <updated>1736371832927</updated>
+    </task>
+    <task id="LOCAL-00149" summary="Reorder definitions for clarity; remove print statements.">
+      <option name="closed" value="true" />
+      <created>1736371889244</created>
+      <option name="number" value="00149" />
+      <option name="presentableId" value="LOCAL-00149" />
+      <option name="project" value="LOCAL" />
+      <updated>1736371889244</updated>
+    </task>
+    <option name="localTasksCounter" value="150" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -889,13 +891,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="And yet more progress towards schema equality" />
-    <MESSAGE value="Match proposed typo, docstring cleanup in PR to classic camdkit" />
-    <MESSAGE value="Correct expected docstring for TimecodeFormat" />
-    <MESSAGE value="Use json_schema_extra to express in the generated JSON schema that one of focus, zoom or iris is required." />
-    <MESSAGE value="Spelling fix in lens docstring." />
-    <MESSAGE value="Reflect fix in lens docstring in lens.json; other spelling and newline fixes in lens.json." />
-    <MESSAGE value="Make focus distance a strictly positive real." />
     <MESSAGE value="Introduce a Distortions type, that groups together Distortion objects of different models. The clip now has a field that is a tuple of Distortions, not a tuple of tuples of Distortion." />
     <MESSAGE value="Add units to generated schema when making comparisons; in the normal context of generating Clip schema, they would be there, but in isolation they aren't generated." />
     <MESSAGE value="Add STRICTLY_POSITIVE_REAL constraint string." />
@@ -914,7 +909,14 @@
     <MESSAGE value="IDE changes" />
     <MESSAGE value="IDE changes in support of documentation match." />
     <MESSAGE value="Rearrange directory structure to match camdkit." />
-    <option name="LAST_COMMIT_MESSAGE" value="Rearrange directory structure to match camdkit." />
+    <MESSAGE value="Allow a few userful arithmetic operations on Rational and StrictlyPositiveRational objects" />
+    <MESSAGE value="Adjust import forwarding contents of model.py and framework.py" />
+    <MESSAGE value="Copy over various files from classic camdkit to aid in compatibility testing" />
+    <MESSAGE value="Comment out print statement." />
+    <MESSAGE value="Add mechanism to add properties from outside the Clip definition itself." />
+    <MESSAGE value="Refactor out schema traversal so we can use it for property setup." />
+    <MESSAGE value="Reorder definitions for clarity; remove print statements." />
+    <option name="LAST_COMMIT_MESSAGE" value="Reorder definitions for clarity; remove print statements." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -926,13 +928,29 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="jupyter-line">
           <url>file://$PROJECT_DIR$/experiments/learnings.ipynb</url>
-          <line>95</line>
-          <option name="timeStamp" value="95" />
+          <line>185</line>
+          <option name="timeStamp" value="373" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/src/main/python/camdkit/arri/reader.py</url>
+          <url>file://$PROJECT_DIR$/src/main/python/camdkit/mosys/reader.py</url>
+          <line>36</line>
+          <option name="timeStamp" value="365" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/main/python/camdkit/mosys/reader.py</url>
           <line>8</line>
-          <option name="timeStamp" value="364" />
+          <option name="timeStamp" value="366" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/main/python/camdkit/clip.py</url>
+          <line>166</line>
+          <option name="timeStamp" value="379" />
+        </line-breakpoint>
+        <line-breakpoint suspend="THREAD" type="python-line">
+          <condition expression="key == &quot;lens&quot;" language="Python" />
+          <url>file://$PROJECT_DIR$/src/main/python/camdkit/clip.py</url>
+          <line>168</line>
+          <option name="timeStamp" value="380" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -950,11 +968,11 @@
     <SUITE FILE_PATH="coverage/pydantic_tests$scratch_1.coverage" NAME="scratch_1 Coverage Results" MODIFIED="1735495359824" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$APPLICATION_CONFIG_DIR$/scratches" />
     <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_python_test_timing_types_TimingTestCases_test_synchronization_ptp.coverage" NAME="Unittests for python.test_timing_types.TimingTestCases.test_synchronization_ptp Coverage Results" MODIFIED="1735861707821" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_python_test_timing_types_TimingTestCases_test_timecode.coverage" NAME="Unittests for python.test_timing_types.TimingTestCases.test_timecode Coverage Results" MODIFIED="1735861881081" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1736290629977" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1736380122871" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/test" />
     <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_test_clip_ClipTestCases_test_lens_regular_parameters.coverage" NAME="Unittests for test_clip.ClipTestCases.test_lens_regular_parameters Coverage Results" MODIFIED="1734539427401" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_python_test_timing_types_TimingTestCases_test_timing_schemas_match.coverage" NAME="Unittests for python.test_timing_types.TimingTestCases.test_timing_schemas_match Coverage Results" MODIFIED="1736115231307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/pydantic_tests$camera_types.coverage" NAME="camera_types Coverage Results" MODIFIED="1734106899074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1736296773455" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1736371923464" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1727995107162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/pydantic_tests$compatibility.coverage" NAME="compatibility Coverage Results" MODIFIED="1734891268851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
     <SUITE FILE_PATH="coverage/pydantic_tests$clip.coverage" NAME="clip Coverage Results" MODIFIED="1735174811083" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
