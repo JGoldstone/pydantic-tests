@@ -50,15 +50,15 @@ class Static(CompatibleBaseModel):
                                "units": SECOND})] = None
     """Duration of the clip"""
 
-    camera: StaticCamera = StaticCamera()
-    lens: StaticLens = StaticLens()
-    tracker: StaticTracker = StaticTracker()
-
     # noinspection PyNestedDecorators
     @field_validator("duration", mode="before")
     @classmethod
     def coerce_duration_to_strictly_positive_rational(cls, v):
         return rationalize_strictly_and_positively(v)
+
+    camera: StaticCamera = StaticCamera()
+    lens: StaticLens = StaticLens()
+    tracker: StaticTracker = StaticTracker()
 
 class Clip(CompatibleBaseModel):
     static: Static = Static()
@@ -249,9 +249,7 @@ class Clip(CompatibleBaseModel):
                     obj = getattr(obj, model_field)
             setattr(obj, name, value)
 
-        print(f"about to add property {name} to class {cls}")
         setattr(cls, name, property(get_through_path, set_through_path))
-        print("done with adding property {name} to class {cls}")
 
     @property
     def capture_frame_rate(self) -> StrictlyPositiveRational:
