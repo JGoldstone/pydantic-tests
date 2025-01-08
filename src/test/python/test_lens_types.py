@@ -64,7 +64,7 @@ class LensTypesTestCases(unittest.TestCase):
         instance_from_json: Distortion = Distortion.from_json(json_from_instance)
         self.assertEqual(valid, instance_from_json)
 
-        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/lens.json"))
+        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/lens.json"))
         self.assertIn("properties", full_expected_schema)
         self.assertIn("distortion", full_expected_schema["properties"])
         expected_schema = full_expected_schema["properties"]["distortion"]
@@ -75,12 +75,12 @@ class LensTypesTestCases(unittest.TestCase):
         self.assertEqual(expected_schema, actual_schema)
 
     def test_static_lens_schemas_match(self):
-        expected: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/static_lens.json"))
+        expected: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/static_lens.json"))
         actual = StaticLens.make_json_schema()
         self.assertDictEqual(expected, actual)
 
     def test_regular_lens_schemas_match(self):
-        expected: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/lens.json"))
+        expected: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/lens.json"))
         actual = Lens.make_json_schema()
         self.assertEqual(expected, actual)
 

@@ -96,7 +96,7 @@ class CameraTypesTestCases(unittest.TestCase):
         instance_from_json: PhysicalDimensions = PhysicalDimensions.from_json(json_from_instance)
         self.assertEqual(d, instance_from_json)
 
-        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/static_camera.json"))
+        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/static_camera.json"))
         self.assertIn("properties", full_expected_schema)
         self.assertIn("activeSensorPhysicalDimensions", full_expected_schema["properties"])
         expected_schema = full_expected_schema["properties"]["activeSensorPhysicalDimensions"]
@@ -267,7 +267,7 @@ class CameraTypesTestCases(unittest.TestCase):
             # sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES + sys.float_info.epsilon
 
     def test_static_camera_schemas_match(self):
-        expected: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/static_camera.json"))
+        expected: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/static_camera.json"))
         actual = StaticCamera.make_json_schema()
         self.assertDictEqual(expected, actual)
 

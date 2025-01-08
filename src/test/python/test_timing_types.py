@@ -27,7 +27,7 @@ from camdkit.timing_types import (TimingMode,
 
 
 
-CLASSIC_TIMING_SCHEMA_PATH = Path("resources/model/timing.json")
+CLASSIC_TIMING_SCHEMA_PATH = Path("src/test/resources/model/timing.json")
 CLASSIC_TIMING_SCHEMA: JsonSchemaValue | None = None
 
 

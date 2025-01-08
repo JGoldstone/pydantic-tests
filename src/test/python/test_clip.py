@@ -481,11 +481,10 @@ class ClipTestCases(unittest.TestCase):
 
         doc: list[dict[str, str]] = Clip.make_documentation()
         sorted_doc = sorted(doc, key=lambda x: x["canonical_name"])
-        print(f"sorted_doc has {len(sorted_doc)} items")
-        with open("/tmp/pydantic-doc.txt", "w") as fp:
-            for doc_entry in sorted_doc:
-                print_doc_entry(doc_entry, fp)
-
+        # print(f"sorted_doc has {len(sorted_doc)} items")
+        # with open("/tmp/pydantic-doc.txt", "w") as fp:
+        #     for doc_entry in sorted_doc:
+        #         print_doc_entry(doc_entry, fp)
         self.assertTrue(len(doc) > 0)
 
 

@@ -71,7 +71,7 @@ class TestTransformCases(unittest.TestCase):
         valid_v3_from_json = Vector3.from_json(valid_v3_as_json)
         self.assertEqual(valid_v3, valid_v3_from_json)
         # verify that the JSON schema from Pydantic is what we think it is
-        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/transforms.json"))
+        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/transforms.json"))
         self.assertIn("items", full_expected_schema)
         self.assertIn("properties", full_expected_schema["items"])
         self.assertIn("rotation", full_expected_schema["items"]["properties"])
@@ -123,7 +123,7 @@ class TestTransformCases(unittest.TestCase):
         valid_v3_from_json = Rotator3.from_json(valid_v3_as_json)
         self.assertEqual(valid_v3, valid_v3_from_json)
         # verify that the JSON schema from Pydantic is what we think it is
-        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/transforms.json"))
+        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/transforms.json"))
         self.assertIn("items", full_expected_schema)
         self.assertIn("properties", full_expected_schema["items"])
         self.assertIn("rotation", full_expected_schema["items"]["properties"])
@@ -192,7 +192,7 @@ class TestTransformCases(unittest.TestCase):
         valid_transform_from_json = Transform.from_json(valid_transform_as_json)
         self.assertEqual(valid_transform, valid_transform_from_json)
 
-        expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/transforms.json"))
+        expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/transforms.json"))
         full_actual_schema: JsonSchemaValue = Clip.make_json_schema()
         self.assertIn("properties", full_actual_schema)
         self.assertIn("transforms", full_actual_schema["properties"])

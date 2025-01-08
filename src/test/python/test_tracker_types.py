@@ -180,7 +180,7 @@ class TrackerTestCases(unittest.TestCase):
             t.status = invalid_overlong_statuses
 
     def test_static_tracker_schemas_match(self):
-        expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("resources/model/static_tracker.json"))
+        expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/static_tracker.json"))
         actual_schema: JsonSchemaValue = StaticTracker.make_json_schema()
         self.assertDictEqual(expected_schema, actual_schema)
 
