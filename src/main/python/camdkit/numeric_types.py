@@ -7,6 +7,7 @@
 """Constrained versions of built-in numeric types"""
 
 import numbers
+from fractions import Fraction
 from typing import Any, Final, Annotated
 from pydantic import Field
 
@@ -58,6 +59,30 @@ class Rational(CompatibleBaseModel):
     def __init__(self, num: int, denom: int) -> None:
         super(Rational, self).__init__(num=num, denom=denom)
 
+    # Not the full set of operations; just enough to pass classic unit tests
+    @staticmethod
+    def _canonicalize(other: Any):
+        if isinstance(other, Rational):
+            return other
+        elif isinstance(other, StrictlyPositiveRational):
+            return Rational(num=other.num, denom=other.denom)
+        frac = Fraction(other)  # may well throw TypeError
+        return Rational(frac.numerator, frac.denominator)
+
+    def __eq__(self, other: Any) -> bool:
+        if other:
+            wrapped = Rational._canonicalize(other)
+            return self.num == wrapped.num and self.denom == wrapped.denom
+        return False
+
+    def __mul__(self, other: Any):
+        wrapped = Rational._canonicalize(other)
+        return Rational(self.num * wrapped.num, self.denom * wrapped.denom)
+
+    def __rtruediv__(self, other: Any):
+        wrapped = Rational._canonicalize(other)
+        return Rational(self.num * wrapped.denom, self.denom * wrapped.num)
+
 
 class StrictlyPositiveRational(CompatibleBaseModel):
     num: int = Field(ge=1, le=MAX_INT_32, strict=True)
@@ -65,6 +90,30 @@ class StrictlyPositiveRational(CompatibleBaseModel):
 
     def __init__(self, num: int, denom: int, ) -> None:
         super(StrictlyPositiveRational, self).__init__(num=num, denom=denom)
+
+    # Not the full set of operations; just enough to pass classic unit tests
+    @staticmethod
+    def _canonicalize(other: Any):
+        if isinstance(other, StrictlyPositiveRational):
+            return other
+        elif isinstance(other, Rational):
+            return StrictlyPositiveRational(num=other.num, denom=other.denom)
+        frac = Fraction(other)  # may well throw TypeError
+        return StrictlyPositiveRational(frac.numerator, frac.denominator)
+
+    def __eq__(self, other: Any) -> bool:
+        if other:
+            wrapped = StrictlyPositiveRational._canonicalize(other)
+            return self.num == wrapped.num and self.denom == wrapped.denom
+        return False
+
+    def __mul__(self, other: Any):
+        wrapped = StrictlyPositiveRational._canonicalize(other)
+        return StrictlyPositiveRational(self.num * wrapped.num, self.denom * wrapped.denom)
+
+    def __rtruediv__(self, other: Any):
+        wrapped = StrictlyPositiveRational._canonicalize(other)
+        return StrictlyPositiveRational(self.num * wrapped.denom, self.denom * wrapped.num)
 
 def rationalize_strictly_and_positively(x: Any) -> StrictlyPositiveRational:
     if x:
