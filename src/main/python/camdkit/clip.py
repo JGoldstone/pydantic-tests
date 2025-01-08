@@ -5,6 +5,7 @@
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
 """Types for modeling clips"""
+from collections.abc import Callable
 from typing import Annotated, Any
 
 from pydantic import Field, field_validator
@@ -149,6 +150,19 @@ class Clip(CompatibleBaseModel):
     """
 
     @classmethod
+    def traverse_json_schema(cls,
+                             name: str,
+                             level: JsonSchemaValue,
+                             parents: list[str],
+                             function: Callable[[str, JsonSchemaValue, list[str]], None]) -> None:
+        if level.get("properties", None):
+            for key, value in level["properties"].items():
+                if "clip_property" in value:
+                    function(key, value, parents + [name])
+                elif "properties" in value:
+                    Clip.traverse_json_schema(key, value, parents + [name], function)
+
+    @classmethod
     def make_documentation(cls) -> list[dict[str, str]]:
         full_schema = Clip.make_json_schema(mode='validation',
                                             exclude_camdkit_internals=False)
@@ -174,16 +188,7 @@ class Clip(CompatibleBaseModel):
                 "units": property_schema["units"] if "units" in property_schema else "None"
             })
 
-        def traverse_json_schema(level: JsonSchemaValue, name: str, parents: list[str]) -> None:
-            if level.get("properties", None):
-                for key, value in level["properties"].items():
-                    if "clip_property" in value:
-                        document_clip_property(key, value, parents + [name])
-                    elif "properties" in value:
-                        traverse_json_schema(value, key, parents + [name])
-
-
-        traverse_json_schema(full_schema, "", [])
+        Clip.traverse_json_schema("", full_schema, [], document_clip_property)
         return documentation
 
     @classmethod
