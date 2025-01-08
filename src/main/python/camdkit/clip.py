@@ -5,7 +5,6 @@
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
 """Types for modeling clips"""
-import doctest
 from typing import Annotated, Any
 
 from pydantic import Field, field_validator
@@ -212,15 +211,42 @@ class Clip(CompatibleBaseModel):
                 obj = getattr(obj, attr)
         setattr(obj, name, value)
 
-    @property
-    def duration(self) -> StrictlyPositiveRational | None:
-        return self.value_from_hierarchy(('static', 'duration'))
+    # @property
+    # def duration(self) -> StrictlyPositiveRational | None:
+    #     return self.value_from_hierarchy(('static', 'duration'))
+    #
+    # @duration.setter
+    # def duration(self, value: StrictlyPositiveRational | None) -> None:
+    #     self.set_through_hierarchy((
+    #         ('static', Static),),
+    #         'duration', value)
 
-    @duration.setter
-    def duration(self, value: StrictlyPositiveRational | None) -> None:
-        self.set_through_hierarchy((
-            ('static', Static),),
-            'duration', value)
+    @classmethod
+    def add_property(cls, name: str, model_path: tuple[tuple[str, type], ...]):
+
+        def get_through_path(self):
+            obj = self
+            model_fields: list[str] = [mf for mf, mc in model_path]
+            model_fields.append(name)
+            for model_field in model_fields:
+                try:
+                    obj = getattr(obj, model_field)
+                except AttributeError:
+                    return None
+            return obj
+
+        def set_through_path(self, value: Any) -> None:
+            obj = self
+            if model_path:
+                for model_field, model_class in model_path:
+                    if not hasattr(obj, model_field) or getattr(obj, model_field) is None:
+                        setattr(obj, model_field, model_class())
+                    obj = getattr(obj, model_field)
+            setattr(obj, name, value)
+
+        print(f"about to add property {name} to class {cls}")
+        setattr(cls, name, property(get_through_path, set_through_path))
+        print("done with adding property {name} to class {cls}")
 
     @property
     def capture_frame_rate(self) -> StrictlyPositiveRational:
