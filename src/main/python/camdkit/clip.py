@@ -160,7 +160,7 @@ class Clip(CompatibleBaseModel):
                                    parents: list[str]) -> None:
             if parents and parents[0] == '':
                 parents.pop(0)
-            print(f"documenting clip property: {property_schema["clip_property"]}; parents {parents}")
+            # print(f"documenting clip property: {property_schema["clip_property"]}; parents {parents}")
             documentation.append({
                 "python_name": property_schema["clip_property"],
                 "canonical_name": key,
