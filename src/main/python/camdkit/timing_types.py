@@ -135,7 +135,7 @@ class Synchronization(CompatibleBaseModel):
 
     def __init__(self, locked: bool,
                  source: SynchronizationSource,
-                 frequency: StrictlyPositiveRational | None,
+                 frequency: StrictlyPositiveRational | None = None,
                  offsets: SynchronizationOffsets | None = None,
                  present: bool | None = None,
                  ptp: SynchronizationPTP | None = None) -> None:
