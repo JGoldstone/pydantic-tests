@@ -9,6 +9,7 @@
 import json
 import unittest
 
+from typing import Final
 from fractions import Fraction
 
 from camdkit.lens_types import (ExposureFalloff,
@@ -19,7 +20,7 @@ from camdkit.camera_types import PhysicalDimensions, SenselDimensions
 from camdkit.timing_types import Timestamp, Timecode, TimecodeFormat, SynchronizationSource, \
     SynchronizationOffsets, SynchronizationPTP, Synchronization
 from camdkit.transform_types import Vector3, Rotator3, Transform
-from camdkit.clip import GlobalPosition, Clip
+from camdkit.clip import Clip
 from camdkit.tracker_types import GlobalPosition
 
 VALID_SAMPLE_ID = "urn:uuid:abcdefab-abcd-abcd-abcd-abcdefabcdef"  # 8-4-4-4-12
@@ -464,8 +465,24 @@ class ClipTestCases(unittest.TestCase):
         clip_from_json = clip.from_json(clip_as_json)
         self.assertEqual(clip, clip_from_json)
 
-    # def test_schema_printing(self):
-    #     print(json.dumps(Clip.make_json_schema(), indent=4))
+    def test_append(self):
+        focus_distance_a: Final[tuple[float, ...]] = (1.2, 3.4, 5.6)
+        focus_distance_b: Final[tuple[float, ...]] = (7.8, 9.0)
+        focus_distance_post_append: Final[tuple[float, ...]] = focus_distance_a + focus_distance_b
+        entrance_pupil_offset_a: Final[tuple[float, ...]] = (-0.1, -0.2, -0.3)
+        entrance_pupil_offset_post_append: Final[tuple[float, ...]] = entrance_pupil_offset_a
+        t_stop_b: Final[tuple[float, ...]] = (11.0, 15.6, 22.0)
+        t_stop_post_append: Final[tuple[float, ...]] = t_stop_b
+        a = Clip()
+        a.lens_focus_distance = focus_distance_a
+        a.lens_entrance_pupil_offset = entrance_pupil_offset_a
+        b = Clip()
+        b.lens_focus_distance = focus_distance_b
+        b.lens_t_number = t_stop_b
+        a.append(b)
+        self.assertEqual(focus_distance_post_append, a.lens_focus_distance)
+        self.assertEqual(entrance_pupil_offset_post_append, a.lens_entrance_pupil_offset)
+        self.assertEqual(t_stop_post_append, a.lens_t_number)
 
     def test_make_documentation(self):
 
@@ -480,13 +497,14 @@ class ClipTestCases(unittest.TestCase):
                 print(f"{key}: {entry[key]}", file=fp)
 
         doc: list[dict[str, str]] = Clip.make_documentation()
-        sorted_doc = sorted(doc, key=lambda x: x["canonical_name"])
+        self.assertTrue(len(doc) > 0)
+        # if something breaks, uncomment the below, and use diff against a reference
+        #
+        # sorted_doc = sorted(doc, key=lambda x: x["canonical_name"])
         # print(f"sorted_doc has {len(sorted_doc)} items")
         # with open("/tmp/pydantic-doc.txt", "w") as fp:
         #     for doc_entry in sorted_doc:
         #         print_doc_entry(doc_entry, fp)
-        self.assertTrue(len(doc) > 0)
-
 
 
 if __name__ == '__main__':

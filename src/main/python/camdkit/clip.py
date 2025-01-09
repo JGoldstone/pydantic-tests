@@ -5,7 +5,7 @@
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
 """Types for modeling clips"""
-from typing import Annotated, Any, get_type_hints, Callable
+from typing import Annotated, Any, get_type_hints, Callable, Self
 
 from pydantic import Field, field_validator, BaseModel
 from pydantic.json_schema import JsonSchemaMode, JsonSchemaValue
@@ -20,16 +20,13 @@ from camdkit.compatibility import (CompatibleBaseModel,
                                    TRANSFORMS)
 from camdkit.units import METER, METERS_AND_DEGREES, SECOND
 from camdkit.numeric_types import (NonNegativeInt,
-                                   UnityOrGreaterFloat,
                                    StrictlyPositiveRational,
                                    rationalize_strictly_and_positively)
-from camdkit.lens_types import (StaticLens, Lens,
-                                Distortion, DistortionOffset, ProjectionOffset,
-                                FizEncoders, RawFizEncoders)
-from camdkit.camera_types import StaticCamera, PhysicalDimensions, SenselDimensions
-from camdkit.string_types import NonBlankUTF8String, UUIDURN
+from camdkit.lens_types import StaticLens, Lens
+from camdkit.camera_types import StaticCamera
+from camdkit.string_types import UUIDURN
 from camdkit.tracker_types import StaticTracker, Tracker, GlobalPosition
-from camdkit.timing_types import Timing, TimingMode, Timestamp, Synchronization, Timecode, Sampling
+from camdkit.timing_types import Timing, Sampling
 from camdkit.versioning_types import VersionedProtocol
 from camdkit.transform_types import Transform
 
@@ -41,7 +38,6 @@ CLIP_SCHEMA_PRELUDE = {
 }
 
 
-# TODO: introspect all of these, or at least the static ones
 class Static(CompatibleBaseModel):
     duration: Annotated[StrictlyPositiveRational | None,
       Field(json_schema_extra={"clip_property": "duration",
@@ -60,6 +56,7 @@ class Static(CompatibleBaseModel):
     tracker: StaticTracker = StaticTracker()
 
 type ModelPath = tuple[str, ...]
+type TraversingFunction = Callable[[str, JsonSchemaValue, ModelPath, str], None]
 
 class Clip(CompatibleBaseModel):
     static: Static = Static()
@@ -155,7 +152,7 @@ class Clip(CompatibleBaseModel):
                              last_model: BaseModel,
                              level: JsonSchemaValue,
                              model_path: ModelPath,
-                             function: Callable[[str, JsonSchemaValue, ModelPath, str], None]) -> None:
+                             function: TraversingFunction) -> None:
         def field_name_for_clip_property(model: BaseModel, clip_property_name: str) -> str:
             for k, v in model.model_fields.items():
                 if (v.json_schema_extra
@@ -255,6 +252,24 @@ class Clip(CompatibleBaseModel):
                          exclude_camdkit_internals: bool = True) -> JsonSchemaValue:
         result = CLIP_SCHEMA_PRELUDE | super(Clip, cls).make_json_schema(mode, exclude_camdkit_internals)
         return result
+
+    def append(self, other: Self) -> None:
+        full_schema = Clip.make_json_schema(mode='validation', exclude_camdkit_internals=False)
+
+        def appender(property_name: str,
+                     property_schema: JsonSchemaValue,
+                     model_path: ModelPath,
+                     field_name: str) -> None:
+            if "clip_property" in property_schema and 'static' not in model_path:
+                clip_property_name = property_schema["clip_property"]
+                if getattr(other, clip_property_name):  # anything to copy?
+                    if ours := getattr(self, clip_property_name):
+                        setattr(self, clip_property_name,
+                                getattr(self, clip_property_name) + getattr(other, clip_property_name))
+                    else:
+                        setattr(self, clip_property_name, getattr(other, clip_property_name))
+
+        Clip.traverse_json_schema(Clip, full_schema, ('',), appender)
 
 
 Clip.setup_clip_properties()
