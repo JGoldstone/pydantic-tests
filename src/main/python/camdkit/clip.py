@@ -5,7 +5,7 @@
 # Copyright Contributors to the SMTPE RIS OSVP Metadata Project
 
 """Types for modeling clips"""
-from typing import Annotated, Any, get_type_hints, Callable, Self
+from typing import Annotated, Any, get_type_hints, Callable, Self, Optional
 
 from pydantic import Field, field_validator, BaseModel
 from pydantic.json_schema import JsonSchemaMode, JsonSchemaValue
@@ -177,8 +177,7 @@ class Clip(CompatibleBaseModel):
         def get_through_path(instance):
             obj = instance
             model_fields: list[str] = [f for f in model_path] + [field_name]
-            # model_fields.append(name)
-            print(f"in getter, model_fields: {model_fields}")
+            # print(f"in getter, model_fields: {model_fields}")
             for model_field in model_fields:
                 try:
                     obj = getattr(obj, model_field)
@@ -189,19 +188,19 @@ class Clip(CompatibleBaseModel):
         def set_through_path(instance, value: Any) -> None:
             model_class = instance.__class__
             obj = instance
-            print(f"in setter, model_path: {model_path}, field_name: {field_name}")
+            # print(f"in setter, model_path: {model_path}, field_name: {field_name}")
             if model_path:
                 for model_field in model_path:
                     model_class = get_type_hints(model_class)[model_field]
-                    print(f"in setter, model_field: {model_field} model_class: {model_class}")
+                    # print(f"in setter, model_field: {model_field} model_class: {model_class}")
                     if not hasattr(obj, model_field) or getattr(obj, model_field) is None:
                         defaulted_instance = model_class()
-                        print("in setter, defaulted instance: {defaulted_instance}")
+                        # print("in setter, defaulted instance: {defaulted_instance}")
                         setattr(obj, model_field, defaulted_instance)
                     obj = getattr(obj, model_field)
             setattr(obj, field_name, value)
 
-        print(f"called setattr({cls}, {clip_property_name}, {property(get_through_path, set_through_path)}")
+        # print(f"called setattr({cls}, {clip_property_name}, {property(get_through_path, set_through_path)}")
         setattr(cls, clip_property_name, property(get_through_path, set_through_path))
         # print(f"called setattr({cls}, {name}, {property(lambda s: 'foo', lambda s, v: None)}")
         # setattr(cls, name, property(lambda s: 'foo', lambda s, v: None))
@@ -213,7 +212,7 @@ class Clip(CompatibleBaseModel):
                            model_path: ModelPath,
                            field_name) -> None:
             clip_property_name = property_schema["clip_property"]
-            print(f"calling cls.add_property({clip_property_name}, {property_name}, {model_path})")
+            # print(f"calling cls.add_property({clip_property_name}, {property_name}, {model_path})")
             cls.add_property(clip_property_name, model_path, field_name)
 
         full_schema = cls.make_json_schema(mode='validation', exclude_camdkit_internals=False)
