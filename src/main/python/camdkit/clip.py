@@ -270,5 +270,42 @@ class Clip(CompatibleBaseModel):
 
         Clip.traverse_json_schema(Clip, full_schema, ('',), appender)
 
+    def __getitem__(self, i) -> Self:
+        full_schema = Clip.make_json_schema(mode='validation', exclude_camdkit_internals=False)
+        result = Clip()
+
+        def extractor(property_name: str,
+                      property_schema: JsonSchemaValue,
+                      model_path: ModelPath,
+                      field_name: str) -> None:
+            if "clip_property" in property_schema:
+                clip_property_name = property_schema["clip_property"]
+                if ours := getattr(self, clip_property_name):
+                    setattr(result, clip_property_name,
+                            ours if "static" in model_path else (ours[i],))
+
+        Clip.traverse_json_schema(Clip, full_schema, ('',), extractor)
+        return result
+
+    def to_json(self, i: Optional[int] = None) -> Self:
+        if i:
+            single_frame_clip: Self =  self[i]
+            return CompatibleBaseModel.to_json(single_frame_clip)
+        return CompatibleBaseModel.to_json(self)
+
+    def _print_non_none(self):
+        full_schema = Clip.make_json_schema(mode='validation', exclude_camdkit_internals=False)
+
+        def non_none_printer(property_name: str,
+                             property_schema: JsonSchemaValue,
+                             model_path: ModelPath,
+                             field_name: str) -> None:
+            if "clip_property" in property_schema:
+                clip_property_name = property_schema["clip_property"]
+                if ours := getattr(self, clip_property_name):
+                    print(f"{property_name} : {ours}")
+
+        Clip.traverse_json_schema(Clip, full_schema, ('',), non_none_printer)
+
 
 Clip.setup_clip_properties()
