@@ -7,7 +7,7 @@
 import uuid
 
 from camdkit.framework import *
-from camdkit.camera_types import PhysicalDimensions as Dimensions
+from camdkit.camera_types import PhysicalDimensions as Dimensions, SenselDimensions
 from camdkit.model import Clip, OPENTRACKIO_PROTOCOL_NAME, OPENTRACKIO_PROTOCOL_VERSION
 from camdkit.timing_types import TimingMode as TimingModeEnum
 
@@ -22,7 +22,7 @@ def get_recommended_static_example():
 def get_complete_static_example():
   clip = _get_complete_dynamic_clip()
   clip.active_sensor_physical_dimensions = Dimensions(width=36.0,height=24.0)
-  clip.active_sensor_resolution = Dimensions(width=3840,height=2160)
+  clip.active_sensor_resolution = SenselDimensions(width=3840,height=2160)
   clip.anamorphic_squeeze = 1
   clip.camera_label = "A"
   clip.camera_make = "CameraMaker"
