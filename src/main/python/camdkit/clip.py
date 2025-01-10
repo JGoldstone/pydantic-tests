@@ -7,7 +7,7 @@
 """Types for modeling clips"""
 from typing import Annotated, Any, get_type_hints, Callable, Self, Optional
 
-from pydantic import Field, field_validator, BaseModel
+from pydantic import Field, field_validator, BaseModel, ConfigDict
 from pydantic.json_schema import JsonSchemaMode, JsonSchemaValue
 
 from camdkit.compatibility import (CompatibleBaseModel,
@@ -59,6 +59,8 @@ type ModelPath = tuple[str, ...]
 type TraversingFunction = Callable[[str, JsonSchemaValue, ModelPath, str], None]
 
 class Clip(CompatibleBaseModel):
+
+    model_config = ConfigDict(extra="ignore")
     static: Static = Static()
 
     tracker: Tracker = Tracker()
