@@ -56,9 +56,16 @@ class TimingTestCases(unittest.TestCase):
         frame_rate_30fps_denom = 1
         frame_rate_30fps = StrictlyPositiveRational(frame_rate_30fps_num,
                                                     frame_rate_30fps_denom)
-        sub_frame = 0
-        tf = TimecodeFormat(frame_rate_30fps, sub_frame)
+        frame_rate_ntsc_broadcast_num = 30000
+        frame_rate_ntsc_broadcast_denom = 1001
+        frame_rate_ntsc_broadcast = StrictlyPositiveRational(frame_rate_ntsc_broadcast_num,
+                                                             frame_rate_ntsc_broadcast_denom)
+        sub_frame_0: int = 0
+        sub_frame_1: int = 1
+        tf = TimecodeFormat(frame_rate_30fps, sub_frame_0)
         self.assertEqual(tf.frame_rate, frame_rate_30fps)
+        self.assertEqual(tf.sub_frame, sub_frame_0)
+
         with self.assertRaises(ValidationError):
             tf.frame_rate = "foo"
         with self.assertRaises(ValidationError):
@@ -69,13 +76,21 @@ class TimingTestCases(unittest.TestCase):
             TimecodeFormat(frame_rate_30fps, "foo")
         with self.assertRaises(ValidationError):
             TimecodeFormat(frame_rate_30fps, 1.0)
+        frame_rate_ntsc_broadcast = StrictlyPositiveRational(30000, 1001)
+        tf.frame_rate = frame_rate_ntsc_broadcast
+        self.assertEqual(tf.frame_rate, frame_rate_ntsc_broadcast)
+
+        with self.assertRaises(ValidationError):
+            tf.sub_frame = "foo"
+        tf.sub_frame = sub_frame_1
+        self.assertEqual(tf.sub_frame, sub_frame_1)
 
         timecode_format_as_json = TimecodeFormat.to_json(tf)
         self.assertEqual(timecode_format_as_json["frameRate"]["num"],
-                         frame_rate_30fps_num)
+                         frame_rate_ntsc_broadcast_num)
         self.assertEqual(timecode_format_as_json["frameRate"]["denom"],
-                         frame_rate_30fps_denom)
-        self.assertEqual(timecode_format_as_json["subFrame"], sub_frame)
+                         frame_rate_ntsc_broadcast_denom)
+        self.assertEqual(timecode_format_as_json["subFrame"], sub_frame_1)
 
         timecode_format_from_json = TimecodeFormat.from_json(timecode_format_as_json)
         self.assertEqual(tf, timecode_format_from_json)
@@ -203,7 +218,7 @@ class TimingTestCases(unittest.TestCase):
         self.assertEqual(timecode_as_json["minutes"], doubled_minutes)
         self.assertEqual(timecode_as_json["seconds"], doubled_seconds)
         self.assertEqual(timecode_as_json["frames"], doubled_frames)
-        self.assertEqual(timecode_as_json["format"], Timecode.to_json(thirty_fps_drop_frame_format))
+        self.assertEqual(timecode_as_json["format"], TimecodeFormat.to_json(thirty_fps_drop_frame_format))
 
         timecode_from_json = Timecode.from_json(timecode_as_json)
         self.assertEqual(tc, timecode_from_json)
