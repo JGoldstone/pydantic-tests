@@ -8,20 +8,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Bring over OpenTrackIO.html from classic camdkit">
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/generate_complete_dynamic_example.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/generate_complete_dynamic_example.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/generate_complete_static_example.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/generate_complete_static_example.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/generate_recommended_dynamic_example.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/generate_recommended_dynamic_example.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/generate_recommended_static_example.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/generate_recommended_static_example.xml" afterDir="false" />
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Switch the main model_dump in CompatibleBaseModel's to_json() over to use exclude_defaults=True">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/compatibility.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/python/test_clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/python/test_clip.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/python/test_examples.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/python/test_example_regression.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/python/test_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/python/test_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools/python/generate_complete_dynamic_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/python/generate_complete_dynamic_example.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools/python/generate_complete_static_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/python/generate_complete_static_example.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools/python/generate_recommended_dynamic_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/python/generate_recommended_dynamic_example.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/tools/python/generate_recommended_static_example.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/tools/python/generate_recommended_static_example.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -501,31 +491,7 @@
       <workItem from="1735846600431" duration="45381000" />
       <workItem from="1736100294577" duration="13616000" />
       <workItem from="1736179216813" duration="1223000" />
-      <workItem from="1736180446321" duration="192840000" />
-    </task>
-    <task id="LOCAL-00127" summary="Remove unused exception object from except statement.">
-      <option name="closed" value="true" />
-      <created>1736259135509</created>
-      <option name="number" value="00127" />
-      <option name="presentableId" value="LOCAL-00127" />
-      <option name="project" value="LOCAL" />
-      <updated>1736259135509</updated>
-    </task>
-    <task id="LOCAL-00128" summary="Don't throw away outer min_length or max_length when pulling next layer up through trapdoor">
-      <option name="closed" value="true" />
-      <created>1736259199029</created>
-      <option name="number" value="00128" />
-      <option name="presentableId" value="LOCAL-00128" />
-      <option name="project" value="LOCAL" />
-      <updated>1736259199029</updated>
-    </task>
-    <task id="LOCAL-00129" summary="Perform surgery on deepcopy'd core schema rather than the one passed in to model_field_schema. Until this change, running individual unit tests in a file might all succeed, but running the file as a whole might fail.">
-      <option name="closed" value="true" />
-      <created>1736260209875</created>
-      <option name="number" value="00129" />
-      <option name="presentableId" value="LOCAL-00129" />
-      <option name="project" value="LOCAL" />
-      <updated>1736260209875</updated>
+      <workItem from="1736180446321" duration="193876000" />
     </task>
     <task id="LOCAL-00130" summary="Remove some commented-out debugging code and more precisely type JSON schema value.">
       <option name="closed" value="true" />
@@ -895,7 +861,31 @@
       <option name="project" value="LOCAL" />
       <updated>1736794837423</updated>
     </task>
-    <option name="localTasksCounter" value="176" />
+    <task id="LOCAL-00176" summary="Add a bunch of files so we can build OpenTrackIO doc in-tree.">
+      <option name="closed" value="true" />
+      <created>1736804376311</created>
+      <option name="number" value="00176" />
+      <option name="presentableId" value="LOCAL-00176" />
+      <option name="project" value="LOCAL" />
+      <updated>1736804376311</updated>
+    </task>
+    <task id="LOCAL-00177" summary="Revert to classic camdkit generate_x_y_example.py and associated XML files; add test_example_regression.py to compare out generated schema against that of classic.">
+      <option name="closed" value="true" />
+      <created>1736804452917</created>
+      <option name="number" value="00177" />
+      <option name="presentableId" value="LOCAL-00177" />
+      <option name="project" value="LOCAL" />
+      <updated>1736804452917</updated>
+    </task>
+    <task id="LOCAL-00178" summary="Switch the main model_dump in CompatibleBaseModel's to_json() over to use exclude_defaults=True">
+      <option name="closed" value="true" />
+      <created>1736804653630</created>
+      <option name="number" value="00178" />
+      <option name="presentableId" value="LOCAL-00178" />
+      <option name="project" value="LOCAL" />
+      <updated>1736804653630</updated>
+    </task>
+    <option name="localTasksCounter" value="179" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -913,9 +903,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Refactor out schema traversal so we can use it for property setup." />
-    <MESSAGE value="Reorder definitions for clarity; remove print statements." />
-    <MESSAGE value="Use type hints to find the model classes required to add properties to Clip programmatically rather than in the current boilerplate." />
     <MESSAGE value="Generate rather than hand-code all those properties of Clip that reach down into the nested CompatibleBaseModels." />
     <MESSAGE value="Remove 638 lines of commented-out hand-rolled property definitions." />
     <MESSAGE value="Clip.append() and a unit test for it." />
@@ -938,7 +925,10 @@
     <MESSAGE value="Changes to not-to-be-published notes and experiments" />
     <MESSAGE value="Bring over make_opentrackio_documentation.py from classic camdkit" />
     <MESSAGE value="Bring over OpenTrackIO.html from classic camdkit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Bring over OpenTrackIO.html from classic camdkit" />
+    <MESSAGE value="Add a bunch of files so we can build OpenTrackIO doc in-tree." />
+    <MESSAGE value="Revert to classic camdkit generate_x_y_example.py and associated XML files; add test_example_regression.py to compare out generated schema against that of classic." />
+    <MESSAGE value="Switch the main model_dump in CompatibleBaseModel's to_json() over to use exclude_defaults=True" />
+    <option name="LAST_COMMIT_MESSAGE" value="Switch the main model_dump in CompatibleBaseModel's to_json() over to use exclude_defaults=True" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -982,7 +972,7 @@
     <SUITE FILE_PATH="coverage/pydantic_tests$generate_recommended_static_example.coverage" NAME="generate_recommended_static_example Coverage Results" MODIFIED="1736800615306" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/tools/python" />
     <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_python_test_timing_types_TimingTestCases_test_timing_schemas_match.coverage" NAME="Unittests for python.test_timing_types.TimingTestCases.test_timing_schemas_match Coverage Results" MODIFIED="1736115231307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/pydantic_tests$camera_types.coverage" NAME="camera_types Coverage Results" MODIFIED="1734106899074" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1736802426837" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_in_python.coverage" NAME="Unittests in python Coverage Results" MODIFIED="1736804324812" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/pydantic_tests$main.coverage" NAME="main Coverage Results" MODIFIED="1736642587530" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/pydantic_tests$compatibility.coverage" NAME="compatibility Coverage Results" MODIFIED="1734891268851" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/main/python/camdkit" />
     <SUITE FILE_PATH="coverage/pydantic_tests$generate_complete_static_example.coverage" NAME="generate_complete_static_example Coverage Results" MODIFIED="1736800615306" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/tools/python" />
