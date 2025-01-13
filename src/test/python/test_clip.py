@@ -315,7 +315,7 @@ class ClipTestCases(unittest.TestCase):
                                            0))
         timecode1= Timecode(1, 2, 3, 5,
                             TimecodeFormat(StrictlyPositiveRational(24, 1),
-                                           0))
+                                           1))
         timing_timecode = (timecode0, timecode1)
         ptp = SynchronizationPTP(domain=1, master="00:11:22:33:44:55", offset=0.0)
         sync_offsets = SynchronizationOffsets(translation=1.0, rotation=2.0, lensEncoders=3.0)
@@ -357,19 +357,18 @@ class ClipTestCases(unittest.TestCase):
             {"seconds": 1718806554, "nanoseconds": 0},
             {"seconds": 1718806555, "nanoseconds": 0}))
         self.assertTupleEqual(clip_as_json["timing"]["recordedTimestamp"], (
-            { "seconds": 1718806000, "nanoseconds": 0 },
-            { "seconds": 1718806001, "nanoseconds": 0 }))
+            {"seconds": 1718806000, "nanoseconds": 0},
+            {"seconds": 1718806001, "nanoseconds": 0}))
         self.assertTupleEqual(clip_as_json["timing"]["sequenceNumber"], timing_sequence_number)
         self.assertTupleEqual(clip_as_json["timing"]["sampleRate"], (
-            { "num": 24000, "denom": 1001 },
-            { "num": 24000, "denom": 1001 }))
+            {"num": 24000, "denom": 1001},
+            {"num": 24000, "denom": 1001}))
         self.assertTupleEqual(clip_as_json["timing"]["timecode"], (
-            { "hours":1, "minutes":2, "seconds":3, "frames":4,
-              "format": { "frameRate": { "num": 24, "denom": 1 },
-                          "subFrame": 0 } },
-            { "hours": 1,"minutes": 2,"seconds": 3,"frames": 5,
-              "format": { "frameRate": { "num": 24, "denom": 1 },
-                          "subFrame": 0 } }))
+            {"hours":1, "minutes":2, "seconds":3, "frames":4,
+             "format": {"frameRate": {"num": 24, "denom": 1}}},
+            {"hours": 1,"minutes": 2,"seconds": 3,"frames": 5,
+             "format": {"frameRate": {"num": 24, "denom": 1},
+                        "subFrame": 1}}))
         expected_synchronization_dict = {
             "present": True, "locked": True,
             "frequency": {"num": 24000, "denom": 1001},
