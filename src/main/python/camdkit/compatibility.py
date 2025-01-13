@@ -287,6 +287,7 @@ class CompatibleBaseModel(BaseModel):
             if isinstance(one_or_many, BaseModel):
                 return one_or_many.model_dump(by_alias=True,
                                                 exclude_none=True,
+                                                exclude_defaults=True,
                                                 exclude={"canonical_name",
                                                          "sampling",
                                                          "units",
