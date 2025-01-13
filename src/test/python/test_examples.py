@@ -9,7 +9,7 @@ import unittest
 
 from copy import deepcopy
 from pathlib import Path
-from typing import Literal, Any
+from typing import Literal
 
 from pydantic.json_schema import JsonSchemaValue
 
@@ -67,17 +67,30 @@ def corrupt_clip_to_pseudo_frame(clip: JsonSchemaValue) -> None:
     return clip
 
 def generify_urn_uuids(clip: JsonSchemaValue) -> None:
-    paths_to_generify: tuple[str, ...] = (
+    paths_to_generify: tuple[str | tuple[str, ...], ...] = (
         "sampleId",
         "sourceId",
-        "relatedSampleIds"
+        "relatedSampleIds",
+        ("static", "camera", "fdlLink")
     )
     for path in paths_to_generify:
-        if path in clip:
-            if type(clip[path]) is list:
-                clip[path] = ["urn:uuid:random" for _ in clip[path]]
+        containing_dict = clip
+        if isinstance(path, tuple):
+            if not path:
+                raise RuntimeError("empty tuple of dict keys in URN generification")
+            if len(path) == 1:
+                path = path[0]
             else:
-                clip[path] = "urn:uuid:random"
+                for pathlet in path[:-1]:
+                    if pathlet not in containing_dict:
+                        return
+                    containing_dict = containing_dict[pathlet]
+                path = path[-1]
+        if path in containing_dict:
+            if type(containing_dict[path]) is list:
+                containing_dict[path] = ["urn:uuid:random" for _ in containing_dict[path]]
+            else:
+                containing_dict[path] = "urn:uuid:random"
 
 
 class ExampleTestCases(unittest.TestCase):
