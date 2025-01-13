@@ -13,7 +13,14 @@ from typing import Literal
 
 from pydantic.json_schema import JsonSchemaValue
 
-COMPARISON_DIR = Path("/tmp")
+REPO_ROOT = Path("/usr/local/repos/git")
+
+# CLASSIC_REPO: Path = REPO_ROOT / "smpte" / "ris-osvp-metadata-camdkit"
+CLASSIC_REPO: Path = REPO_ROOT / "jgoldstone" / "ris-osvp-metadata-camdkit"  # my fork at first
+CLASSIC_EXAMPLES_DIR: Path = CLASSIC_REPO / "build" / "opentrackio" / "examples"
+
+PYDANTIC_REPO: Path = Path(REPO_ROOT) / "jgoldstone" / "pydantic-tests"
+PYDANTIC_EXAMPLES_DIR: Path = PYDANTIC_REPO / "build" / "opentrackio" / "examples"
 
 def corrupt_clip_to_pseudo_frame(clip: JsonSchemaValue) -> None:
     paths_to_unwrap: tuple[tuple[str, ...], ...] = (
@@ -109,8 +116,8 @@ class ExampleTestCases(unittest.TestCase):
 
     def compare(self, completeness: Literal['recommended', 'complete'],
                 scope: Literal['static', 'dynamic']) -> None:
-        classic_path = Path(COMPARISON_DIR, f"{completeness}_{scope}_example_classic.json")
-        pydantic_path = Path(COMPARISON_DIR, f"{completeness}_{scope}_example_pydantic.json")
+        classic_path = Path(CLASSIC_EXAMPLES_DIR, f"{completeness}_{scope}_example.json")
+        pydantic_path = Path(PYDANTIC_EXAMPLES_DIR, f"{completeness}_{scope}_example.json")
         with open(classic_path) as classic_file:
             classic_json = json.load(classic_file)
             with open(pydantic_path) as pydantic_file:
