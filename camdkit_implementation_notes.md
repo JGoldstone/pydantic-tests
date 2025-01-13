@@ -487,6 +487,11 @@ The presence or absence of "additionalProperties": False in generated JSON schem
 
 The model name in Distortion can be of infinite length
 
+The protocol version was using minValue and maxValue but those aren't valid for integers; changed
+to minimum and maximum as per the spec. And I added a requirement that both name and version be present.
+
+Why aren't we verifying that sub_frame is a non-negative int < UINT_MAX?
+
 ### questionable
 
 Why does lens distortion uniquely require at least one element in a clip?
@@ -501,4 +506,7 @@ that the id be a UUIDURN ? I've relaxed that restriction in the Pydantic impleme
 match what I see manually generated in the classic version, but is it wise to do allow
 anything in there?
 
-
+In `examples.py` there are some type mismatches: passing a `list` of floats instead
+of a `tuple[float, ...]` of them, for example. And passing a Fraction instead of
+a StrictlyPositiveRational; the field has a validator that can deal with this, but
+maybe the callers should be adjusted. Worth discussing.
