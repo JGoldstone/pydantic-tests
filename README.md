@@ -431,18 +431,10 @@ to back it.
 
 ## State of the implementation
 
-All 43 of my unit tests pass. 45 out of the 59 unit tests in the current
-`test_model.py`'s module pass.
+(In the points below, "classic" `camdkit` means the main camdkit after the
+"Consistency typo and regex" PR is merged)
 
-I am going to work on something other than this project this afternoon, but
-will return to it full-time Saturday and work through the holidays.
-
-### Plan:
-- [ ] make all unit tests in `test_model.py` pass
-- [ ] make generated schema match
-- [ ] make documentation match
-- [ ] make new branch on my fork of `ris-osvp-metadata-camdkit` and integrate Pydantic-based code
-- [ ] verify everything still works
-- [ ] subnmit PR
-
-
+- All of the classic `camdkit` unit tests pass; all of the new unit tests pass.
+- All generated examples match those produced by classic `camdkit`.
+- The generated OpenTrackIO schema matches that of classic `camdkit`.
+- The generated documentation matches that of classic `camdkit`

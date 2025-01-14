@@ -1,0 +1,15 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint = "==2.6.0"
+coverage = "*"
+jsonschema = "*"
+jinja2 = "*"
+
+[requires]
+python_version = "3.11"
+pydantic = "*"
+jsonref = "*"
