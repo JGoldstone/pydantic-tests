@@ -84,7 +84,7 @@
     "synchronization": {
       "type": "object",
       "additionalProperties": false,
-      "description": "Object describing how the tracking device is synchronized for this\nsample.\n\nfrequency: The frequency of a synchronization signal.This may differ from\nthe sample frame rate for example in a genlocked tracking device. This is\nnot required if the synchronization source is PTP or NTP.\nlocked: Is the tracking device locked to the synchronization source\noffsets: Offsets in seconds between sync and sample. Critical for e.g.\nframe remapping, or when using different data sources for\nposition/rotation and lens encoding\npresent: Is the synchronization source present (a synchronization\nsource can be present but not locked if frame rates differ for\nexample)\nptp: If the synchronization source is a PTP master, then this object\ncontains:\n- \"master\": The MAC address of the PTP master\n- \"offset\": The timing offset in seconds from the sample timestamp to\nthe PTP timestamp\n- \"domain\": The PTP domain number\nsource: The source of synchronization must be defined as one of the\nfollowing:\n- \"genlock\": The tracking device has an external black/burst or\ntri-level analog sync signal that is triggering the capture of\ntracking samples\n- \"videoIn\": The tracking device has an external video signal that is\ntriggering the capture of tracking samples\n- \"ptp\": The tracking device is locked to a PTP master\n- \"ntp\": The tracking device is locked to an NTP server\n",
+      "description": "Object describing how the tracking device is synchronized for this\nsample.\n\nfrequency: The frequency of a synchronization signal.This may differ from\nthe sample frame rate for example in a genlocked tracking device. This is\nnot required if the synchronization source is PTP or NTP.\nlocked: Is the tracking device locked to the synchronization source\noffsets: Offsets in seconds between sync and sample. Critical for e.g.\nframe remapping, or when using different data sources for\nposition/rotation and lens encoding\npresent: Is the synchronization source present (a synchronization\nsource can be present but not locked if frame rates differ for\nexample)\nptp: If the synchronization source is a PTP leader, then this object\ncontains:\n- \"leader\": The MAC address of the PTP leader\n- \"offset\": The timing offset in seconds from the sample timestamp to\nthe PTP timestamp\n- \"domain\": The PTP domain number\nsource: The source of synchronization must be defined as one of the\nfollowing:\n- \"genlock\": The tracking device has an external black/burst or\ntri-level analog sync signal that is triggering the capture of\ntracking samples\n- \"videoIn\": The tracking device has an external video signal that is\ntriggering the capture of tracking samples\n- \"ptp\": The tracking device is locked to a PTP leader\n- \"ntp\": The tracking device is locked to an NTP server\n",
       "properties": {
         "frequency": {
           "type": "object",
@@ -131,7 +131,7 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "master": {
+            "leader": {
               "type": "string",
               "pattern": "(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
             },

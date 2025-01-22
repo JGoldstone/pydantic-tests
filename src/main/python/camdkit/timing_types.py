@@ -24,10 +24,10 @@ from camdkit.units import SECOND
 
 # This was in the classic implementation, but Pydantic doesn't currently
 # allow backreferences in regular expressions. Brute force it.
-# PTP_MASTER_PATTERN = "[0-9a-opt_param_fn]{2}([-:]?)[0-9a-opt_param_fn]{2}(\\1[0-9a-opt_param_fn]{2}){4}$"
+# PTP_LEADER_PATTERN = "[0-9a-opt_param_fn]{2}([-:]?)[0-9a-opt_param_fn]{2}(\\1[0-9a-opt_param_fn]{2}){4}$"
 #
 # highly recommended: regex101.com in Python mode
-PTP_MASTER_PATTERN = r"(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
+PTP_LEADER_PATTERN = r"(?:^[0-9a-f]{2}(?::[0-9a-f]{2}){5}$)|(?:^[0-9a-f]{2}(?:-[0-9a-f]{2}){5}$)"
 
 class TimingMode(StrEnum):
     INTERNAL = "internal"
@@ -116,13 +116,13 @@ class SynchronizationOffsets(CompatibleBaseModel):
 class SynchronizationPTP(CompatibleBaseModel):
 
     domain: NonNegative8BitInt | None = None
-    master: Annotated[str | None, Field(pattern=PTP_MASTER_PATTERN)] = None
+    leader: Annotated[str | None, Field(pattern=PTP_LEADER_PATTERN)] = None
     offset: Annotated[float | None, Field(strict=True)] = None
 
     def __init__(self, domain: Optional[int] = None,
-                 master: Optional[str] = None,
+                 leader: Optional[str] = None,
                  offset: Optional[float] = None) -> None:
-        super(SynchronizationPTP, self).__init__(domain=domain, master=master, offset=offset)
+        super(SynchronizationPTP, self).__init__(domain=domain, leader=leader, offset=offset)
 
 
 class Synchronization(CompatibleBaseModel):
@@ -218,9 +218,9 @@ elapsed since the start of the epoch.
     present: Is the synchronization source present (a synchronization
     source can be present but not locked if frame rates differ for
     example)
-    ptp: If the synchronization source is a PTP master, then this object
+    ptp: If the synchronization source is a PTP leader, then this object
     contains:
-    - "master": The MAC address of the PTP master
+    - "leader": The MAC address of the PTP leader
     - "offset": The timing offset in seconds from the sample timestamp to
     the PTP timestamp
     - "domain": The PTP domain number
@@ -231,7 +231,7 @@ elapsed since the start of the epoch.
     tracking samples
     - "videoIn": The tracking device has an external video signal that is
     triggering the capture of tracking samples
-    - "ptp": The tracking device is locked to a PTP master
+    - "ptp": The tracking device is locked to a PTP leader
     - "ntp": The tracking device is locked to an NTP server
     """
 

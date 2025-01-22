@@ -340,39 +340,39 @@ class TimingTestCases(unittest.TestCase):
         min_valid_domain: int = 0
         max_valid_domain: int = MAX_INT_8
         valid_domain: int = 1
-        valid_master: str = "00:11:22:33:44:55"
+        valid_leader: str = "00:11:22:33:44:55"
         valid_offset: float = 1.0
         with self.assertRaises(ValidationError):
-            SynchronizationPTP(domain="foo", master=valid_master, offset=valid_offset)
+            SynchronizationPTP(domain="foo", leader=valid_leader, offset=valid_offset)
         with self.assertRaises(ValidationError):
-            SynchronizationPTP(domain=min_valid_domain - 1, master=valid_master, offset=valid_offset)
+            SynchronizationPTP(domain=min_valid_domain - 1, leader=valid_leader, offset=valid_offset)
         with self.assertRaises(ValidationError):
-            SynchronizationPTP(domain=max_valid_domain + 1, master=valid_master, offset=valid_offset)
+            SynchronizationPTP(domain=max_valid_domain + 1, leader=valid_leader, offset=valid_offset)
         with self.assertRaises(ValidationError):
-            SynchronizationPTP(domain=valid_domain, master=0.0, offset=valid_offset)
+            SynchronizationPTP(domain=valid_domain, leader=0.0, offset=valid_offset)
         with self.assertRaises(ValidationError):
-            SynchronizationPTP(domain=valid_domain, master=valid_master, offset="foo")
-        valid_ptp = SynchronizationPTP(domain=valid_domain, master=valid_master, offset=valid_offset)
+            SynchronizationPTP(domain=valid_domain, leader=valid_leader, offset="foo")
+        valid_ptp = SynchronizationPTP(domain=valid_domain, leader=valid_leader, offset=valid_offset)
 
         updated_domain: int = valid_domain * 2
-        updated_master: str = "00:11:22:33:44:56"
+        updated_leader: str = "00:11:22:33:44:56"
         updated_offset: float = valid_offset * 2
         valid_ptp.domain = updated_domain
         self.assertEqual(updated_domain, valid_ptp.domain)
-        valid_ptp.master = updated_master
-        self.assertEqual(updated_master, valid_ptp.master)
+        valid_ptp.leader = updated_leader
+        self.assertEqual(updated_leader, valid_ptp.leader)
         valid_ptp.offset = updated_offset
         self.assertEqual(updated_offset, valid_ptp.offset)
         with self.assertRaises(ValidationError):
             valid_ptp.domain = "foo"
         with self.assertRaises(ValidationError):
-            valid_ptp.master = 0.0
+            valid_ptp.leader = 0.0
         with self.assertRaises(ValidationError):
             valid_ptp.offset = "foo"
 
         ptp_as_json = SynchronizationPTP.to_json(valid_ptp)
         self.assertEqual(ptp_as_json["domain"], updated_domain)
-        self.assertEqual(ptp_as_json["master"], updated_master)
+        self.assertEqual(ptp_as_json["leader"], updated_leader)
         self.assertEqual(ptp_as_json["offset"], updated_offset)
 
         ptp_from_json = SynchronizationPTP.from_json(ptp_as_json)
@@ -401,10 +401,10 @@ class TimingTestCases(unittest.TestCase):
                                                lensEncoders=valid_lens_encoders_offset)
         valid_present: bool = True
         valid_ptp_domain: int = 1
-        valid_ptp_master: str = "00:11:22:33:44:55"
+        valid_ptp_leader: str = "00:11:22:33:44:55"
         valid_ptp_offset: float = 3.0
         valid_ptp = SynchronizationPTP(domain=valid_ptp_domain,
-                                       master=valid_ptp_master,
+                                       leader=valid_ptp_leader,
                                        offset=valid_ptp_offset)
         with self.assertRaises(ValidationError):
             Synchronization(valid_locked,
@@ -466,10 +466,10 @@ class TimingTestCases(unittest.TestCase):
                                                  lensEncoders=updated_lens_encoders_offset)
         updated_present: bool = not valid_present
         updated_ptp_domain: int = valid_ptp_domain * 2
-        updated_ptp_master: str = "00:11:22:33:44:56"
+        updated_ptp_leader: str = "00:11:22:33:44:56"
         updated_ptp_offset: float = valid_ptp_offset * 2
         updated_ptp = SynchronizationPTP(domain=updated_ptp_domain,
-                                         master=updated_ptp_master,
+                                         leader=updated_ptp_leader,
                                          offset=updated_ptp_offset)
         valid_sync.locked = updated_locked
         self.assertEqual(updated_locked, valid_sync.locked)

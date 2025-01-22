@@ -233,10 +233,10 @@ Here is a list of such:
   defined with `strict=True`. COME BACK TO THIS
 - ` test_synchronization()`: This final test:
   ```python
-      sync.ptp.master = "ab:CD:eF:23:45:67"
+      sync.ptp.leader = "ab:CD:eF:23:45:67"
       clip.timing_synchronization = (sync, )
   ```
-  required the construction of an invalid master (only lower-case hex digits are permitted),
+  required the construction of an invalid leader (only lower-case hex digits are permitted),
   so the assignment couldn't be tested because the value to be assigned couldn't be created.
 - `test_timing_mode_enum()`
   - the classic implementation had a TimingModeEnum enum class and a TimingMode parameter. In the
@@ -352,7 +352,7 @@ This seems to be true, _cf._ [here](https://github.com/pydantic/pydantic/discuss
 On the other hand currently `self.assertEqual(d, d_clip)` fails, and a glance shows that `len(dir(d))`
 is 46 whereas `len(dir(d_clip))` is 176. Some work to do there. COME BACK TO THIS
 
-### upper _vs._ lower case in PTP master regular expressiop
+### upper _vs._ lower case in PTP leader regular expressiop
 
 The classic implementation accepts only lower-case hex digits. The IEEE 1588:2019 document uses
 uppercase in its documentation but doesn't address serialization to character streams. SMPTE ST 2059-2

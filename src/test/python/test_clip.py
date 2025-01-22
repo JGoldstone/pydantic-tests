@@ -317,7 +317,7 @@ class ClipTestCases(unittest.TestCase):
                             TimecodeFormat(StrictlyPositiveRational(24, 1),
                                            1))
         timing_timecode = (timecode0, timecode1)
-        ptp = SynchronizationPTP(domain=1, master="00:11:22:33:44:55", offset=0.0)
+        ptp = SynchronizationPTP(domain=1, leader="00:11:22:33:44:55", offset=0.0)
         sync_offsets = SynchronizationOffsets(translation=1.0, rotation=2.0, lensEncoders=3.0)
         synchronization = Synchronization(present=True,
                                           locked=True,
@@ -373,7 +373,7 @@ class ClipTestCases(unittest.TestCase):
             "present": True, "locked": True,
             "frequency": {"num": 24000, "denom": 1001},
             "source": "ptp",
-            "ptp": {"offset": 0.0, "domain": 1, "master": "00:11:22:33:44:55"},
+            "ptp": {"offset": 0.0, "domain": 1, "leader": "00:11:22:33:44:55"},
             "offsets": {"translation": 1.0, "rotation": 2.0, "lensEncoders": 3.0}}
         self.assertTupleEqual(clip_as_json["timing"]["synchronization"],
                               (expected_synchronization_dict,
