@@ -299,7 +299,7 @@ class CompatibleBaseModel(BaseModel):
         from a tuple of JSON dicts, or a tuple of tuples of validated objects from
         a tuple of tuples of JSON dicts, or ... it's basically JSON all the way down
         """
-        def inner(value):  # TODO since return type is whatever cls is, can we say that?
+        def inner(value) -> cls | tuple[cls, ...]:
             if isinstance(value, dict) and all([type(k) == str for k in value.keys()]):
                 return cls.model_validate(value)
             elif isinstance(value, tuple):
