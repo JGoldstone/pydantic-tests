@@ -256,22 +256,20 @@ The parameter shall contain at least one normalised values (0..1) for the FIZ en
     a lens
     """
 
-    # TODO file on why camdkit has this as NonNegativeFloat instead of StrictlyPositiveFloat
-    f_number: Annotated[tuple[NonNegativeFloat, ...] | None,
+    f_number: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
       Field(alias="fStop",
             json_schema_extra={"clip_property": "lens_f_number",
-                               "constraints": NON_NEGATIVE_REAL})] = None
+                               "constraints": STRICTLY_POSITIVE_REAL})] = None
     """The linear f-number of the lens, equal to the focal length divided
     by the diameter of the entrance pupil.
     """
 
     # TODO: file issue to get this renamed to lens_pinhole_focal_length in the clip and pinholeFocalLength in the JSON
-    # TODO file on why camdkit has this as NonNegativeFloat instead of StrictlyPositiveFloat
-    focal_length: Annotated[tuple[NonNegativeFloat, ...] | None,
+    focal_length: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
       Field(alias="focalLength",
             json_schema_extra={"units": MILLIMETER,
                                "clip_property": "lens_focal_length",
-                               "constraints": NON_NEGATIVE_REAL})] = None
+                               "constraints": STRICTLY_POSITIVE_REAL})] = None
     """Focal length of the lens."""
 
     focus_distance: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
@@ -304,24 +302,10 @@ The parameter shall contain at least one integer value for the FIZ encoders.
     homing / ranging has taken place.
     """
 
-    # TODO file on why camdkit has this as NonNegativeFloat instead of StrictlyPositiveFloat
-    t_number: Annotated[tuple[NonNegativeFloat, ...] | None,
+    t_number: Annotated[tuple[StrictlyPositiveFloat, ...] | None,
       Field(alias="tStop",
             json_schema_extra={"clip_property": "lens_t_number",
-                               "constraints": NON_NEGATIVE_REAL})] = None
+                               "constraints": STRICTLY_POSITIVE_REAL})] = None
     """Linear t-number of the lens, equal to the F-number of the lens
     divided by the square root of the transmittance of the lens.
     """
-
-#     undistortion: Annotated[tuple[tuple[Distortion, ...], ...],
-#                   Field(json_schema_extra={"clip_property": "lens_undistortions",
-#                                            "constraints": """The list shall contain at least one Distortion object, and in each
-# object the radial and tangential coefficients shall each be real numbers.
-# """})] | None = None
-#     """A list of Distortion objects that each define the coefficients for
-#     calculating the distortion characteristics of a lens comprising radial
-#     distortion coefficients of the spherical distortion (k1-N) and the
-#     tangential distortion (p1-N). An optional key 'model' can be used that
-#     describes the distortion model. The default is Brown-Conrady D-U (that
-#     maps Distorted to Undistorted coordinates).
-#     """
