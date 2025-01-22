@@ -8,15 +8,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Update to use setuptools; update README.md &quot;State of the implementation&quot; section.">
+    <list default="true" id="466e69f6-f83a-4047-a165-be14e5109776" name="Changes" comment="Change references from PTP master to PTP leader">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/camdkit_implementation_notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/camdkit_implementation_notes.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/examples.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/examples.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/python/camdkit/timing_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/python/test_clip.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/python/test_clip.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/python/test_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/python/test_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/python/test_camera_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/python/test_camera_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/python/test_lens_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/python/test_lens_types.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/python/test_timing_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/python/test_timing_types.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/model/timing.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/model/timing.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/python/test_tracker_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/python/test_tracker_types.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/python/test_transform_types.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/python/test_transform_types.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -319,76 +317,37 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Python tests.Unittests in python">
-    <configuration name="make_opentrackio_documentation" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="pydantic tests" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/tools/python" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/tools/python/make_opentrackio_documentation.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for python.test_camera_types.CameraTypesTestCases.test_physical_dimensions" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python tests.Python tests in test_transform_types.py">
+    <configuration name="Python tests in test_camera_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/test" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;python.test_camera_types.CameraTypesTestCases.test_physical_dimensions&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/src/test/python/test_camera_types.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests for python.test_clip.ClipTestCases.test_timing_regular_parameters" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+    <configuration name="Python tests in test_lens_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pydantic tests" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/test" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;python.test_clip.ClipTestCases.test_timing_regular_parameters&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Python tests for python.test_model.ModelTest.test_timecode_to_dict" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="pydantic tests" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;python.test_model.ModelTest.test_timecode_to_dict&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/src/test/python/test_lens_types.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
     <configuration name="Python tests in test_timing_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
@@ -404,6 +363,38 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
       <option name="_new_target" value="&quot;$PROJECT_DIR$/src/test/python/test_timing_types.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests in test_tracker_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="pydantic tests" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/src/test/python/test_tracker_types.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests in test_transform_types.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="pydantic tests" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/src/test/python/test_transform_types.py&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
@@ -430,20 +421,20 @@
       <item itemvalue="Python.generate_complete_dynamic_example" />
       <item itemvalue="Python.generate_recommended_dynamic_example" />
       <item itemvalue="Python.generate_complete_static_example" />
-      <item itemvalue="Python.make_opentrackio_documentation" />
       <item itemvalue="Python tests.Unittests in python" />
-      <item itemvalue="Python tests.Python tests for python.test_camera_types.CameraTypesTestCases.test_physical_dimensions" />
-      <item itemvalue="Python tests.Python tests for python.test_clip.ClipTestCases.test_timing_regular_parameters" />
-      <item itemvalue="Python tests.Python tests for python.test_model.ModelTest.test_timecode_to_dict" />
+      <item itemvalue="Python tests.Python tests in test_transform_types.py" />
+      <item itemvalue="Python tests.Python tests in test_tracker_types.py" />
+      <item itemvalue="Python tests.Python tests in test_lens_types.py" />
+      <item itemvalue="Python tests.Python tests in test_camera_types.py" />
       <item itemvalue="Python tests.Python tests in test_timing_types.py" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.make_opentrackio_documentation" />
-        <item itemvalue="Python tests.Python tests for python.test_clip.ClipTestCases.test_timing_regular_parameters" />
+        <item itemvalue="Python tests.Python tests in test_transform_types.py" />
+        <item itemvalue="Python tests.Python tests in test_tracker_types.py" />
+        <item itemvalue="Python tests.Python tests in test_lens_types.py" />
         <item itemvalue="Python tests.Python tests in test_timing_types.py" />
-        <item itemvalue="Python tests.Python tests for python.test_model.ModelTest.test_timecode_to_dict" />
-        <item itemvalue="Python tests.Python tests for python.test_camera_types.CameraTypesTestCases.test_physical_dimensions" />
+        <item itemvalue="Python tests.Python tests in test_camera_types.py" />
       </list>
     </recent_temporary>
   </component>
@@ -496,15 +487,7 @@
       <workItem from="1735846600431" duration="45381000" />
       <workItem from="1736100294577" duration="13616000" />
       <workItem from="1736179216813" duration="1223000" />
-      <workItem from="1736180446321" duration="207649000" />
-    </task>
-    <task id="LOCAL-00133" summary="Updated Poetry and PyCharm infrastructure files.">
-      <option name="closed" value="true" />
-      <created>1736260523434</created>
-      <option name="number" value="00133" />
-      <option name="presentableId" value="LOCAL-00133" />
-      <option name="project" value="LOCAL" />
-      <updated>1736260523434</updated>
+      <workItem from="1736180446321" duration="210540000" />
     </task>
     <task id="LOCAL-00134" summary="Updated implementation notes">
       <option name="closed" value="true" />
@@ -890,7 +873,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736884785156</updated>
     </task>
-    <option name="localTasksCounter" value="182" />
+    <task id="LOCAL-00182" summary="Change references from PTP master to PTP leader">
+      <option name="closed" value="true" />
+      <created>1737516829927</created>
+      <option name="number" value="00182" />
+      <option name="presentableId" value="LOCAL-00182" />
+      <option name="project" value="LOCAL" />
+      <updated>1737516829927</updated>
+    </task>
+    <option name="localTasksCounter" value="183" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -908,7 +899,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Get rid of everything in derived_artifacts except the (not completed, thus not used) summarize_constraints() function." />
     <MESSAGE value="Add ability to supply an argument to example generators to redirect output to a file" />
     <MESSAGE value="Add missing default of None for Synchronization frequency." />
     <MESSAGE value="Compatibility &quot;as&quot; imports, plus get rid of parentId." />
@@ -933,7 +923,8 @@
     <MESSAGE value="Add test to make sure we handle a non-default sub_frame OK. Mild gestures at PEP8 cleanup (there is a LOT to do)." />
     <MESSAGE value="Workspace changes reflecting recent addition of resources and reorganization of tools" />
     <MESSAGE value="Update to use setuptools; update README.md &quot;State of the implementation&quot; section." />
-    <option name="LAST_COMMIT_MESSAGE" value="Update to use setuptools; update README.md &quot;State of the implementation&quot; section." />
+    <MESSAGE value="Change references from PTP master to PTP leader" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change references from PTP master to PTP leader" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -958,6 +949,11 @@
           <line>132</line>
           <option name="timeStamp" value="423" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/test/python/test_lens_types.py</url>
+          <line>89</line>
+          <option name="timeStamp" value="424" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -977,7 +973,7 @@
     <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_python_test_timing_types_TimingTestCases_test_synchronization_ptp.coverage" NAME="Unittests for python.test_timing_types.TimingTestCases.test_synchronization_ptp Coverage Results" MODIFIED="1735861707821" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_python_test_timing_types_TimingTestCases_test_timecode.coverage" NAME="Unittests for python.test_timing_types.TimingTestCases.test_timecode Coverage Results" MODIFIED="1735861881081" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/pydantic_tests$generate_complete_dynamic_example.coverage" NAME="generate_complete_dynamic_example Coverage Results" MODIFIED="1737516010789" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/tools/python" />
-    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1736798099998" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/test" />
+    <SUITE FILE_PATH="coverage/pydantic_tests$.coverage" NAME=" Coverage Results" MODIFIED="1737521833680" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/test" />
     <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_test_clip_ClipTestCases_test_lens_regular_parameters.coverage" NAME="Unittests for test_clip.ClipTestCases.test_lens_regular_parameters Coverage Results" MODIFIED="1734539427401" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/pydantic_tests$generate_recommended_static_example.coverage" NAME="generate_recommended_static_example Coverage Results" MODIFIED="1736800615306" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src/tools/python" />
     <SUITE FILE_PATH="coverage/pydantic_tests$Unittests_for_python_test_timing_types_TimingTestCases_test_timing_schemas_match.coverage" NAME="Unittests for python.test_timing_types.TimingTestCases.test_timing_schemas_match Coverage Results" MODIFIED="1736115231307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />

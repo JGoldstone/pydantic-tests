@@ -21,11 +21,18 @@ from camdkit.transform_types import Vector3, Rotator3, Transform
 from camdkit.units import DEGREE, METER
 
 
-def load_classic_camdkit_schema(path: Path) -> JsonSchemaValue:
-    with open(path, "r", encoding="utf-8") as file:
-        schema = json.load(file)
-        canonicalize_descriptions(schema)
-        return schema
+CLASSIC_TRANSFORM_SCHEMA_PATH = Path("src/test/resources/model/transforms.json")
+CLASSIC_TRANSFORM_SCHEMA: JsonSchemaValue | None = None
+
+
+def setUpModule():
+    global CLASSIC_TRANSFORM_SCHEMA
+    with open(CLASSIC_TRANSFORM_SCHEMA_PATH, "r", encoding="utf-8") as fp:
+        CLASSIC_TRANSFORM_SCHEMA = json.load(fp)
+
+
+def tearDownModule():
+    pass
 
 
 class TestTransformCases(unittest.TestCase):
@@ -71,7 +78,7 @@ class TestTransformCases(unittest.TestCase):
         valid_v3_from_json = Vector3.from_json(valid_v3_as_json)
         self.assertEqual(valid_v3, valid_v3_from_json)
         # verify that the JSON schema from Pydantic is what we think it is
-        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/transforms.json"))
+        full_expected_schema: JsonSchemaValue = CLASSIC_TRANSFORM_SCHEMA
         self.assertIn("items", full_expected_schema)
         self.assertIn("properties", full_expected_schema["items"])
         self.assertIn("rotation", full_expected_schema["items"]["properties"])
@@ -123,7 +130,7 @@ class TestTransformCases(unittest.TestCase):
         valid_v3_from_json = Rotator3.from_json(valid_v3_as_json)
         self.assertEqual(valid_v3, valid_v3_from_json)
         # verify that the JSON schema from Pydantic is what we think it is
-        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/transforms.json"))
+        full_expected_schema: JsonSchemaValue = CLASSIC_TRANSFORM_SCHEMA
         self.assertIn("items", full_expected_schema)
         self.assertIn("properties", full_expected_schema["items"])
         self.assertIn("rotation", full_expected_schema["items"]["properties"])
@@ -192,7 +199,7 @@ class TestTransformCases(unittest.TestCase):
         valid_transform_from_json = Transform.from_json(valid_transform_as_json)
         self.assertEqual(valid_transform, valid_transform_from_json)
 
-        expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/transforms.json"))
+        expected_schema: JsonSchemaValue = CLASSIC_TRANSFORM_SCHEMA
         full_actual_schema: JsonSchemaValue = Clip.make_json_schema()
         self.assertIn("properties", full_actual_schema)
         self.assertIn("transforms", full_actual_schema["properties"])

@@ -20,12 +20,22 @@ from camdkit.compatibility import canonicalize_descriptions
 from camdkit.lens_types import StaticLens, Distortion, Lens
 
 
-def load_classic_camdkit_schema(path: Path) -> JsonSchemaValue:
-    with open(path, "r", encoding="utf-8") as file:
-        schema = json.load(file)
-        canonicalize_descriptions(schema)
-        return schema
+CLASSIC_LENS_SCHEMA_PATH = Path("src/test/resources/model/lens.json")
+CLASSIC_LENS_SCHEMA: JsonSchemaValue | None = None
+CLASSIC_STATIC_LENS_SCHEMA_PATH = Path("src/test/resources/model/static_lens.json")
+CLASSIC_STATIC_LENS_SCHEMA: JsonSchemaValue | None = None
 
+def setUpModule():
+    global CLASSIC_LENS_SCHEMA
+    global CLASSIC_STATIC_LENS_SCHEMA
+    with open(CLASSIC_LENS_SCHEMA_PATH, "r", encoding="utf-8") as fp:
+        CLASSIC_LENS_SCHEMA = json.load(fp)
+    with open(CLASSIC_STATIC_LENS_SCHEMA_PATH, "r", encoding="utf-8") as fp:
+        CLASSIC_STATIC_LENS_SCHEMA = json.load(fp)
+
+
+def tearDownModule():
+    pass
 
 class LensTypesTestCases(unittest.TestCase):
 
@@ -64,7 +74,7 @@ class LensTypesTestCases(unittest.TestCase):
         instance_from_json: Distortion = Distortion.from_json(json_from_instance)
         self.assertEqual(valid, instance_from_json)
 
-        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/lens.json"))
+        full_expected_schema: JsonSchemaValue = CLASSIC_LENS_SCHEMA
         self.assertIn("properties", full_expected_schema)
         self.assertIn("distortion", full_expected_schema["properties"])
         expected_schema = full_expected_schema["properties"]["distortion"]
@@ -75,12 +85,12 @@ class LensTypesTestCases(unittest.TestCase):
         self.assertEqual(expected_schema, actual_schema)
 
     def test_static_lens_schemas_match(self):
-        expected: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/static_lens.json"))
+        expected: JsonSchemaValue = CLASSIC_STATIC_LENS_SCHEMA
         actual = StaticLens.make_json_schema()
         self.assertDictEqual(expected, actual)
 
     def test_regular_lens_schemas_match(self):
-        expected: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/lens.json"))
+        expected: JsonSchemaValue = CLASSIC_LENS_SCHEMA
         actual = Lens.make_json_schema()
         self.assertEqual(expected, actual)
 

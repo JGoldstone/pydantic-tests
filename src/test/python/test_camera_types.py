@@ -44,11 +44,18 @@ ONE_HUNDRED_EIGHTY_DEGREES = 180.0
 THREE_HUNDRED_SIXTY_DEGREES = 360.0
 
 
-def load_classic_camdkit_schema(path: Path) -> JsonSchemaValue:
-    with open(path, "r", encoding="utf-8") as file:
-        schema = json.load(file)
-        canonicalize_descriptions(schema)
-        return schema
+CLASSIC_CAMERA_SCHEMA_PATH = Path("src/test/resources/model/static_camera.json")
+CLASSIC_CAMERA_SCHEMA: JsonSchemaValue | None = None
+
+
+def setUpModule():
+    global CLASSIC_CAMERA_SCHEMA
+    with open(CLASSIC_CAMERA_SCHEMA_PATH, "r", encoding="utf-8") as fp:
+        CLASSIC_CAMERA_SCHEMA = json.load(fp)
+
+
+def tearDownModule():
+    pass
 
 
 class CameraTypesTestCases(unittest.TestCase):
@@ -96,7 +103,7 @@ class CameraTypesTestCases(unittest.TestCase):
         instance_from_json: PhysicalDimensions = PhysicalDimensions.from_json(json_from_instance)
         self.assertEqual(d, instance_from_json)
 
-        full_expected_schema: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/static_camera.json"))
+        full_expected_schema: JsonSchemaValue = CLASSIC_CAMERA_SCHEMA
         self.assertIn("properties", full_expected_schema)
         self.assertIn("activeSensorPhysicalDimensions", full_expected_schema["properties"])
         expected_schema = full_expected_schema["properties"]["activeSensorPhysicalDimensions"]
@@ -267,7 +274,7 @@ class CameraTypesTestCases(unittest.TestCase):
             # sc.shutter_angle = THREE_HUNDRED_SIXTY_DEGREES + sys.float_info.epsilon
 
     def test_static_camera_schemas_match(self):
-        expected: JsonSchemaValue = load_classic_camdkit_schema(Path("src/test/resources/model/static_camera.json"))
+        expected: JsonSchemaValue = CLASSIC_CAMERA_SCHEMA
         actual = StaticCamera.make_json_schema()
         self.assertDictEqual(expected, actual)
 

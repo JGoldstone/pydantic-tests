@@ -18,6 +18,19 @@ def load_classic_camdkit_schema(path: Path) -> JsonSchemaValue:
         return schema
 
 
+CLASSIC_TRACKER_SCHEMA_PATH = Path("src/test/resources/model/static_tracker.json")
+CLASSIC_TRACKER_SCHEMA: JsonSchemaValue | None = None
+
+
+def setUpModule():
+    global CLASSIC_TRACKER_SCHEMA
+    with open(CLASSIC_TRACKER_SCHEMA_PATH, "r", encoding="utf-8") as fp:
+        CLASSIC_TRACKER_SCHEMA = json.load(fp)
+
+
+def tearDownModule():
+    pass
+
 class TrackerTestCases(unittest.TestCase):
 
     def test_tracker_make(self):

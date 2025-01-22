@@ -32,15 +32,13 @@ CLASSIC_TIMING_SCHEMA: JsonSchemaValue | None = None
 
 
 def setUpModule():
-    print("setting up")
     global CLASSIC_TIMING_SCHEMA
     with open(CLASSIC_TIMING_SCHEMA_PATH, "r", encoding="utf-8") as fp:
         CLASSIC_TIMING_SCHEMA = json.load(fp)
-    print("set up")
 
 
 def tearDownModule():
-    print("tearing down")
+    pass
 
 
 class TimingTestCases(unittest.TestCase):
