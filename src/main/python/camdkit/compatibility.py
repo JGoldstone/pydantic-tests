@@ -282,19 +282,15 @@ class CompatibleBaseModel(BaseModel):
     @classmethod
     def to_json(cls, model_or_tuple: Self | tuple):
         def inner(one_or_many: Self | tuple):
-            # TODO figure out how to express isinstance(one_or_many, CompatibleBaseModel)
-            #   despite the fact that we aren't done defining it yet
-            if isinstance(one_or_many, BaseModel):
-                return one_or_many.model_dump(by_alias=True,
-                                                exclude_none=True,
-                                                exclude_defaults=True,
-                                                exclude={"canonical_name",
-                                                         "sampling",
-                                                         "units",
-                                                         "section"})
             if isinstance(one_or_many, tuple):
                 return tuple([inner(e) for e in one_or_many])
-            raise ValueError(f"unhandled object handed to {cls.__name__}.to_json()")
+            return one_or_many.model_dump(by_alias=True,
+                                            exclude_none=True,
+                                            exclude_defaults=True,
+                                            exclude={"canonical_name",
+                                                     "sampling",
+                                                     "units",
+                                                     "section"})
         return inner(model_or_tuple)
 
     @classmethod
