@@ -210,8 +210,6 @@ class ModelTest(unittest.TestCase):
     self.assertTupleEqual(d["lens"]["distortionOffset"], ({ "x":1.0,"y":2.0 }, { "x":1.0,"y":2.0 }))
     self.assertTupleEqual(d["lens"]["projectionOffset"], ({ "x":0.1,"y":0.2 }, { "x":0.1,"y":0.2 }))
 
-    # d_clip = Clip()
-    # d_clip.from_json(d)
     d_clip = Clip.from_json(d)
     self.assertEqual(d_clip, clip)
 
