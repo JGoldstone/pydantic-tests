@@ -6,20 +6,18 @@
 
 """Types for lens modeling"""
 
-from typing import Any, Annotated, Self, Optional
+from typing import Annotated, Self, Optional
 
 from pydantic import Field, model_validator
 
 from camdkit.compatibility import (CompatibleBaseModel,
                                    BOOLEAN,
                                    NONBLANK_UTF8_MAX_1023_CHARS,
-                                   UUID_URN,
-                                   NON_NEGATIVE_REAL,
                                    STRICTLY_POSITIVE_REAL,
                                    REAL,
                                    REAL_AT_LEAST_UNITY,
                                    ARRAY)
-from camdkit.numeric_types import (NonNegativeFloat, StrictlyPositiveFloat, NormalizedFloat,
+from camdkit.numeric_types import (StrictlyPositiveFloat, NormalizedFloat,
                                    NonNegativeInt, UnityOrGreaterFloat)
 from camdkit.string_types import NonBlankUTF8String
 from camdkit.units import MILLIMETER, METER
@@ -166,7 +164,6 @@ class ExposureFalloff(CompatibleBaseModel):
 
 
 class Lens(CompatibleBaseModel):
-    # TODO: watch GitHub issue #127 to see if we can get rid of the 'custom' field
     custom: Annotated[tuple[tuple[float, ...], ...] | None,
       Field(json_schema_extra={"clip_property": "lens_custom",
                                "constraints": ARRAY})] = None
