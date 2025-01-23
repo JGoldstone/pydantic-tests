@@ -1,435 +1,111 @@
-# `camdkit.clip` reimplemented with Pydantic
+# Camera Metadata Toolkit (camdkit)
 
-## TL:DR;
+## Introduction
 
-This is nerding out re: code modularity and maintainability. If your RIS
-involvement is mostly about "how do I transport this info with ST 2110"
-or "how do I process received metadata on hardware that might not even
-support floating point", please don't waste time reading this.
+### Initial project scope: simple camera and lens metadata
 
-## Discussion
-Though the concept is simple (see "Desired end state" below) neither the
-rationality of deploying it nor the issue of whether others find the
-implementation pleasing have been discussed. At all.
+`camdkit` is the code embodiment of  the [SMPTE RIS for OSVP camera metadata
+model](https://www.smpte.org/rapid-industry-solutions/on-set-virtual-production). `camdkit` exists because code, especially code that passes unit tests, is as unambiguous a reference as we know how to provide. Documentation _should_ describe the metadata the SMPTE RIS for OSVP describes; but if there is any uncertainty in interpreting the documentation, the code exists to precisely state what a metadatum describes and how it is conveyed.
 
-So there's now a `camdkit` [GitHub discussion topic for this project](https://github.com/SMPTE/ris-osvp-metadata-camdkit/discussions/141).
+Today `camdkit` supports mapping (or importing, if you will) of metadata from five popular digital cinema cameras into a canonical form; it also supports a mapping of the metadata defined in the *F4* protocol used by tracking system component from Mo-Sys.
 
-## Desired end state
-All code built on the current `framework.py` and `model.py` "just works",
-producing identical results when compared to those of the current code.
+There is no current provision in `camdkit` for an inverse mapping, _e.g._ there is nothing in `camdkit` that would take canonical camera and lens data that was imported from the output of a RED camera and produce an equivalent file of ARRI camera and lens data in ARRI's CSV format.
 
-This means the example code, the code to make various artifacts (documentation,
-schema, etc), unit tests, and anything anyone has written outside the
-`ris-osvp-metadata-camdkit` repository.
+Initially `camdkit` was comprised solely of these forward mappings to a canonical form, the canonical form being a SMPTE-defined Python class, yclept `Clip`, with each accessible metadatum being a Python `property`, the metadata being called 'parameters' in the vocabulary of `camdkit`. One could speak of a `Clip` having a `camera_model` the value of which was the string `"V-Raptor XL 8K"`.
 
-I will weaken "identical results" slightly. If the original code produces
-the string
-```python
-'{ "foo": 1, "bar": 2 }'
-```
-and the Pydantic-based code produces the string
-```python
-'{ "bar": 2, "foo": 1 }'
-```
-then I'm going to say the results are identical.
+Parameters that are considered to be unchanging throughout the course of a clip are termed 'static parameters'; parameters that can change from one frame to the next are called 'regular' parameters, the implication being that they represent some metadata that are sampled at a regular interval.
 
-There are some edge cases from the unit tests. More about this in "What are
-some downsides" below, but: in the current implementation,
-```python
-TimingTimestamp.validate(Timestamp(seconds=-1, nanoseconds=2))
-```
-will return False. In the Pydantic-based code, it raises `ValidationError`
-while constructing the argument to `TimingTimestamp.validate()`, before the
-code for `TimingTimestamp.validate()` is ever even entered. Pydantic does
-validation early. It is trying to make it the case that invalid objects
-cannot exist. Period.
+### Enlarged scope: OpenLensIO and OpenTrackIO
 
-But in general, the idea is: compatible code that's easier for outsiders to
-understand and easier for insiders to maintain.
+Early on `camdkit` showed itself to be successful and useful for basic camera and lens metadata, but in developing a common model for lens optics, the group members realized that the larger community of OSVP vendors was not well represented, and reached out to makers of camera tracking systems in particular. Both Mo-Sys Engineering Ltd and TrackMen GmbH invested considerable effort in clarifying an optical model, which now exists as **OpenLensIO** and can be found (here)[res/OpenLensIO_v0_9_0.pdf]. Further work (with contributions by RIS members from Concept Overdrive, Inc. and Original Syndicate) produced recommendations for OSVP static and regular parameter transport leveraging standards such as the IETF's RTP and associated protocols, and SMPTE's ST 2110 suite. This combination of `camdkit`, OpenLensIO and transport recommendations is termed **OpenTrackingIO**.
+  
+## `camdkit`'s continued utility as payload generator
 
-## Motivation
+If **OpenTrackingIO** is about how to move payload around, and **OpenLensIO** is about the details of a subset of payload semantics for a few key lens metadata (_e.g._ distortion), then where does `camdkit` fit into this enlarged world?
 
-The road to `camdkit` was long and twisty. Originally its charter was to be a
-[Rosetta Stone](https://en.wikipedia.org/wiki/Rosetta_Stone) for diverse camera
-and lens metadata, using the bright clarity of an implementation to cut through
-the fog of different vendors using the same terms for the semantically same 
-thing, or meaning the same thing but describing its states in different units.
+`camdkit` is still the method by which parametric data (static and regular) are represented in applications. It provides for payload validation, serialization and deserialization and for payload self-description and documentation.
 
-Quite deliberately the canonical representation into which all camera and lens
-metadata was cast was declared a common working space but _not_ a set of
-requirements for transport or storage.
+The remainder of this document will discuss how to install camdkit, and how to use it at the application (_e.g._ Python object) level. For information on how to transport JSON-serialized `camdkit` data, see the OpenTrackingIO documentation referenced above; for details of the semantics of the lens-related static and regular metadata, including lens distortion models, see the **OpenLensIO** documentation.
 
-With the exception of the `Dimension` class, all the metadata described were
-what one would call POD [Plain Old Data] types. They might be _constrained_ POD
-types, such as "non-negative integer", but they were very simple.
+### Installation
 
-### Weakened functional division between two key Python modules
-The classes
-that implemented a representation of these types without regard to their use
-were named something like PODType`Parameter` and were in `framework.py`; the
-uses of those `Parameter`s were in `model.py` and had arbitrary names.
+This is not to say that the tool use below is the only correct way to install `camdkit`, but it is perhaps the simplest.
 
-An example will make this more clear. Here is the definition of a parameter to
-generically handle strings:
-```python
-class StringParameter(Parameter):
+* clone this repo
 
-  @staticmethod
-  def validate(value) -> bool:
-    """The parameter shall be a Unicode string betwee 0 and 1023
-    codepoints.
-    """
-    return isinstance(value, str) and len(value) < 1024
+`git clone ...`
 
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return str(value)
+* install Python (https://www.python.org/)
 
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return str(value)
+* install pipenv
 
-  @staticmethod
-  def make_json_schema() -> dict:
-    return {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 1023
-    }
-```
-and here is how it would be used in `model.py`:
-```python
-class LensSerialNumber(StringParameter):
-  """Non-blank string uniquely identifying the lens"""
+`pip install --user pipenv`
 
-  canonical_name = "serialNumber"
-  sampling = Sampling.STATIC
-  units = None
-  section = "lens"
-```
+* install dependencies
 
-This worked well. But to this developer's eyes, it didn't scale well to when
-the metadata set was vastly extended to support camera tracking metadata,
-including geometric transform chains, device synchronization, semantic
-versioning, &c. For something like a set of 1-3 coefficients representing
-exposure falloff, `framework.py` carried those coefficients in a `dataclass`
-object:
-```python
-@dataclasses.dataclass
-class ExposureFalloff:
-  """Coefficients for the calculation of exposure fall-off"""
-  a1: float
-  a2: typing.Optional[float] = None
-  a3: typing.Optional[float] = None
-```
-The logic for validation, serialization, and self-describing schema generation
-was added not in `framework.py` to the definition of a parameter _type_, but
-in `model.py` tied much more closely to the parameter's _use_. Thus in
-`model.py` one would have a class built on top of a generic `Parameter`, the
-root class for all of `framework.py`'s parameter types:
+`pipenv install --dev`
+
+* set the PYTHONPATH environment variable to `src/main/python`, e.g.
+
+`export PYTHONPATH=src/main/python`
+
+* convert RED camera files
+
+`pipenv run python src/main/python/camdkit/red/cli.py src/test/resources/red/A001_C066_0303LZ_001.static.csv src/test/resources/red/A001_C066_0303LZ_001.frames.csv`
+
+## `Clip`, the foundational `camdkit` object
+The fundamental organizing tool for `camdkit` parameters is the `Clip` object. It holds parameter values, validates any new parameter values to be added or to replace existing values, and handles JSON serialization and deserialization.
+
+Parameter values are accessed or set with simple access as attributes of a clip object:
+
+`camdkit` takes care of translating proper 'snake case' attribute names such as `lens_entrance_pupil_offset` to canonical JSON 'capitalCase' form when the `Clip` object is serialized:
 
 ```python
-class LensExposureFalloff(Parameter):
-  """Coefficients for calculating the exposure fall-off (vignetting) of
-  a lens
-  """
-  sampling = Sampling.REGULAR
-  canonical_name = "exposureFalloff"
-  section = "lens"
-  units = None
-
-  @staticmethod
-  def validate(value) -> bool:
-    """The coefficients shall each be real numbers."""
-
-    if not isinstance(value, ExposureFalloff):
-      return False
- 
-    # a1 is required
-    if value.a1 == None:
-      return False
-
-    for v in [value.a1, value.a2, value.a3]:
-      if v is not None and not isinstance(v, numbers.Real):
-        return False
-
-    return True
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return dataclasses.asdict(value)
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return ExposureFalloff(**value)
-
-  @staticmethod
-  def make_json_schema() -> dict:
-    return { 
-      "type": "object",
-      "additionalProperties": False,
-      "required": ["a1"],
-      "properties": {
-        "a1": {
-            "type": "number"
-        },
-        "a2": {
-            "type": "number"
-        },
-        "a3": {
-            "type": "number"
-        }
-      }
-    }
-
+from camdkit.model import Clip
+c = Clip()
+...
+# something here that loads lens data into the Clip object
+...
+epo_values = clip.lens_entrance_pupil_offset
+```
+When serialized, the resulting JSON values look like:
+```python
+...
+  { "entrancePupilOffset":
+    [
+        4,
+        5,
+        6,
+        7
+    ]
+  }
+...
 ```
 
-To rigidly maintain the original functional division between `framework.py` 
-and `model.py` one would need to define an elaborate `Parameter` subclass
-type in `framework.py` and then one could tersely use it in `model.py` in
-the "original style" of `camdkit`.
-
-But this could often seem very artificial
-and a lot of work, given that these new parameter types and parameters always
-had a 1:1 relationship, _vs._ the 1:n relationship between `StringParameter`
-in `framework.py` for example and its multipicity of uses (`CameraMake`,
-`LensModel`, &c) in `model.py`.
-
-The now-diffused responsibility required the maintainer to make more choices
-than they had previously needed to make.
-
-### JSON schema consistency
-
-As `framework.py` and `model.py` currently stand, the schema describing a
-parameter is hand-coded as part of the definition of the underlying parameter
-type or of the parameter itself. The schema needs to be complete, that is,
-it needs to be expanded "all the way down".
-
-When there are multiple parameters that have elements of the same parameter
-type, sometimes the existing code can take care of this expansion, but other
-times the expansion ends up being done manually. Take this code fragment from
-`Transforms.make_json_schema()`, for example:
+To add more values to regular metadata, which are stored as tuples, simply add new tuples of values:
 
 ```python
-"id": {
-    "type": "string",
-    "minLength": 1,
-    "maxLength": 1023
-}
+from camdkit.model import Clip
+
+c = Clip()
+c.lens_entrance_pupil_offset = (14.2, 12.4)
+print(f"Initial lens EPO values are {c0.lens_entrance_pupil_offset}")
+c.lens_entrance_pupil_offset += (31.4, 26.2)
+print(f"augmented lens EPO values are {c.lens_entrance_pupil_offset}")
 ```
 
-That's the representation of a non-blank string no longer than 1023 characters,
-a very common element to parameters that aggregate POD parameters or other 
-aggregating parameters. And yet that JSON schema has already been defined
-elsewhere: this is `StringParameter.make_json_schema` from `framework.py`:
+### Advanced topics
 
-```python
-  @staticmethod
-  def make_json_schema() -> dict:
-    return {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 1023
-    }
-```
+- Serialization notes
 
-This is at odds with the Python DRY ("Don't repeat yourself") philosophy. It's
-not like there are Python police (well, not yet) that are going to levy a fine on
-us for repeating ourselves but still. If we decided we needed to limit the maximum
-length to 511 bytes, we would need to change all relevant occurences of 1023,
-_vs._ changing it in one place.
+If one is trying to debug an interoperability issue with some tool that examines "bits on the wire", the following note on optimizing serialization to reduce byte count on scarce-bandwidth sets may be useful.
 
-Plus, it's _hard_ to hand-code JSON schema. So far we have been good, I think, but
-if we are to start adding even more structures, either to define things like 
-transport mechanisms, or more likely, to formalize the notion of "Sample", the
-schema could get more complex. I've heard others bring this up; it's not just me.
+Though initially the group had discussed using various compression schemes to minimize the size of grouped transmitted parameters, eventually it settled on just transmitting the JSON. Keeping the transmitted data 'slim' is aided by two rules for transmission:
+- there is no need (and indeed no mechanism) to explicitly represent that a metadata field is undefined; neither for undefined static metadata nor for undefiend regular metadata. As an example, if you don't know the version of firmware installed on a camera's lens (or if it isn't a lens that even _has_ firmware) there is no need to transmit that fact with every sent group of metadata.
+- metadata that are defined to have a default value need not be transmitted. As part of sending timecode data, there is a composite metadatum termed a "timecode format" comprised of a frame rate and a sub-frame, the latter being useful for, _e.g._, indicating which field of an interlaced frame is associated with the accompanying metadata. The sub-frame field has a default value of 0. If the metdata pertain to a frame's field 0, there is no need to transmit the sub-frame; only if the metadata pertain to field 1 does the sub-frame need to be sent.
 
-## So what's Pydantic and why is it relevant?
+## Extension and maintenance
 
-Pydantic (website [here](https://docs.pydantic.dev/latest/concepts/models/)) is a "data validation library for Python". It calls 
-aggregated structures _models_, which it says are "... similar to structs in
-languages like C ...". Its models (built on `pydantic.Basemodel`) aggregate
-POD types or other aggregates of POD types, and provide _validation_,
-_serialization_ (i.e. conversion to JSON), _deserialization_ (initialization 
-from JSON), and JSON _schema generation_.
+The model documentation is [auto-generated](https://smpte.github.io/ris-osvp-metadata-camdkit/).
 
-This can lead to more compact and maintainable code. Picking a not atypical
-case from `model.py`:
-
-```python
-class Protocol(Parameter):
-  """Name of the protocol in which the sample is being employed, and
-  version of that protocol
-  """
-  canonical_name = "protocol"
-  sampling = Sampling.REGULAR
-  units = None
-
-  @staticmethod
-  def validate(value) -> bool:
-    """Protocol name is nonblank string; protocol version is basic x.y.z
-     semantic versioning string
-     """
-
-    if not isinstance(value, VersionedProtocol):
-      return False
-
-    if not isinstance(value.name, str):
-      return False
-    if not len(value.name):
-      return False
-    if value.name != OPENTRACKIO_PROTOCOL_NAME:  # Temporary restriction
-      return False
-
-    if not isinstance(value.version, tuple):
-      return False
-    if len(value.version) != 3:
-      return False
-    return all([
-      isinstance(version_number_component, int) \
-                and version_number_component >= 0 \
-                and version_number_component <= 9 \
-                for version_number_component in value.version])
-
-  @staticmethod
-  def to_json(value: typing.Any) -> typing.Any:
-    return {k: v for k, v in dataclasses.asdict(value).items() if v is not None}
-
-  @staticmethod
-  def from_json(value: typing.Any) -> typing.Any:
-    return VersionedProtocol(**value)
-
-  @staticmethod
-  def make_json_schema() -> dict:
-    return {
-      "type": "object",
-      "additionalProperties": False,
-      "properties": {
-        "name": {
-          "type": "string",
-            "minLength": 1,
-            "maxLength": 1023
-        },
-        "version": {
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "minValue": 0,
-            "maxValue": 9
-          },
-          "minItems": 3,
-          "maxItems": 3
-        }
-      }
-    }
-```
-
-In the re-implementation of `framework.py` and `model.py` the same parameter
-is defined with:
-
-```python
-class VersionedProtocol(CompatibleBaseModel):
-    name: NonBlankUTF8String
-    version: tuple[int, int, int]
-
-    def __init__(self, name: NonBlankUTF8String, version: tuple[SingleDigitInt, SingleDigitInt, SingleDigitInt]):
-        super(VersionedProtocol, self).__init__(name=name, version=version)
-        if name != OPENTRACKIO_PROTOCOL_NAME:
-            raise ValueError("The only currently accepted name for a versioned protocol"
-                             " is {OPENTRACKIO_PROTOCOL_NAME}")
-
-```
-
-For the record, the complete definitions of `NonBlankUTF8String` and
-`SingleDigitInt` are:
-
-```python
-type NonBlankUTF8String = Annotated[str, StringConstraints(min_length=1, max_length=1023)]
-```
-and
-```python
-type SingleDigitInt = Annotated[int, Field(..., ge=0, le=9, strict=True)]
-```
-respectively. And they can be re-used. OK, `SingleDigitInt` hasn't gotten re-used
-yet, but NonBlankUTF8String gets re-used **all** **the** **time**.
-
-### How does it _do_ that?
-
-Pydantic is built on type hints. Deeply, deeply built on type hints. To make
-this reimplementation of `framework.py` and `clip.py` work, one needs to read
-up on type hints. I read up on type hints a lot. They are pretty clear in what
-they mean; but syntactically, learning about them is a chore. Fortunately, 
-there's enough of a variety of examples in the new code so that in the future,
-type hinting can almost always be guided by precedent.
-
-Much of the type hinting mechanism is in base Python already, if one is running
-semi-modern Python. I believe what's required came in around Python 3.9. I'm
-running 3.13; the [VFX reference platform](https://vfxplatform.com) is at 3.11.
-
-A really nice thing is that modern IDEs like Visual Studio Code and PyCharm
-understand type hints _deeply_ and while you are coding, you'll get immediate
-feedback -- it's validate-as-you-go. If I type
-```python
-foo = VersionedProtocol("bar", (1, 2, 10))
-```
-then my IDE is going to flag that 10 as invalid within a fraction of a second
-of my typing it.
-
-By the way, `mypy` has a great 
-[cheat sheet for type hints](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html), covering the obvious
-cases but considerably more subtle ones as well.
-
-### What are some downsides?
-
-The idea was to basically throw the burden of validation, serialization,
-deserialization and JSON schema creation onto Pydantic and the type system. In
-doing so, the existing distinction between parameter and parameter type is
-more or less erased.
-
-This is mostly OK, but there are certain areas of the
-existing codebase where existing unit tests no longer pass. An example was
-given in the "Desired end state" section, where caveats on 'identical results'
-were being laid out. This code from `test_model.py`'s `test_timestamp_limits`
-method will fail on a Pydantic base:
-```python
-self.assertFalse(TimingTimestamp.validate(Timestamp(-1,2)))
-```
-The reason it will fail is that in the existing implementation, one is allowed
-to construct invalid objects of a `Parameter`'s "underlying type(s)" -- which
-would fail if their `validate()` method was called, for sure -- and then when
-the `Parameter` itself is constructed, it will call that `validate()` method.
-But in the meantime, there's an invalid object on the stack/heap/whatever.
-
-Pydantic doesn't let that happen; the moment you try and create a `Timestamp`
-with a negative hour, it will raise a `ValidationException`.
-
-The existing code needs to be examined and tested to see if this poses a
-serious problem, or if this is a case where an existing unit test could
-be changed.
-
-Another issue is that when a type is coerced (or to use an alternative term,
-"promoted") to match the type of field of a model, the type isn't preserved.
-So, if you have a field X that's defined as a float, and you initialize it with
-an int, there's a gizmo (technically, a pydantic `field_validator` decorator)
-that coerces / promotes the int to a float. But if you turn around and ask
-an instance of the model "what's your value of X?", you get back a float and
-not an int. If you assign a `Fraction` to a field that is defined to be a
-`StrictlyPositiveRational`, then read it back, you get an object the type of
-which is `StrictlyPositiveRational`, not `Fraction`.
-
-I mean, one _could_ make the field validator store the type of the original
-value and restore it when that field was accessed but that seems super
-excessive, with each coerced/promoted field now requiring an additional field
-to back it.
-
-...other things here, eventually...
-
-## State of the implementation
-
-(In the points below, "classic" `camdkit` means the main camdkit after the
-"Consistency typo and regex" PR is merged)
-
-- All of the classic `camdkit` unit tests pass; all of the new unit tests pass.
-- All generated examples match those produced by classic `camdkit`.
-- The generated OpenTrackIO schema matches that of classic `camdkit`.
-- The generated documentation matches that of classic `camdkit`
+For source readers (those modules that convert proprietary metadata into `camdkit` metadata), simply following the model of existing systems, and placing importer source and importer unit test source files alongside existing systems should suffice.
