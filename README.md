@@ -211,16 +211,11 @@ times the expansion ends up being done manually. Take this code fragment from
 `Transforms.make_json_schema()`, for example:
 
 ```python
-          "id": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 1023
-          },
-          "parentId": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 1023
-          }
+"id": {
+    "type": "string",
+    "minLength": 1,
+    "maxLength": 1023
+}
 ```
 
 That's the representation of a non-blank string no longer than 1023 characters,
